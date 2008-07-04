@@ -1025,6 +1025,23 @@ function GM:PhysgunDrop(ply, ent)
 	ent:GetPhysicsObject():EnableMotion(false)
 end
 
+function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
+	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
+		return false
+	elseif ValidEntity( ent.Owner ) and ent.Owner != ply && !ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick() )
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+	return false
+	elseif ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
+		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+		ent:SetColor(255,255,255,128)
+	else
+	ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+	ent:SetColor(255,255,255,255)
+	end
+	return false
+end
+
 function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	local trace = {}
@@ -1035,7 +1052,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if !trc.Entity then return false end
 	if !trc.Entity:IsValid( ) then return false end
-	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" then return false end
+	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" && trc.Entity:GetClass() != "sent_dispenser" then return false end
 	
 	local ent = trc.Entity
 
