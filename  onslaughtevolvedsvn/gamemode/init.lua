@@ -1009,23 +1009,6 @@ function GM:GravGunPunt( ply, ent )
 	return true
 end
 
-function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
-	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
-		return false
-	elseif ValidEntity( ent.Owner ) and ent.Owner != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick() )
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-	return false
-	elseif ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
-		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
-		ent:SetColor(255,255,255,128)
-	else
-	ent:SetCollisionGroup(COLLISION_GROUP_NONE)
-	ent:SetColor(255,255,255,255)
-	end
-	return false
-end
-
 function GM:PhysgunPickup(ply, ent)
 	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
 		return false
