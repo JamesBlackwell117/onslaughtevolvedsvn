@@ -2,7 +2,7 @@
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 GM.Name 	= "Onslaught: Evolved - 1.75"
-GM.Author 	= "Conman420 and Xera" -- DO NOT CHANGE THIS
+GM.Author 	= "Conman420, Xera, & Ailia" -- DO NOT CHANGE THIS
 GM.Email 	= ""
 GM.Website 	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
