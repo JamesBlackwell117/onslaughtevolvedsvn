@@ -56,7 +56,7 @@ function SWEP:CanSpawnBuilding( )
 	local c = 0
 
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		if v.Owner == self.Owner then c=c+1 end
+		if v.owner == self.owner then c=c+1 end
 	end
 	if PHASE == "BATTLE" then
 		return c < 2
@@ -143,7 +143,7 @@ function SWEP:Reload()
 		if self.LastReload + 0.5 < CurTime() then
 		
 		for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-			if v.Owner == self.Owner then v:Remove() end
+			if v.owner == self.owner then v:Remove() end
 			end
 		self.LastReload = CurTime()
 		self.owner:Message("Deleted all dispensers.", Color(100,255,100,255))
