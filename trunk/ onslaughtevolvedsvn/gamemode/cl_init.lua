@@ -141,7 +141,7 @@ function DrawTips()
 	local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
 	local killneeded = nextrank.KILLS or 0
 	local rank = LocalPlayer():GetNWInt("rank") or 1
-	if kills > killneeded && rank >= #RANKS then
+	if kills > killneeded || rank >= #RANKS then
 		draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
 	else
 		draw.SimpleText( "KILLS: "..kills.."/"..math.Clamp(killneeded - kills,0,killneeded).." kills until "..RANKS[rank + 1].NAME, "HUD", W * 0.71, H * 0.006 )
@@ -224,6 +224,7 @@ hook.Add("HUDPaint","messages",DrawPowerUp)
 
 function GM:HUDDrawTargetID( )
 	if !LocalPlayer():Alive() then return end
+	if GetConVarNumber( "ose_hidetips" ) == 1 then return end
 	local tr = LocalPlayer( ):GetEyeTrace( )
 	if not tr.Hit or not ValidEntity( tr.Entity ) then
 		return
