@@ -7,7 +7,7 @@ include( "cl_panels.lua" )
 include( "cl_hud.lua")
 include( "ose.lua" )
 
-local PHASE = "BUILD"
+PHASE = "BUILD"
 
 MENU = nil
 
