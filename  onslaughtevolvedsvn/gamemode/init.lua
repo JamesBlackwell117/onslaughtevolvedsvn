@@ -901,10 +901,11 @@ end
 
 function GM:PlayerDisconnected( ply )
 	print(ply:Nick().." BIBI!")
-	if ply.Buildings then
-		for k,v in pairs(ply.Buildings) do
+	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+		if v:GetOwner() == ply then v:Remove() end
+	end
+	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
 			if v.owner == ply then v:Remove() end
-		end
 	end
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
@@ -917,6 +918,7 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
+	timer.Simple(0.1,CheckDead)
 end
 
 function GM:DeleteProps(ply, ID, nick)
@@ -932,8 +934,7 @@ function GM:DeleteProps(ply, ID, nick)
 		if v:GetClass() != "sent_spawner" then
 			if v.owner == ply then
 				v:Remove()
-			end
-			if !ValidEntity(v.owner) then
+			elseif !ValidEntity(v.owner) then
 				v:Remove()
 			end
 		end
