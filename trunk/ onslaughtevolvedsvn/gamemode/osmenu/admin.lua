@@ -1,0 +1,135 @@
+// Xera
+
+local PANEL = { }
+
+function PANEL:Init( )
+
+	self.Rows = { }
+
+	self.Label = vgui.Create( "DLabel", self )
+	self.Label:SetText( "Admin-only functions." )
+	self.Label:SetTextColor( Color( 255, 255, 255, 255 ) )
+	self.Label:SizeToContents( )
+
+	self.PanelList = vgui.Create( "DPanelList", self )
+	self.PanelList:SetPadding( 2 )
+	self.PanelList:EnableVerticalScrollbar( true )
+	
+	self:AddAdminButton( "Start build", "Forces the game to switch to build mode.", function( ) RunConsoleCommand( "Admin", "2" ) end, "gui/silkicons/box" )
+	self:AddAdminButton( "Start battle", "Forces the game to switch to battle mode.", function( ) RunConsoleCommand( "Admin", "1" ) end, "gui/silkicons/bomb" )
+	self:AddAdminButton( "Set spawn time", "Allows you to set the amount of time before players respawn.", function( )
+		Derma_StringRequest( "Spawn time",
+			"Amount of time between player spawns",
+			tostring( SPAWN_TIME ),
+			function( Str )
+				RunConsoleCommand( "Admin", "6", Str )
+			end,
+			function( ) end,
+			"Set", "Cancel" )
+	end )
+	self:AddAdminButton( "Set maximum NPCs", "Allows you to set the maximum amount of NPCs.", function( )
+		Derma_StringRequest( "Max NPCs",
+			"Maximum amount of NPCs",
+			tostring( MAX_NPCS ),
+			function( Str )
+				RunConsoleCommand( "Admin", "3", Str )
+			end,
+			function( ) end,
+			"Set", "Cancel" )
+	end )
+	self:AddAdminButton( "Set build time", "Allows you to set the time allowed for building.", function( )
+		Derma_StringRequest( "Build time",
+			"Time in seconds to allow for building",
+			tostring( BUILDTIME ),
+			function( Str )
+				RunConsoleCommand( "Admin", "4", Str )
+			end,
+			function( ) end,
+			"Set", "Cancel" )
+	end )
+	self:AddAdminButton( "Set battle time", "Allows you to set the time allowed for battling.", function( )
+		Derma_StringRequest( "Battle time",
+			"Time in seconds to allow for battling",
+			tostring( BATTLETIME ),
+			function( Str )
+				RunConsoleCommand( "Admin", "5", Str )
+			end,
+			function( ) end,
+			"Set", "Cancel" )
+	end )
+	self:AddAdminButton( "Give selection SWEP", "Gives you the SWEP used to select props for saving.", function( )
+		RunConsoleCommand( "admin", "select" )
+	end )
+	self:AddAdminButton( "Set owner", "Allows you to set the owner of the selected props.", function( )
+		local menu = DermaMenu( )
+		for k,v in pairs( player.GetAll( ) ) do
+			menu:AddOption( v:Nick( ), function( ) RunConsoleCommand( "admin", "owner", tostring( k ) ) end )
+		end
+		menu:Open( )
+	end )
+	self:AddAdminButton( "Save selected", "Saves the selected props to a file.", function( )
+		Derma_StringRequest( "File",
+		"File to save select props to",
+		"",
+		function( Str )
+			RunConsoleCommand( "prop_save", string.gsub( Str, " ", "_" ) )
+		end,
+		function( ) end,
+		"Save", "Cancel" )
+	end )
+	self:AddAdminButton( "Load file", "Opens the load file dialog.", function( )
+		MENU.FileLoad = vgui.Create( "onslaught_fileload" )
+	end, "onslaught/file" )
+end
+
+local function AdminButtonDoClick( b )
+	if not LocalPlayer( ):IsAdmin( ) then
+		Derma_Message( "Not an admin!", "Error", "OK" )
+	else
+		b:AdminClick( )
+	end
+end
+
+function PANEL:AddAdminButton( txt, ttip, func, img )
+	local btn = vgui.Create( "onslaught_iconbutton", self )
+	btn.DoClick = AdminButtonDoClick
+	btn.AdminClick = func
+	btn:SetText( txt )
+	btn:SetSize( self:GetWide( ) - 4, 20 )
+	
+	if ttip then
+		btn:SetTooltip( ttip )
+	end
+	
+	if img then
+		btn:Setup( img )
+	end
+	self.PanelList:AddItem( btn )
+end
+
+function PANEL:PerformLayout( )
+	self:StretchToParent( 2, 24, 2, 2 )
+	self.Label:SetPos( 2, 2 )
+	self.PanelList:StretchToParent( 2, 2, 2, 2 )
+end
+
+vgui.Register( "onslaught_admin", PANEL, "DPanel" )
+
+PANEL = { }
+
+function PANEL:Init( )
+end
+
+function PANEL:PerformLayout( )
+	if self.Image then
+		self.Image:SetSize( 16, 16 )
+		self.Image:SetPos( self:GetWide( ) - 18, 2 )
+	end
+end
+
+function PANEL:Setup( mat )
+	self.Image = vgui.Create( "DImage", self )
+	self.Image:SetMaterial( Material( mat ) )
+end
+
+vgui.Register( "onslaught_iconbutton", PANEL, "DButton" )

@@ -1,0 +1,13 @@
+"Gamemode"
+{
+	"name"		"Onslaught evolved 1.1"
+	"version"	"1.1"
+
+	"author_name"	"Conman420 and Xera"
+	"author_email"	""
+	"author_url"	"Facepunch thread"
+	
+	"icon"		""
+	"info"		"Run away from various amounts of NPCs and defend your base!"
+	"hide"		"0"
+}

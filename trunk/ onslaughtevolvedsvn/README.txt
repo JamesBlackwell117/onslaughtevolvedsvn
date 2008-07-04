@@ -1,0 +1,1 @@
+Copy the ose maps into your maps directory!
