@@ -1105,7 +1105,7 @@ end
 
 function Pmeta:GetRank()
 	local rank = self:GetNWInt("rank")
-	--if self:IsAdmin() then rank = #RANKS end
+	if self:IsAdmin() then rank = #RANKS end
 	return rank
 end
 
@@ -1140,6 +1140,8 @@ function GM:OnNPCKilled( npc, killer, wep)
 	if !killer:IsValid() then return end
 	local class = npc:GetClass()
 	local name = npcs[class] or class
+	local bonus = 0
+
 	if class == "npc_combine_s" then
 		for k,v in pairs(ents.FindByClass("item_ammo_ar2_altfire")) do
 			v:Remove()
@@ -1151,23 +1153,28 @@ function GM:OnNPCKilled( npc, killer, wep)
 		end
 	end
 	local plyobj = killer
-	if ValidEntity(npc.Igniter) && killer == npc then
+	if killer:IsPlayer() then 
+	elseif ValidEntity(killer:GetOwner()) then
+		if killer:GetOwner():IsPlayer() then
+			plyobj = killer:GetOwner()
+		end
+	elseif killer == npc && npc:IsOnFire() && ValidEntity(npc.Igniter) then
 		plyobj = npc.Igniter
-	elseif killer:GetClass() == "npc_turret_floor" || killer:GetClass() == "ose_mines" then
-		plyobj = killer.owner
 	end
 	if !plyobj:IsPlayer() then return false end
 	self:CalculatePowerups(npc,plyobj,wep)
-	self:AddNPCKillMoney(class,plyobj)
+	self:AddNPCKillMoney(class,plyobj,bonus)
 end
 
-function GM:AddNPCKillMoney(class,ply)
+function GM:AddNPCKillMoney(class,ply,bonus)
 	local npc = "npc_combine_s" --default to stop errors
 	for k,v in pairs(NPCS) do
 		if v.CLASS == class then npc = v break end
 	end
 	local givemoney = npc.MONEY or 50
 	local name = npcs[class] or class
+	givemoney = givemoney + bonus
+
 	ply:SetNetworkedInt("money",ply:GetNetworkedInt( "money") + givemoney)
 	ply:Message("+"..tonumber(givemoney).." ["..name.."]", Color(100,255,100,255))
 	timer.Simple(0.2,ply.Taunt,ply)
@@ -1175,14 +1182,10 @@ function GM:AddNPCKillMoney(class,ply)
 	ply:SetFrags(ply:GetNWInt("kills"))
 end
 
-function GM:CalculatePowerups(npc, killer, wep)
+function GM:CalculatePowerups(npc, killer, wep, bonus)
 	killer.LastKill = killer.LastKill or CurTime()
 	if killer.LastKill + 0.5 > CurTime() then
 		killer:Message("+10 Health [Double Kill]", Color(100,100,255,255))
-		killer:AddHealth(10)
-	end
-	if killer:GetPos():Distance(npc:GetPos()) >= 3000 then
-		killer:Message("+10 Health [250 foot kill]", Color(100,100,255,255))
 		killer:AddHealth(10)
 	end
 	killer.LastKill = CurTime()
@@ -1215,7 +1218,16 @@ function OSE_Spawn(ply,cmd,args)
 				propcount = propcount + 1
 			end
 		end
-	if propcount > 3 then ply:Message("Ladder Limit Reached! (3)", Color(255,100,100,255)) return end
+		if propcount > 2 then ply:Message("Ladder Limit Reached!", Color(255,100,100,255)) return end
+	else
+		class = "sent_prop"
+		local propcount = 0
+		for k,v in pairs(ents.FindByClass("sent_prop")) do
+			if v.Owner == ply then
+				propcount = propcount + 1
+			end
+		end
+		if propcount > PROP_LIMIT then ply:Message("Prop Limit Reached!", Color(255,100,100,255)) return end
 	end
  
 	local trace = {} 
