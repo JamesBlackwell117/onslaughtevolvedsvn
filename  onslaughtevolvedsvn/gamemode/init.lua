@@ -821,13 +821,6 @@ function GM:PlayerDeathThink( ply )
 end
 
 function GM:PlayerShouldTakeDamage( ply, attacker )
-	if PHASE == "BUILD" then
-		if attacker:GetClass() == "trigger_hurt" then
-			return true
-		else
-			return false
-		end
-	end
 	if PHASE == "BATTLE" then
 		if attacker:GetClass() == "worldspawn" then
 			if ply:GetClass().NAME == "Scout" then
@@ -836,24 +829,24 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 			end
 		end
 	end
-		if attacker:IsPlayer() then return false end
-		if attacker:GetClass() == "ose_mines" then return false end
+	
+	if attacker:IsPlayer() then 
+	return false
+	elseif ValidEntity(attacker:GetOwner()) then
+		if attacker:GetOwner():IsPlayer() then
+			return false
+		end
+	end
 		if !attacker:IsNPC() && !attacker:GetClass() == "trigger_hurt" then return false end
 	return true
 end
 
 function GM:ScalePlayerDamage(ply, hitgrp, dmg)
-	if dmg:GetAttacker():GetClass() == "npc_turret_floor" then
-		dmg:ScaleDamage(0.2)
-	end
-	if dmg:IsExplosionDamage() then
+	if dmg:IsExplosionDamage() || dmg:GetAttacker():GetClass() == "weapon_shotgun" then
 		dmg:ScaleDamage(0.4)
-	end
-
-	if table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
+	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
 		dmg:ScaleDamage(7)
-	end
-	if dmg:GetAttacker():GetClass() == "npc_manhack" then
+	elseif dmg:GetAttacker():GetClass() == "npc_manhack" then
 		dmg:ScaleDamage(2)
 	end
 	return dmg
