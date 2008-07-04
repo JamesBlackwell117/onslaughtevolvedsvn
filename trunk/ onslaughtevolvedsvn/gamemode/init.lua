@@ -27,8 +27,11 @@ local Pmeta = FindMetaTable( "Player" )
 local Emeta = FindMetaTable( "Entity" )
 
 function Emeta:Dissolve()
-	if ( ValidEntity( self) && !self.Dissolving ) then      
-		self.Shealth = nil
+	if ( ValidEntity( self) && !self.Dissolving ) then
+		if self:GetClass() == "sent_prop" || self:GetClass() == "sent_ladder" || self:GetClass() == "sent_ammo_dispenser" || self:GetClass() == "sent_dispenser" then      
+			self.Shealth = 0
+		end
+		
 		local dissolve = ents.Create( "env_entity_dissolver" )
 		dissolve:SetPos( self:GetPos() )
 
@@ -1207,14 +1210,14 @@ function OSE_Spawn(ply,cmd,args)
 	local class = "sent_prop"
 	if model == "models/Items/ammocrate_smg1.mdl" then
 		for k,v in pairs(ents.FindByClass("sent_ammo_dispenser")) do
-			if v.Owner == ply then ply:Message("You can only spawn one ammo dispenser", Color(255,100,100,255)) return end
+			if v.owner == ply then ply:Message("You can only spawn one ammo dispenser", Color(255,100,100,255)) return end
 		end
 		class = "sent_ammo_dispenser"
 	elseif model == "models/props_c17/metalladder002.mdl" then
 		class = "sent_ladder"
 		local propcount = 0
 		for k,v in pairs(ents.FindByClass("sent_ladder")) do
-			if v.Owner == ply then
+			if v.owner == ply then
 				propcount = propcount + 1
 			end
 		end
@@ -1223,7 +1226,7 @@ function OSE_Spawn(ply,cmd,args)
 		class = "sent_prop"
 		local propcount = 0
 		for k,v in pairs(ents.FindByClass("sent_prop")) do
-			if v.Owner == ply then
+			if v.owner == ply then
 				propcount = propcount + 1
 			end
 		end
