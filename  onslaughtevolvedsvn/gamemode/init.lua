@@ -70,8 +70,8 @@ function GM:PlayerInitialSpawn(ply)
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
 		local oldobj = discplayers[ply:SteamID()].OBJECT
 		for k,v in pairs(ents.FindByClass("sent_prop")) do
-			if v.owner == oldobj then
-				v.owner = ply
+			if v.Owner == oldobj then
+				v.Owner = ply
 			end
 		end
 		discplayers[ply:SteamID()] = nil
@@ -402,7 +402,7 @@ function AdminMenu(ply,com,args)
 	elseif args[ 1 ] == "owner" then
 		if isnumber( args[ 2 ] ) then
 			for k,v in pairs( GAMEMODE.SaveProps ) do
-				v.owner = player.GetByID( tonumber( args[ 2 ] ) )
+				v.Owner = player.GetByID( tonumber( args[ 2 ] ) )
 			end
 		else
 			ply:ChatPrint( "Must enter a number." )
@@ -518,8 +518,8 @@ function SellAll(ply,cmd,args)
 	end
 	local mon = 0
 	for k,v in pairs(ents.FindByClass("sent_*")) do
-		if ValidEntity(v.owner) then
-				if v.owner == ply then
+		if ValidEntity(v.Owner) then
+				if v.Owner == ply then
 				if v.Shealth then
 					mon = mon + v.Shealth
 					end
@@ -767,7 +767,6 @@ function GM:PlayerDeath( ply, wep, killer )
 		end
 	end
 	
-	
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
@@ -776,13 +775,17 @@ function GM:PlayerDeath( ply, wep, killer )
 	return true
 end
 
-function GM:CanPlayerSuicide ( ply )
-ply:PrintMessage(HUD_PRINTTALK, "You can't suicide!")
-return false
-end 
+--function GM:CanPlayerSuicide ( ply )
+--ply:PrintMessage(HUD_PRINTTALK, "You can't suicide!")
+--return false
+--end 
 
 function GM:PlayerDeathThink( ply )
-	if ply.NextSpawn != nil && ply.NextSpawn > CurTime( ) then
+	if ply.NextSpawn == nil then
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
+	end
+
+	if ply.NextSpawn > CurTime( ) then
 		local players = player.GetAll()
 		if ply:KeyReleased( IN_ATTACK ) then
 			ply.specid = ply.specid + 1
@@ -908,7 +911,7 @@ function GM:PlayerDisconnected( ply )
 		if v:GetOwner() == ply then v:Remove() end
 	end
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-			if v.owner == ply then v:Remove() end
+			if v.Owner == ply then v:Remove() end
 	end
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
@@ -935,9 +938,9 @@ function GM:DeleteProps(ply, ID, nick)
 	print("[ONSLAUGHT] Deleting props")
 	for k,v in pairs(ents.FindByClass("sent_*")) do
 		if v:GetClass() != "sent_spawner" then
-			if v.owner == ply then
+			if v.Owner == ply then
 				v:Remove()
-			elseif !ValidEntity(v.owner) then
+			elseif !ValidEntity(v.Owner) then
 				v:Remove()
 			end
 		end
@@ -1015,8 +1018,8 @@ end
 function GM:PhysgunPickup(ply, ent)
 	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
 		return false
-	elseif ValidEntity( ent.owner ) and ent.owner != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.owner:Nick() )
+	elseif ValidEntity( ent.Owner ) and ent.Owner != ply && !ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick() )
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return false
 	else
@@ -1059,16 +1062,16 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	local ent = trc.Entity
 
-	if ValidEntity(ent.owner) and ent.owner != ply and !ply:IsAdmin() then
-		ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. ent.owner:Nick( ))
+	if ValidEntity(ent.Owner) and ent.Owner != ply and !ply:IsAdmin() then
+		ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick( ))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return false
 	end
 	
-	if ValidEntity(ent.owner) then
+	if ValidEntity(ent.Owner) then
 		if ent.Shealth then
-			ent.owner:SetNetworkedInt("money", ent.owner:GetNetworkedInt("money") + ent.Shealth)
-			ent.owner:Message("+"..math.Round(ent.Shealth).." [Deleted Item]", Color(100,255,100,255))
+			ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + ent.Shealth)
+			ent.Owner:Message("+"..math.Round(ent.Shealth).." [Deleted Item]", Color(100,255,100,255))
 		end
 	end
 	
@@ -1210,14 +1213,14 @@ function OSE_Spawn(ply,cmd,args)
 	local class = "sent_prop"
 	if model == "models/Items/ammocrate_smg1.mdl" then
 		for k,v in pairs(ents.FindByClass("sent_ammo_dispenser")) do
-			if v.owner == ply then ply:Message("You can only spawn one ammo dispenser", Color(255,100,100,255)) return end
+			if v.Owner == ply then ply:Message("You can only spawn one ammo dispenser", Color(255,100,100,255)) return end
 		end
 		class = "sent_ammo_dispenser"
 	elseif model == "models/props_c17/metalladder002.mdl" then
 		class = "sent_ladder"
 		local propcount = 0
 		for k,v in pairs(ents.FindByClass("sent_ladder")) do
-			if v.owner == ply then
+			if v.Owner == ply then
 				propcount = propcount + 1
 			end
 		end
@@ -1226,7 +1229,7 @@ function OSE_Spawn(ply,cmd,args)
 		class = "sent_prop"
 		local propcount = 0
 		for k,v in pairs(ents.FindByClass("sent_prop")) do
-			if v.owner == ply then
+			if v.Owner == ply then
 				propcount = propcount + 1
 			end
 		end
@@ -1250,7 +1253,7 @@ function OSE_Spawn(ply,cmd,args)
 	ent:SetAngles(ang)
 	ent:SetPos(tr.HitPos)
 	ent:SetModel(model)
-	ent.owner = ply
+	ent.Owner = ply
 	ent:Spawn()
 	ent:Activate()
 	//garry

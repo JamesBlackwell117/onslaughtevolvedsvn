@@ -53,12 +53,12 @@ function SWEP:PrimaryAttack()
 	self.Weapon:EmitSound(self.Primary.Sound) 
 	self:TakePrimaryAmmo( 1 )
 	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
-	self.owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
+	self.Owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
 	if SERVER then
 		timer.Simple(0.2, function(self) if ValidEntity(self) then self:EmitSound("weapons/shotgun/shotgun_cock.wav") end end, self)
 	end
 	timer.Simple(0.3, function(self) if ValidEntity(self) then self:SendWeaponAnim(ACT_SHOTGUN_PUMP) end end, self)
-	self.owner:ViewPunch(Vector(-10,0,0))
+	self.Owner:ViewPunch(Vector(-10,0,0))
 end
 
 function SWEP:SecondaryAttack( )
@@ -72,16 +72,16 @@ function SWEP:SecondaryAttack( )
 	self.Weapon:EmitSound(self.Primary.Sound) 
 	self:TakePrimaryAmmo( 3 )
 	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
-	self.owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
+	self.Owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
 	if SERVER then
-		local aimvec = self.owner:GetAimVector()
+		local aimvec = self.Owner:GetAimVector()
 		if aimvec:Angle().p >= 15 then
-			self.owner:SetVelocity(aimvec * -600)
+			self.Owner:SetVelocity(aimvec * -600)
 		end
 		timer.Simple(0.15, function(self) if ValidEntity(self) then self:EmitSound("weapons/shotgun/shotgun_cock.wav") end end, self)
 	end
 	timer.Simple(0.2, function(self) if ValidEntity(self) then self:SendWeaponAnim(ACT_SHOTGUN_PUMP) end end, self)
-	self.owner:ViewPunch(Vector(-10,0,0))
+	self.Owner:ViewPunch(Vector(-10,0,0))
 end
 
 

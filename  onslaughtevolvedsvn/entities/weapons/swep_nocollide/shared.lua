@@ -36,7 +36,7 @@ end
 function SWEP:PrimaryAttack( )
 	if CLIENT then return end
 	
-	local tr = self.owner:GetEyeTrace( )
+	local tr = self.Owner:GetEyeTrace( )
 	
 	if not tr.Hit or not tr.HitNonWorld or not ValidEntity( tr.Entity ) or tr.Entity:GetClass( ) != "sent_prop" and tr.Entity:GetClass( ) != "sent_ladder" then
 		return

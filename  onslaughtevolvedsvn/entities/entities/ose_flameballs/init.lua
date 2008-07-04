@@ -3,8 +3,6 @@ AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
 
-ENT.owner = nil
-
 function ENT:Initialize()   
 	self.Entity:SetModel( "models/combine_helicopter/helicopter_bomb01.mdl")
 	self.Entity:SetMoveType( MOVETYPE_FLY )  
@@ -40,7 +38,7 @@ end
 
 function ENT:Touch(ent)
 	if ent:IsNPC() && ent:GetClass() != "npc_turret_floor" then
-		ent.Igniter = self.owner
+		ent.Igniter = self.Owner
 		ent:Ignite(7,50)
 		ent:SetHealth(ent:Health()-2)
 	end

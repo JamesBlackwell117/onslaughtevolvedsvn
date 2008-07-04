@@ -58,11 +58,11 @@ end
 function SWEP:PrimaryAttack( )
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .4 )
 	self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
-	self.owner:SetAnimation(ACT_MELEE_ATTACK_SWING_GESTURE)
+	self.Owner:SetAnimation(ACT_MELEE_ATTACK_SWING_GESTURE)
 	local trace = { }
-	trace.start = self.owner:GetShootPos( )
-	trace.endpos = trace.start + ( self.owner:GetAimVector( ) * 100 )
-	trace.filter = self.owner
+	trace.start = self.Owner:GetShootPos( )
+	trace.endpos = trace.start + ( self.Owner:GetAimVector( ) * 100 )
+	trace.filter = self.Owner
 	
 	local tr = util.TraceLine( trace )
 	if !tr.Entity || !tr.HitNonWorld then
@@ -90,7 +90,7 @@ function SWEP:PrimaryAttack( )
 			if tr.Entity.Controller.Shealth > TURRET_HEALTH then tr.Entity.Controller.Shealth = TURRET_HEALTH end
 			tr.Entity:SetNWInt("health", tr.Entity.Controller.Shealth)
 		elseif tr.Entity:IsNPC() then
-			self.owner:TraceHullAttack( self.owner:GetShootPos( ), self.owner:GetAimVector( ) * 120, Vector( -16, -16, -16 ), Vector( 36, 36, 36 ), 30, 2, true )
+			self.Owner:TraceHullAttack( self.owner:GetShootPos( ), self.owner:GetAimVector( ) * 120, Vector( -16, -16, -16 ), Vector( 36, 36, 36 ), 30, 2, true )
 		end
 	end
 	if tr.MatType == MAT_FLESH || tr.HitType == MAT_BLOODYFLESH then

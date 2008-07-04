@@ -14,12 +14,12 @@ end
 function ENT:StartTouch(ent)
 	if PHASE == "BUILD" then
 		if ent:GetClass() == "sent_prop" || ent:GetClass() == "sent_ladder" || ent:GetClass() == "sent_ammo_dispenser" then
-			if ValidEntity(ent.owner) then
-				ent.owner:Message("You can't spawn props there!", Color(255,100,100,255))
+			if ValidEntity(ent.Owner) then
+				ent.Owner:Message("You can't spawn props there!", Color(255,100,100,255))
 				if ent.Shealth then
-					ent.owner:SetNetworkedInt("money", ent.owner:GetNetworkedInt("money") + (ent.Shealth))
+					ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + (ent.Shealth))
 					ent.Shealth = 0
-					ent.owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+					ent.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 				end
 			end
 			ent:Dissolve()

@@ -3,8 +3,6 @@ AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
 
-ENT.owner = nil
-
 function ENT:Initialize()   
 	self.Entity:SetModel( "models/props_combine/combine_mine01.mdl")
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )  

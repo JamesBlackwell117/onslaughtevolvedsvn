@@ -6,7 +6,7 @@ include('shared.lua')
 
 ENT.Shealth = TURRET_HEALTH
 ENT.Turret = nil
-ENT.owner = nil
+ENT.Owner = nil
 ENT.LastTouch = CurTime()
 
 function ENT:Initialize()   
@@ -81,7 +81,7 @@ function ENT:DoExplosions(id)
 	util.Effect( "Explosion", effectdata )
 	self.Turret:Remove()
 	self.Entity:Remove()
-	self.owner:Message("One of you turrets has died!",Color(255,100,100,255))
+	self.Owner:Message("One of you turrets has died!",Color(255,100,100,255))
 end
 
 

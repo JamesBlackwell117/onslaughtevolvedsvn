@@ -31,22 +31,12 @@ function ENT:Use(act, cal)
 			self.Healing = self.Healing + 1
 			if (self.Healing / 50) == math.Round(self.Healing / 50) && self.Healing > 49 then
 				if self.Class == 3 then
-					self.owner:Message("+100 [Dispenser healing]", Color(100,255,100,255))
-					self.owner:SetNWInt("money",self.ownerGetNWInt("money") + 100)
+					self.Owner:Message("+100 [Dispenser healing]", Color(100,255,100,255))
+					self.Owner:SetNWInt("money",self.OwnerGetNWInt("money") + 100)
 				end
 			end
 		end
 		timer.Simple(2, act.Extinguish, act)
 		self.LastUse = CurTime()
-	end
-end
-
-function ENT:OnRemove()
-	if self.owner.Buildings then
-		for k,v in pairs (self.owner.Buildings) do
-			if v == self.Entity then
-				table.remove(self.owner.Buildings, k)
-			end
-		end
 	end
 end

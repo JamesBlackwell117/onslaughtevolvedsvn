@@ -6,7 +6,7 @@ include('shared.lua')
 ENT.Shealth = 100
 ENT.Mhealth = 100
 ENT.Model = ""
-ENT.owner = nil
+ENT.Owner = nil
 ENT.LastTouch = CurTime()
 ENT.Prepared = false
 ENT.Bull = nil
