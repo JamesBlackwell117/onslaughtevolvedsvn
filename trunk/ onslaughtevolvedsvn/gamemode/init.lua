@@ -22,6 +22,7 @@ local discplayers = {}
 local ROUND_ID = 0
 
 local voted = 0
+---Comment and stuff
 
 local Pmeta = FindMetaTable( "Player" )
 local Emeta = FindMetaTable( "Entity" )
