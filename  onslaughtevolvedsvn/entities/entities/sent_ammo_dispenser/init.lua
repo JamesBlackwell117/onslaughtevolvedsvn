@@ -21,9 +21,6 @@ function ENT:Initialize()
 	end
 end
 
-function ENT:Think()
-end
-
 function ENT:Close()
 	local sequence = self.Entity:LookupSequence("Idle")
 	self.Entity:SetSequence(sequence)
@@ -41,10 +38,3 @@ function ENT:Use(act, cal)
 	self.LastUse = CurTime()
 end
 
-function ENT:UpdateColour()
-	if self.Shealth > self.Mhealth then
-		self.Shealth = self.Mhealth
-	end
-	local col = (self.Shealth / self.Mhealth) * 255
-	self.Entity:SetColor(col, col, col, 255)
-end

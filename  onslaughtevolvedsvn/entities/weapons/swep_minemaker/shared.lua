@@ -40,7 +40,10 @@ end
 
 function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
-	if ( !self:CanPrimaryAttack() ) then return end 
+	if ( !self:CanPrimaryAttack() ) then
+			self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return 
+	end 
 	self:TakePrimaryAmmo(1)
 	local trace = {}
 	trace.start = self.owner:GetShootPos()
@@ -56,11 +59,11 @@ function SWEP:PrimaryAttack()
 	local ang = trc.HitNormal:Angle()
 	local ang2 = Angle(ang.p + 90, ang.y, ang.r)
 	mine:SetAngles(ang2)
-	mine.owner = self.owner
+	mine:SetOwner(self.Owner)
 	mine:Spawn()
 	mine:Activate()
 	
 	self.owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	self.owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
-	self.Weapon:SetNextPrimaryFire(CurTime() + 3)
+	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
 end

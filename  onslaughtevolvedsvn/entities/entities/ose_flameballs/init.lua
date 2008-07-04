@@ -40,8 +40,9 @@ end
 
 function ENT:Touch(ent)
 	if ent:IsNPC() && ent:GetClass() != "npc_turret_floor" then
-		ent:Ignite(2,50)
 		ent.Igniter = self.owner
+		ent:Ignite(7,50)
+		ent:SetHealth(ent:Health()-2)
 	end
 	self.Entity:Remove()
 end

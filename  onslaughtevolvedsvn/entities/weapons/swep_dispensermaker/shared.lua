@@ -54,12 +54,9 @@ function SWEP:CanSpawnBuilding( )
 		return false
 	end
 	local c = 0
-	for k,v in pairs( self.owner.Buildings ) do
-		if not ValidEntity( v ) then
-			table.remove( self.owner.Buildings, k )
-		elseif v:GetClass( ) == "sent_dispenser" then
-			c = c + 1
-		end
+
+	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
+		if v.Owner == self.Owner then c=c+1 end
 	end
 	if PHASE == "BATTLE" then
 		return c < 2
@@ -72,6 +69,7 @@ function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
 	if ( !self:CanSpawnBuilding() ) then
 		self.owner:Message("You can't spawn any more dispensers!", Color(255,100,100,255))
+		self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end 
 	local trace = {}
@@ -81,7 +79,7 @@ function SWEP:PrimaryAttack()
 	local trc = util.TraceLine(trace)
 	if !trc.Hit then return end
 	if trc.Entity then
-		if trc.Entity:IsPlayer() || trc.Entity:IsNPC() || trc.Entity:GetClass() == "sent_dispenser" || trc.Entity:GetClass() == "npc_turret_floor" || trc.Entity:GetClass() == "sent_turretcontroller" then return end
+		if trc.Entity:IsPlayer() || trc.Entity:GetClass() == "sent_dispenser" || trc.Entity:GetClass() == "npc_turret_floor" || trc.Entity:GetClass() == "sent_turretcontroller" then return end
 	end
 	
 	local ang = trc.HitNormal:Angle()
@@ -90,7 +88,7 @@ function SWEP:PrimaryAttack()
 		disp:SetPos(trc.HitPos)
 		disp:SetAngles(ang)
 		disp.owner = self.owner
-		disp:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		--disp:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		disp:Spawn()
 		disp:Activate()
 		disp.Class = self.owner:GetNWInt("class")
@@ -98,9 +96,8 @@ function SWEP:PrimaryAttack()
 		if trc.Entity && trc.HitNonWorld then
 			disp:SetParent(trc.Entity)
 		end
-		table.insert(self.owner.Buildings,disp)
 		disp:GetPhysicsObject():EnableMotion(false)
-		self.Weapon:SetNextPrimaryFire(CurTime() + 2)
+		self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
 		self.owner:Message((DISP_COST * -1).." [Dispenser Spawned]",Color(100,255,100,255))
 		self.owner:SetNetworkedInt( "money", self.owner:GetNetworkedInt( "money" ) - DISP_COST )
 		self.Weapon:EmitSound( "npc/scanner/scanner_electric1.wav" )
@@ -123,17 +120,16 @@ function SWEP:SecondaryAttack()
 	
 	if not tr.Hit then return end
 	if not ValidEntity( tr.Entity ) then return end
-	if not table.HasValue( self.owner.Buildings, tr.Entity ) then return end
 	
-	local ed = EffectData( )
-	ed:SetEntity( tr.Entity )
-	util.Effect( "propspawn", ed )
+	--local ed = EffectData( )
+	--ed:SetEntity( tr.Entity )
+	--util.Effect( "propspawn", ed )
 	
-	for k,v in pairs( self.owner.Buildings ) do
-		if v == tr.Entity then
-			table.remove( self.owner.Buildings, k )
-			break
-		end
+	if tr.Entity:GetClass() == "sent_dispenser" && tr.Entity.Owner == self.Owner then
+	tr.Entity.Turret:Remove( )
+	tr.Entity:Remove( )
+	else
+	return
 	end
 	
 	tr.Entity:Remove( )
@@ -144,13 +140,10 @@ end
 
 function SWEP:Reload()
 	if SERVER then
-		if !self.owner.Buildings then return end
-		if self.LastReload + 1 < CurTime() then
-			for k,v in pairs( self.owner.Buildings ) do
-				if v:GetClass() == "sent_dispenser" then
-					table.remove( self.owner.Buildings, k )
-					v:Remove()
-				end
+		if self.LastReload + 0.5 < CurTime() then
+		
+		for k,v in pairs(ents.FindByClass("sent_dispenser")) do
+			if v.Owner == self.Owner then v:Remove() end
 			end
 		self.LastReload = CurTime()
 		self.owner:Message("Deleted all dispensers.", Color(100,255,100,255))

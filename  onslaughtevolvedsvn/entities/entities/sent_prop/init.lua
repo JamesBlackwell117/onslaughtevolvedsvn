@@ -11,7 +11,6 @@ ENT.LastTouch = CurTime()
 ENT.Prepared = false
 ENT.Bull = nil
 
-Zombies = {"npc_zombine", "npc_zombie", "npc_fastzombie", "npc_antlion", "npc_antlionguard", "npc_rollermine", "npc_manhack", "npc_poisonzombie"}
 
 function ENT:Initialize()
 	self.Entity:SetModel( self.Model ) 	//Model path
@@ -66,11 +65,10 @@ function ENT:Touch(ent) -- Zombies need all the help they can get :-(
 		self.Shealth = self.Shealth - 70
 		self.Entity:UpdateColour()
 		self.LastTouch = CurTime()
-		if self.Shealth / self.Mhealth <= 0.4 then
-			self.Entity:Ignite(8,150)
-		end
 		if self.Shealth <= 0 then
-			self:Remove()
+			self:Dissolve()
+		elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
+			self.Entity:Ignite(8,150)
 		end
 	end
 end
@@ -102,7 +100,7 @@ function ENT:InitCreateBull()
  
 		if xy > xz && xy > yz then 
 		bullpos.z = self:OBBCenter().x
-		elseif xz > yz then
+		elseif xz > yz && xz > xy then
 		bullpos.x = self:OBBCenter().z
 		else
 		bullpos.y = self:OBBCenter().y
@@ -138,10 +136,10 @@ end
 
 function ENT:Prepare()
 	self:CalculateHealth()
-	self:InitCreateBull()
 	if ValidEntity(self.Bull) then
 		self.Bull:Remove()
 	end
+	self:InitCreateBull()
 	local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-1000), ents.FindByClass("sent_*"))
 	if trace.HitWorld then
 		if trace.Fraction > .01 then
@@ -154,6 +152,7 @@ function ENT:Prepare()
 	if self.Mhealth <= 50 then self.Mhealth = 50 self.Shealth = 50 end
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
 	self:SetColor(255,255,255,255)
+	self.Entity:SetMoveType( MOVETYPE_NONE )
 end
 
 function ENT:UpdateColour()
@@ -165,16 +164,6 @@ function ENT:UpdateColour()
 end
 
 function ENT:OnTakeDamage(dmg)
-	/*
-	if ValidEntity(self.Bull) && !self.Bullposed then -- may need this
-		local inf = dmg:GetInflictor()
-		if inf:IsNPC() then
-			local bullpos = self:NearestPoint(inf:LocalToWorld(inf:OBBCenter()))
-			self.Bull:SetPos(bullpos)
-			self.Bullposed = true
-		end
-	end
-	*/
 	if dmg:GetInflictor():IsPlayer() then
 	 	dmg:SetDamage(0)
 		return dmg 
@@ -184,22 +173,31 @@ function ENT:OnTakeDamage(dmg)
 			return dmg
 		end
 	end
-	self.Shealth = self.Shealth - dmg:GetDamage() 
-	self:UpdateColour()
-	if self.Shealth / self.Mhealth <= 0.25 then
-		self.Entity:GetPhysicsObject():EnableMotion(true)
-		self.Entity:Ignite(8,150)
+	
+	local damage = dmg:GetDamage()
+	local pos = self:LocalToWorld(self:OBBCenter())
+	local count = 0
+	local base = 0
+
+	for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
+		if v:IsPlayer() then count = count + 1 end
 	end
+	
+	if count == 0 then damage = damage * math.sqrt(#player.GetAll())
+	else damage = damage * math.sqrt(#player.GetAll()) / count end
+	
+	if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
+
+	self.Shealth = self.Shealth - damage 
+	self:UpdateColour()
 	if self.Shealth <= 0 then
-		self:Remove()
+		self:Dissolve()
+	elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
+		self.Entity:Ignite(8,150)
 	end
 	return dmg
 end
 
 function ENT:OnRemove()
 end
-
-function ENT:PhysicsUpdate( phys )
-print("PHYSICS")
-end 
 

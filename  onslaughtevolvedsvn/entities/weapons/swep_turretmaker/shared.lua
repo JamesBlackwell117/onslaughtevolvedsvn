@@ -54,12 +54,8 @@ function SWEP:CanSpawnBuilding( )
 		return false
 	end
 	local c = 0
-	for k,v in pairs( self.owner.Buildings ) do
-		if not ValidEntity( v ) then
-			table.remove( self.owner.Buildings, k )
-		elseif v:GetClass( ) == "npc_turret_floor" then
-			c = c + 1
-		end
+	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+		if v:GetOwner() == self.Owner then c=c+1 end
 	end
 	return c < 2
 end
@@ -68,6 +64,7 @@ function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
 	if not self:CanSpawnBuilding( ) then
 		self.owner:Message("You can't spawn any more turrets!", Color(255,100,100,255))
+		self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end
 	local trace = {}
@@ -82,25 +79,22 @@ function SWEP:PrimaryAttack()
 	local ang = self.owner:EyeAngles()
 	trt:SetAngles(Angle(0,ang.yaw,0))
 	trt:SetKeyValue("spawnflags","512")
-	trt.owner = self.owner
+	trt:SetOwner(self.Owner)
 	trt:Spawn()
 	trt:Activate()
-	table.insert(self.owner.Buildings,trt)
 	trt:GetPhysicsObject():EnableMotion(false)
-	trt.owner = self.owner
-	trt:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	trt:SetNetworkedEntity("owner",self.owner)
 	local trtctrl = ents.Create("sent_turretcontroller") --this entity controls the turrets health and kills it etc.
 	trtctrl:SetPos(trt:GetPos())
 	trtctrl:SetParent(trt)
 	trtctrl:Spawn()
 	trtctrl:Activate()
-	trtctrl.owner = self.owner
+	trtctrl:SetOwner(self.Owner)
 	trt.Controller = trtctrl
 	trt:SetNWInt("health",trtctrl.Shealth)
 	self.owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	self.owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
-	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
+	self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
 	self.owner:Message((TURRET_COST * -1).." [Spawned Turret]", Color(255,100,100,255))
 	self.owner:SetNetworkedInt( "money", self.owner:GetNetworkedInt( "money" ) - TURRET_COST )
 end
@@ -119,35 +113,30 @@ function SWEP:SecondaryAttack( )
 	
 	if not tr.Hit then return end
 	if not ValidEntity( tr.Entity ) then return end
-	if not table.HasValue( self.owner.Buildings, tr.Entity ) then return end
 	
-	
-	for k,v in pairs( self.owner.Buildings ) do
-		if v == tr.Entity then
-			table.remove( self.owner.Buildings, k )
-			break
-		end
-	end
-	
+	if tr.Entity:GetClass() == "npc_turret_floor" && tr.Entity:GetOwner() == self.Owner then
 	tr.Entity.Controller:Remove( )
 	tr.Entity:Remove( )
+	elseif tr.Entity:GetClass() == "sent_turretcontroller" && tr.Entity:GetOwner() == self.Owner  then
+	tr.Entity.Turret:Remove( )
+	tr.Entity:Remove( )
+	else
+	return
+	end
 	
 	self.owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	self.owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
-	self.Weapon:SetNextSecondaryFire( CurTime( ) + 2 )
+	self.Weapon:SetNextSecondaryFire( CurTime( ) + 0.5 )
 
 end
 
 function SWEP:Reload()
 	if SERVER then
-		if !self.owner.Buildings then return end
 		if self.LastReload + 1 < CurTime() then
-			for k,v in pairs( self.owner.Buildings ) do
-				if v:GetClass() == "npc_turret_floor" then
-					v:Remove()
-					table.remove( self.owner.Buildings, k )
-				end
-			end
+		
+		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+			if v:GetOwner() == self.Owner then v.Controller:Remove() v:Remove() end
+		end
 		self.LastReload = CurTime()
 		self.owner:Message("Deleted all turrets.", Color(100,255,100,255))
 		end

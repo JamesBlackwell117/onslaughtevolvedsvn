@@ -76,7 +76,7 @@ function SWEP:PrimaryAttack( )
 		if self.LastBall + 0.18 <= CurTime() then
 			self:TakePrimaryAmmo(1)
 			local Ptrace = ents.Create("ose_flameballs")
-			Ptrace.owner = self.owner
+			Ptrace:SetOwner(self.Owner)
 			Ptrace:SetVelocity((self.owner:GetAimVector() * 450) + self.owner:GetVelocity())
 			Ptrace:SetPos(self.owner:GetShootPos() + (self.owner:GetAimVector() * 50))
 			Ptrace:Spawn()
