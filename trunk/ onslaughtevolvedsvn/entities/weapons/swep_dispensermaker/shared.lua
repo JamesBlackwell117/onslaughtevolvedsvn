@@ -41,22 +41,22 @@ end
 function SWEP:Deploy()
 	if SERVER then
 		self.Weapon:SendWeaponAnim(ACT_VM_DRAW)
-		self.owner:Message("Fire: Spawn dispenser.")
-		self.owner:Message("Alt Fire: Delete dispenser.")
-		self.owner:Message("Reload: Delete all dispensers.")
+		self.Owner:Message("Fire: Spawn dispenser.")
+		self.Owner:Message("Alt Fire: Delete dispenser.")
+		self.Owner:Message("Reload: Delete all dispensers.")
 		return true
 	end
 end 
 
 function SWEP:CanSpawnBuilding( )
-	if DISP_COST > self.owner:GetNetworkedInt( "money") then
-		self.owner:Message("Insufficient funds!", Color(255,100,100,255))
+	if DISP_COST > self.Owner:GetNetworkedInt( "money") then
+		self.Owner:Message("Insufficient funds!", Color(255,100,100,255))
 		return false
 	end
 	local c = 0
 
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		if v.owner == self.owner then c=c+1 end
+		if v.Owner == self.Owner then c=c+1 end
 	end
 	if PHASE == "BATTLE" then
 		return c < 2
@@ -68,14 +68,14 @@ end
 function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
 	if ( !self:CanSpawnBuilding() ) then
-		self.owner:Message("You can't spawn any more dispensers!", Color(255,100,100,255))
+		self.Owner:Message("You can't spawn any more dispensers!", Color(255,100,100,255))
 		self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end 
 	local trace = {}
-	trace.start = self.owner:GetShootPos()
-	trace.endpos = trace.start + (self.owner:GetAimVector() * 200)
-	trace.filter = self.owner
+	trace.start = self.Owner:GetShootPos()
+	trace.endpos = trace.start + (self.Owner:GetAimVector() * 200)
+	trace.filter = self.Owner
 	local trc = util.TraceLine(trace)
 	if !trc.Hit then return end
 	if trc.Entity then
@@ -87,23 +87,23 @@ function SWEP:PrimaryAttack()
 		local disp = ents.Create("sent_dispenser")
 		disp:SetPos(trc.HitPos)
 		disp:SetAngles(ang)
-		disp.owner = self.owner
+		disp.Owner = self.Owner
 		--disp:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		disp:Spawn()
 		disp:Activate()
-		disp.Class = self.owner:GetNWInt("class")
+		disp.Class = self.Owner:GetNWInt("class")
 		disp.Type = PHASE
 		if trc.Entity && trc.HitNonWorld then
 			disp:SetParent(trc.Entity)
 		end
 		disp:GetPhysicsObject():EnableMotion(false)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
-		self.owner:Message((DISP_COST * -1).." [Dispenser Spawned]",Color(100,255,100,255))
-		self.owner:SetNetworkedInt( "money", self.owner:GetNetworkedInt( "money" ) - DISP_COST )
+		self.Owner:Message((DISP_COST * -1).." [Dispenser Spawned]",Color(100,255,100,255))
+		self.Owner:SetNetworkedInt( "money", self.Owner:GetNetworkedInt( "money" ) - DISP_COST )
 		self.Weapon:EmitSound( "npc/scanner/scanner_electric1.wav" )
-		self.owner:SendLua( [[ surface.PlaySound( "npc/scanner/scanner_electric1.wav" ) ]] )
+		self.Owner:SendLua( [[ surface.PlaySound( "npc/scanner/scanner_electric1.wav" ) ]] )
 	else
-		self.owner:Message("Must be spawned on a vertical wall!")
+		self.Owner:Message("Must be spawned on a vertical wall!")
 	end
 end
 
@@ -113,9 +113,9 @@ function SWEP:SecondaryAttack()
 	end
 
 	local trace = { }
-	trace.start = self.owner:GetShootPos( )
-	trace.endpos = trace.start + ( self.owner:GetAimVector( ) * 1000 )
-	trace.filter = self.owner
+	trace.start = self.Owner:GetShootPos( )
+	trace.endpos = trace.start + ( self.Owner:GetAimVector( ) * 1000 )
+	trace.filter = self.Owner
 	local tr = util.TraceLine( trace )
 	
 	if not tr.Hit then return end
@@ -126,16 +126,13 @@ function SWEP:SecondaryAttack()
 	--util.Effect( "propspawn", ed )
 	
 	if tr.Entity:GetClass() == "sent_dispenser" && tr.Entity.Owner == self.Owner then
-	tr.Entity.Turret:Remove( )
 	tr.Entity:Remove( )
 	else
 	return
 	end
-	
-	tr.Entity:Remove( )
-	
-	self.owner:EmitSound( "npc/scanner/scanner_electric1.wav" )
-	self.owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_electric1.wav" )]] )
+		
+	self.Owner:EmitSound( "npc/scanner/scanner_electric1.wav" )
+	self.Owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_electric1.wav" )]] )
 end
 
 function SWEP:Reload()
@@ -143,10 +140,10 @@ function SWEP:Reload()
 		if self.LastReload + 0.5 < CurTime() then
 		
 		for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-			if v.owner == self.owner then v:Remove() end
+			if v.Owner == self.Owner then v:Remove() end
 			end
 		self.LastReload = CurTime()
-		self.owner:Message("Deleted all dispensers.", Color(100,255,100,255))
+		self.Owner:Message("Deleted all dispensers.", Color(100,255,100,255))
 		end
 	end
 end

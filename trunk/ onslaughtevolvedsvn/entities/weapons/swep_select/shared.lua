@@ -40,7 +40,7 @@ end
 function SWEP:PrimaryAttack( )
 	if CLIENT then return end
 	
-	local tr = self.owner:GetEyeTrace( )
+	local tr = self.Owner:GetEyeTrace( )
 	if not tr.Hit or tr.HitWorld then return end
 	if not ValidEntity( tr.Entity ) then return end
 	
@@ -61,9 +61,9 @@ function SWEP:SecondaryAttack( )
 	if CLIENT then return end
 	
 	if not self.FirstPoint then
-		self.FirstPoint = self.owner:GetEyeTrace( ).HitPos
+		self.FirstPoint = self.Owner:GetEyeTrace( ).HitPos
 	else
-		local es = ents.FindInBox( self.FirstPoint, self.owner:GetEyeTrace( ).HitPos )
+		local es = ents.FindInBox( self.FirstPoint, self.Owner:GetEyeTrace( ).HitPos )
 		for k,v in pairs( es ) do
 			if v:GetClass( ) == "sent_prop" || v:GetClass() == "sent_ladder" then
 				GAMEMODE:SelectProp( v )

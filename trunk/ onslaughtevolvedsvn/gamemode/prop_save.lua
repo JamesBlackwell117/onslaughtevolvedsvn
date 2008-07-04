@@ -75,7 +75,7 @@ local function makeprop( class, mdl, pos, ang, owner )
 	ent:SetModel( mdl )
 	ent:SetPos( Vector( pos.x, pos.y, pos.z ) )
 	ent:SetAngles( Angle( ang.p, ang.y, ang.r ) )
-	ent.owner = owner
+	ent.Owner = owner
 	ent:Spawn( )
 	local ed = EffectData( )
 	ed:SetEntity( ent )

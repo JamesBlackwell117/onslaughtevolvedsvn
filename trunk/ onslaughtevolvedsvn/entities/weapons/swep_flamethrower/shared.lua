@@ -43,42 +43,42 @@ function SWEP:Holster( )
 end
  
 function SWEP:Think( )
-	if self.owner:KeyPressed( IN_ATTACK ) then
+	if self.Owner:KeyPressed( IN_ATTACK ) then
 		if ( !self:CanPrimaryAttack() ) then return end
 		self:SetNWBool( "On", true )
 		self.Weapon:EmitSound(self.Sound)
-		local speed = Classes[self.owner:GetNetworkedInt("class")].SPEED / 1.5
-		GAMEMODE:SetPlayerSpeed(self.owner, speed, speed)
+		local speed = Classes[self.Owner:GetNetworkedInt("class")].SPEED / 1.5
+		GAMEMODE:SetPlayerSpeed(self.Owner, speed, speed)
 	end
-	if self.owner:KeyReleased( IN_ATTACK ) then
+	if self.Owner:KeyReleased( IN_ATTACK ) then
 		self:SetNWBool( "On", false )
 		self.Weapon:StopSound(self.Sound)
 		self.Weapon:EmitSound(self.StopSoond)
-		local speed = Classes[self.owner:GetNetworkedInt("class")].SPEED
-		GAMEMODE:SetPlayerSpeed(self.owner, speed, speed)
+		local speed = Classes[self.Owner:GetNetworkedInt("class")].SPEED
+		GAMEMODE:SetPlayerSpeed(self.Owner, speed, speed)
 	end
 end
 
 function SWEP:PrimaryAttack( )
 	if ( !self:CanPrimaryAttack() ) then return end
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .02 )
- 	local tr = util.GetPlayerTrace( self.owner ) 
+ 	local tr = util.GetPlayerTrace( self.Owner ) 
  	local trace = util.TraceLine( tr )
  	if (!trace.Hit) then return end 
 	local hitpos = trace.HitPos
 	local effectdata = EffectData()
  	effectdata:SetOrigin( hitpos )
- 	effectdata:SetStart( self.owner:GetShootPos() )
+ 	effectdata:SetStart( self.Owner:GetShootPos() )
  	effectdata:SetAttachment( 1 )
- 	effectdata:SetEntity( self.owner )
+ 	effectdata:SetEntity( self.Owner )
  	util.Effect( "flamer", effectdata )
 	if SERVER then
 		if self.LastBall + 0.18 <= CurTime() then
 			self:TakePrimaryAmmo(1)
 			local Ptrace = ents.Create("ose_flameballs")
 			Ptrace:SetOwner(self.Owner)
-			Ptrace:SetVelocity((self.owner:GetAimVector() * 450) + self.owner:GetVelocity())
-			Ptrace:SetPos(self.owner:GetShootPos() + (self.owner:GetAimVector() * 50))
+			Ptrace:SetVelocity((self.Owner:GetAimVector() * 450) + self.Owner:GetVelocity())
+			Ptrace:SetPos(self.Owner:GetShootPos() + (self.Owner:GetAimVector() * 50))
 			Ptrace:Spawn()
 			Ptrace:Activate()
 			self.LastBall = CurTime()

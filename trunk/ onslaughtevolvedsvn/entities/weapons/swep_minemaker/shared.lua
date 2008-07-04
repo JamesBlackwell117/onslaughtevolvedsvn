@@ -46,9 +46,9 @@ function SWEP:PrimaryAttack()
 	end 
 	self:TakePrimaryAmmo(1)
 	local trace = {}
-	trace.start = self.owner:GetShootPos()
-	trace.endpos = trace.start + (self.owner:GetAimVector() * 150)
-	trace.filter = self.owner
+	trace.start = self.Owner:GetShootPos()
+	trace.endpos = trace.start + (self.Owner:GetAimVector() * 150)
+	trace.filter = self.Owner
 	local trc = util.TraceLine(trace)
 	if !trc.Hit then return end
 	if !trc.Entity then return end
@@ -63,7 +63,7 @@ function SWEP:PrimaryAttack()
 	mine:Spawn()
 	mine:Activate()
 	
-	self.owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
-	self.owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
+	self.Owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
+	self.Owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
 end
