@@ -14,8 +14,8 @@ Classes = {}
 Classes[1] = {NAME = "Scout", SPEED = 650, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,3,11,9}, MODEL = "models/player/Group03/Female_02.mdl", DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
 Classes[2] = {NAME = "Soldier", SPEED = 350, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
 Classes[3] = {NAME = "Engineer", SPEED = 300, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", DSCR = "A must have for any onslaught team. With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
-Classes[4] = {NAME = "Sniper", SPEED = 270, WEAPON_SET = 5, HEALTH = 80,AMMO = {8,7,5}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
-Classes[5] = {NAME = "Pyro", SPEED = 450, WEAPON_SET = 4, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", DSCR = "A must have for those who enjoy setting fire to things. The pyro has the ability to set fire traps and explosions to send those enemies fliying!"  }
+Classes[4] = {NAME = "Sniper", SPEED = 270, WEAPON_SET = 4, HEALTH = 80,AMMO = {8,7,5}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
+Classes[5] = {NAME = "Pyro", SPEED = 450, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", DSCR = "A must have for those who enjoy setting fire to things. The pyro has the ability to set fire traps and explosions to send those enemies fliying!"  }
 
 TAUNTS = {}
 TAUNTS[1] = {"vo/episode_1/npc/female01/cit_kill02.wav","vo/npc/female01/gotone01.wav","vo/episode_1/npc/female01/cit_kill04.wav", "vo/episode_1/npc/female01/cit_kill09.wav", "vo/episode_1/npc/female01/cit_kill06.wav","vo/episode_1/npc/female01/cit_kill11.wav","vo/episode_1/npc/female01/cit_kill16.wav"}
@@ -48,20 +48,20 @@ AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", QT = 1, PRICE = 300, MODEL = "models/
 
 
 NPCS = {}
-NPCS[1]	 = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 120, MODEL = "models/combine_soldier.mdl", 	  KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[2]  = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 100, MODEL = "models/combine_super_soldier.mdl", KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
+NPCS[1]	 = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 100, MODEL = "models/combine_soldier.mdl", 	  KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS[2]  = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 140, MODEL = "models/combine_super_soldier.mdl", KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
 NPCS[3]  = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 120, MODEL = "models/combine_soldier_prisonguard.mdl", 	  KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[4]  = {CLASS = "npc_hunter", 		 SQUAD = "combine",  FLAGS = 9984, 	 MONEY = 500, MODEL = "models/hunter.mdl"}
-NPCS[5]  = {CLASS = "npc_manhack", 		 SQUAD = "combine",  FLAGS = 263940, MONEY = 50,  MODEL = "models/manhack.mdl"}
+NPCS[4]  = {CLASS = "npc_hunter", 		 SQUAD = "hunter",  FLAGS = 9984, 	 MONEY = 500, MODEL = "models/hunter.mdl"}
+NPCS[5]  = {CLASS = "npc_manhack", 		 SQUAD = "hacks",  FLAGS = 263940, MONEY = 50,  MODEL = "models/manhack.mdl"}
 NPCS[6]  = {CLASS = "npc_zombie", 		 SQUAD = "zombies",  FLAGS = 1796, 	 MONEY = 75,  MODEL = "models/zombie/classic.mdl"}
-NPCS[7]  = {CLASS = "npc_fastzombie", 	 SQUAD = "zombies",  FLAGS = 1796,   MONEY = 100, MODEL = "models/zombie/fast.mdl"}
+NPCS[7]  = {CLASS = "npc_fastzombie", 	 SQUAD = "fzombies",  FLAGS = 1796,   MONEY = 100, MODEL = "models/zombie/fast.mdl"}
 NPCS[8]  = {CLASS = "npc_zombine", 		 SQUAD = "zombies",  FLAGS = 1796,   MONEY = 100, MODEL = "models/zombie/zombie_soldier.mdl"}
 NPCS[9]  = {CLASS = "npc_antlion", 		 SQUAD = "ant", 	 FLAGS = 9984,   MONEY = 100, MODEL = "models/antlion.mdl", 	 		  KEYS = "radius 512"}
-NPCS[10]  = {CLASS = "npc_headcrab", 	 SQUAD = "zombies",  FLAGS = 1796,   MONEY = 33,  MODEL = "models/headcrabclassic.mdl"}
-NPCS[11] = {CLASS = "npc_headcrab_fast", SQUAD = "zombies",  FLAGS = 1796,   MONEY = 40,  MODEL = "models/headcrab.mdl"}
-NPCS[12] = {CLASS = "npc_metropolice", 	 SQUAD = "combine",  FLAGS = 9988,   MONEY = 80,  MODEL = "models/police.mdl",				  KEYS = "manhacks 2 additionalequipment weapon_smg1"}
+NPCS[10]  = {CLASS = "npc_headcrab", 	 SQUAD = "crab",  FLAGS = 1796,   MONEY = 33,  MODEL = "models/headcrabclassic.mdl"}
+NPCS[11] = {CLASS = "npc_headcrab_fast", SQUAD = "crab",  FLAGS = 1796,   MONEY = 40,  MODEL = "models/headcrab.mdl"}
+NPCS[12] = {CLASS = "npc_metropolice", 	 SQUAD = "combine",  FLAGS = 403204,   MONEY = 50,  MODEL = "models/police.mdl",			  KEYS = "additionalequipment weapon_pistol"}
 NPCS[13] = {CLASS = "npc_antlionguard",  SQUAD = "ant", 	 FLAGS = 9988,   MONEY = 300,  MODEL = "models/antlion_guard.mdl"}
-NPCS[14] = {CLASS = "npc_rollermine",	 SQUAD = "combine",  FLAGS = 9988,   MONEY = 60,  MODEL = "models/roller.mdl", 		 		  KEYS = "uniformsightdist 1"}
+NPCS[14] = {CLASS = "npc_rollermine",	 SQUAD = "roller",  FLAGS = 9988,   MONEY = 60,  MODEL = "models/roller.mdl", 		 		  KEYS = "uniformsightdist 1"}
 NPCS[15] = {CLASS = "npc_poisonzombie",	 SQUAD = "zombies",  FLAGS = 9988,   MONEY = 125,  MODEL = "models/zombie/poison.mdl",		  KEYS = "crabcount 3"}
 NPCS[16] = {CLASS = "npc_headcrab_black",	 SQUAD = "crab",  FLAGS = 9988,   MONEY = 120,  MODEL = "models/headcrabblack.mdl"}
 
@@ -81,6 +81,7 @@ npcs = {
 	npc_antlionguard = "Antlion Guard"
 }
 
+Zombies = {"npc_zombine", "npc_zombie", "npc_fastzombie", "npc_antlion", "npc_antlionguard", "npc_poisonzombie"}
 
 TIPS = {"Press reload with your physgun to delete the prop you are looking at.",
 		"To earn money to spawn props, kills NPCs in the battle phase.",
@@ -112,7 +113,10 @@ RANKS[5] = {NAME = "Second Lieutenant", KILLS = 2000, COLOR = Color( 200, 100, 1
 RANKS[6] = {NAME = "Lieutenant", KILLS = 3000, COLOR = Color( 255, 100, 100, 255 )}
 RANKS[7] = {NAME = "Captain", KILLS = 5000, COLOR = Color( 50, 50, 80, 255 )}
 RANKS[8] = {NAME = "General", KILLS = 8000, COLOR = Color( 50, 50, 50, 255 )}
-RANKS[9] = {NAME = "Jesus", KILLS = 20000, COLOR = Color(255, 105, 180,255)}
+RANKS[9] = {NAME = "Jesus", KILLS = 20000, COLOR = Color( 255, 105, 180, 255)}
+RANKS[10] = {NAME = "Fuckin' Godlike", KILLS = 50000, COLOR = Color(255, 0, 0,255)}
+RANKS[11] = {NAME = "Ultimate Epic of Epicness", KILLS = 100000, COLOR = Color( 255, 100, 100, 255 )}
+
 
 for k,v in pairs(RANKS) do
 	team.SetUp( k + 1, v.NAME, v.COLOR )  -- yay for awesome ranks
@@ -192,17 +196,23 @@ end
 	LADDER_COST = 800
 	LIVE_BONUS = 5000
 	DEATH_PENALTY = -1500
-	
+
+	--PROP VARS--
+	FLAMABLE_PROPS = false
+	BATTLE_PHYS = false
+	PROP_LIMIT = 25
+
 	--NETWORK VARS--
 	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
 	
 	--NPC Spawner Vars--
 	MAXHUNTERS = 2
-	MAXHACKS = 15
+	MAXHACKS = 7
 	SPAWN_DELAY = 1
 	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--
 	TURRET_COST = 1000
 	DISP_COST = 750
+	DISP_RATE = 50 -- lower is faster
 	TURRET_HEALTH = 100

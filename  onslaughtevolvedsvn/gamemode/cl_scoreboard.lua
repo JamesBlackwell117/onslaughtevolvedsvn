@@ -36,7 +36,12 @@ function GM:GetTeamScoreInfo()
 		
 		local PlayerInfo = {}
 		PlayerInfo.Frags = _frags
-		PlayerInfo.Deaths = Classes[pl:GetNWInt("class", 1)].NAME
+		local class = pl:GetNWInt("class")
+		if class == 0 then
+		PlayerInfo.Deaths = "Unknown"
+		else
+		PlayerInfo.Deaths = Classes[class].NAME
+		end
 		PlayerInfo.Score = _frags - _deaths
 		PlayerInfo.Ping = _ping
 		PlayerInfo.Name = pl:Nick()
