@@ -22,7 +22,6 @@ local discplayers = {}
 local ROUND_ID = 0
 
 local voted = 0
----Comment and stuff
 
 local Pmeta = FindMetaTable( "Player" )
 local Emeta = FindMetaTable( "Entity" )
@@ -51,7 +50,6 @@ end
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
 	ply.Buddies = {} --I'll get round to this I swear
-	ply.Buildings = {}
 	ply.Died = 0
 	ply:SetNetworkedInt( "kills", 0)
 	ply:SetNetworkedInt( "money", STARTING_MONEY )
@@ -107,6 +105,20 @@ function UpdateTime()
 	umsg.End()
 end
 
+function GM:PlayerCanPickupWeapon(ply, wep) 
+	if PHASE == "BUILD" then
+		return true
+	end
+
+	for k,v in pairs(WEAPON_SET[ply:GetNetworkedInt("class")]) do
+		if wep:GetClass() == v then
+			return true
+		end
+	end
+
+	return false
+end
+ 
 function GM:PlayerSpawn(ply)
 	ply:ShouldDropWeapon(false)
 	ply:UnSpectate() 
@@ -195,6 +207,7 @@ function GM:CalculateLiveBonus()
 			local bonus = LIVE_BONUS + (DEATH_PENALTY * v.Died)
 			if bonus > 0 && v.FullRound == true then
 				v:SetNetworkedInt( "money",v:GetNetworkedInt( "money") + bonus) -- if the player doesn"t die in that battle round give him some money
+ 				v:SetNWInt("kills", v:GetNWInt("kills") + math.Round(math.Clamp(bonus / 100, 1, 10)))
 				v:Message("+"..bonus.." [Round Live Bonus]", Color(100,255,100,255))
 			end
 			v.Died = 0
@@ -237,13 +250,14 @@ function GM:StartBuild()
 			v:Remove( )
 		end
 		if v:GetClass() != "npc_bullseye" && v:IsNPC() then
-			v:Fire("kill")
+			v:Remove()
 		end
 		if v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" then
 			v.Shealth = v.Mhealth
 			v:UpdateColour()
 			v:Extinguish()
 			v:GetPhysicsObject():EnableMotion(false)
+			v:SetMoveType(MOVETYPE_VPHYSICS)
 		end
 		if v:GetClass() == "ose_mines" then
 			v:Remove()
@@ -502,18 +516,18 @@ function SellAll(ply,cmd,args)
 	local mon = 0
 	for k,v in pairs(ents.FindByClass("sent_*")) do
 		if ValidEntity(v.owner) then
-			if v.owner then
 				if v.owner == ply then
-					if v.Mhealth then
-						mon = mon + v.Mhealth
+				if v.Shealth then
+					mon = mon + v.Shealth
 					end
 					v:Dissolve()
 				end
 			end
 		end
-	end
+	if(mon > 0) then
 	ply:SetNWInt("money", ply:GetNWInt("money") + mon)
 	ply:Message("+"..math.Round(mon).." [Sold all props]", Color(100,255,100,255))
+	end
 end
 
 concommand.Add("sellall", SellAll)
@@ -568,7 +582,6 @@ function SendMaps(ply,cmd,args)
 		umsg.Short( #read )
 		for k,v in pairs( read ) do
 			umsg.String( v )
-			print(v)
 		end
 	umsg.End( )
 end
@@ -652,15 +665,12 @@ function GM:EndVote()
 		v:ChatPrint("Starting the winning map in 5 seconds!")
 	end
 	GAMEMODE:SaveAllProfiles()
-	GAMEMODE:SaveAllProfiles()
 	timer.Simple(5, GAMEMODE.ChangeMap, GAMEMODE, string.sub(map,1, -5 ))
 end
 
 function GM:ChangeMap(map)
 	game.ConsoleCommand("changelevel "..map.."\n")
 end
-
-Zombies = {"npc_zombine", "npc_zombie", "npc_fastzombie", "npc_antlion", "npc_poisonzombie"}
 
 function GM:ScaleNPCDamage(npc,hit,dmg)
 	if npc:GetClass() == "npc_turret_floor" then return end
@@ -713,6 +723,10 @@ end
 
 function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
+	if ply:IsAdmin() then
+		ply:SetNWInt("rank", #RANKS)
+		return
+	end
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:ChatPrint("You are now a "..v.NAME.." rank!")
@@ -729,12 +743,14 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
 	ply.specid = 1
-	ply.Specatemode = OBS_MODE_IN_EYE
+	ply.Specatemode = OBS_MODE_CHASE
 	local name = npcs[killer:GetClass()] or killer:GetClass()
 	
-	for k,v in pairs(ply.Buildings) do
-		if v.owner == ply && v.Class == 3 && v.Type == "BATTLE" then v:Remove() end
-		if v.owner == ply && v:GetClass() == "npc_turret_floor" then v:Remove() end
+	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+		if v:GetOwner() == ply then v:Remove() end
+	end
+	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
+		if v.Owner == ply && v.Type == "BATTLE" then v:Remove() end
 	end
 	
 	if PHASE == "BUILD" then
@@ -745,7 +761,6 @@ function GM:PlayerDeath( ply, wep, killer )
 	if ply != killer then
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
-			timer.Simple(0.1,CheckDead)
 		end
 	end
 	
@@ -753,6 +768,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
+	timer.Simple(0.1,CheckDead)
 	ply:AddDeaths(1)	
 	return true
 end
