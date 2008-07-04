@@ -2,7 +2,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
-npc_types = {"npc_combine_s", "npc_combine_s_elite", "npc_combine_s", "npc_manhack", "npc_hunter"}
+npc_types = {"npc_combine_s", "npc_manhack", "npc_hunter"}
 
 ENT.Npcs = npc_types
 ENT.pathname = "path"
@@ -50,7 +50,7 @@ function ENT:Think( )
 		if #player.GetAll( ) == 0 then return end
 		local npc = self.Npcs[ math.random( 1, #self.Npcs) ]
 		if npc == "npc_hunter" then
-			if #ents.FindByClass("npc_hunter") >= MAXHUNTERS then
+			 if #ents.FindByClass("npc_hunter") >= MAXHUNTERS + math.Round(#player.GetAll()/4) then
 				self.Entity:NextThink( CurTime( ) + self.Delay )
 				return true
 			end
@@ -100,6 +100,10 @@ function ENT:Think( )
 			ent:AddEntityRelationship(v, 1, 99 )
 		end
 		
+		for k,v in pairs(NPCS) do
+			ent:Fire( "setrelationship", v.CLASS .. " D_LI 99" ) -- make the npcs like eachother
+		end
+		
 		if table.HasValue(Zombies, ent:GetClass()) then
 			for k,v in pairs(ents.FindByClass("npc_bullseye")) do
 				local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-50), ents.FindByClass("sent_*"))
@@ -109,9 +113,6 @@ function ENT:Think( )
 			end
 		else
 			ent:Fire( "setrelationship", "npc_bullseye D_HT 1" )
-		end
-		for k,v in pairs(NPCS) do
-			ent:Fire( "setrelationship", v.CLASS .. " D_LI 99" ) -- make the npcs like eachother
 		end
 		
 		ent:Spawn( )

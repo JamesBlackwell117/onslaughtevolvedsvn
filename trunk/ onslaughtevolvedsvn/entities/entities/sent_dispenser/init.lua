@@ -19,37 +19,13 @@ function ENT:Initialize()
 	end
 end
 
-function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu
-
-	if ( !tr.Hit ) then return end
-	
-	local SpawnPos = tr.HitPos + tr.HitNormal * 16
-	
-	local ent = ents.Create( "sent_dispenser" ) // This line must be EXACTLY the same as the sents folder name!
-	
-	ent:SetPos( SpawnPos )
-	ent:Spawn()
-	ent:Activate()
-	
-	return ent
-	
-end
-
-function ENT:Touch()
-end
-
-function ENT:Think()
-end
-
-function ENT:OnTakeDamage(dmg)
-end
 
 function ENT:Use(act, cal)
 	if !act:IsPlayer() then return end
 	if self.LastUse + 0.08 < CurTime() then
 	if act:Health() >= act:GetMaxHealth() then return end
 		self.Entity:EmitSound("items/medshot4.wav",50,100)
-		act:AddHealth(math.Round(act:GetMaxHealth()/75))
+		act:AddHealth(math.Round(act:GetMaxHealth()/DISP_RATE))
 		if PHASE == "BATTLE" then
 			self.Healing = self.Healing + 1
 			if (self.Healing / 50) == math.Round(self.Healing / 50) && self.Healing > 49 then
@@ -62,9 +38,6 @@ function ENT:Use(act, cal)
 		timer.Simple(2, act.Extinguish, act)
 		self.LastUse = CurTime()
 	end
-end
-
-function ENT:PhysicsCollide(data)
 end
 
 function ENT:OnRemove()

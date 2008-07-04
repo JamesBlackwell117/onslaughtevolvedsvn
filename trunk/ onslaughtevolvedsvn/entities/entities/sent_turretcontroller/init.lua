@@ -56,8 +56,14 @@ function ENT:Touch(ent) -- Zombies need all the help they can get :-(
 end
 
 function ENT:OnTakeDamage(dmg)
-	if dmg:GetInflictor():IsPlayer() || ValidEntity(dmg:GetInflictor().owner) || dmg:GetInflictor():GetClass() == "crossbow_bolt" then
-		return 0
+	if dmg:GetInflictor():IsPlayer() then
+	 	dmg:SetDamage(0)
+		return dmg 
+	elseif ValidEntity(dmg:GetInflictor():GetOwner()) then
+		if dmg:GetInflictor():GetOwner():IsPlayer() then
+			dmg:SetDamage(0)
+			return dmg
+		end
 	end
 	self.Turret:SetNWInt("health",self.Shealth)
 	self.Shealth = self.Shealth - dmg:GetDamage() 

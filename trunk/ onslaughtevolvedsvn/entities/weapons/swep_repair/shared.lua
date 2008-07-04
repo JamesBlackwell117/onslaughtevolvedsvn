@@ -77,19 +77,20 @@ function SWEP:PrimaryAttack( )
 			if tr.Entity.Shealth >= tr.Entity.Mhealth then return end
 			if !tr.Entity:IsOnFire() then 
 				tr.Entity.Shealth = tr.Entity.Shealth + 15
+				if tr.Entity.Shealth > tr.Entity.Mhealth then tr.Entity.Shealth = tr.Entity.Mhealth end
 			end
 			if math.random(1,4) == 1 then
 				tr.Entity:Extinguish()
 			end
 			tr.Entity:GetPhysicsObject( ):EnableMotion( false )
 			tr.Entity:UpdateColour( )
+		elseif tr.Entity:GetClass() == "npc_turret_floor" then
+			if tr.Entity.Controller.Shealth >= TURRET_HEALTH then return end
+			tr.Entity.Controller.Shealth = tr.Entity.Controller.Shealth + 5
+			if tr.Entity.Controller.Shealth > TURRET_HEALTH then tr.Entity.Controller.Shealth = TURRET_HEALTH end
+			tr.Entity:SetNWInt("health", tr.Entity.Controller.Shealth)
 		elseif tr.Entity:IsNPC() then
 			self.owner:TraceHullAttack( self.owner:GetShootPos( ), self.owner:GetAimVector( ) * 120, Vector( -16, -16, -16 ), Vector( 36, 36, 36 ), 30, 2, true )
-		end
-		if tr.Entity:GetClass() == "npc_turret_floor" then
-			if tr.Entity.Controller.Shealth >= TURRET_HEALTH then return end
-			tr.Entity:SetNWInt("health", tr.Entity:GetNWInt("health") + 5)
-			tr.Entity.Controller.Shealth = tr.Entity.Controller.Shealth + 5
 		end
 	end
 	if tr.MatType == MAT_FLESH || tr.HitType == MAT_BLOODYFLESH then

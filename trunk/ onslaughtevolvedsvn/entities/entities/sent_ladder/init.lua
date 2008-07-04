@@ -8,7 +8,6 @@ ENT.Shealth = 150
 ENT.Mhealth = 150
 
 function ENT:Initialize()  
-	print("LADDER")
 	self.Entity:SetModel(self.Model)
 	self.Entity:PhysicsInit( SOLID_BBOX )
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )   

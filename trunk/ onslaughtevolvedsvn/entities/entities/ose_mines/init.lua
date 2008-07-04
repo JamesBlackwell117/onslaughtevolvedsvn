@@ -40,14 +40,14 @@ function ENT:Touch(ent)
 end
 
 function ENT:Think()
-	local ents = ents.FindInSphere(self.Entity:GetPos(), 50)
+	local ents = ents.FindInSphere(self.Entity:GetPos(), 75)
 	for k,v in pairs(ents) do
 		if v:IsNPC() && v:GetClass() != "npc_bullseye" && v:GetClass() != "npc_turret_floor" then
 			self:Explode(v)
 			return
 		end
 	end
-	self.Entity:NextThink( CurTime( ) + 2 )
+	self.Entity:NextThink( CurTime( ) + 1 )
 	return true
 end
 
