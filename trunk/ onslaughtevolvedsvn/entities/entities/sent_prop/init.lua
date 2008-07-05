@@ -5,12 +5,10 @@ include('shared.lua')
 
 ENT.Shealth = 100
 ENT.Mhealth = 100
+ENT.SMH = 100
 ENT.Model = ""
 ENT.Owner = nil
 ENT.LastTouch = CurTime()
-ENT.Prepared = false
---ENT.Bull = nil
-
 
 function ENT:Initialize()
 	self.Entity:SetModel( self.Model ) 	//Model path
@@ -30,16 +28,13 @@ function ENT:Initialize()
 end
 
 function ENT:CalculateHealth()
-		local phys = self.Entity:GetPhysicsObject()  	
-		self.Shealth = phys:GetMass()
-		self.Shealth = self.Shealth * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100
+		self.SMH = self.Entity:GetPhysicsObject():GetMass() * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100
 		
-		if self.Shealth < 200 then
-			self.Shealth = 200
-		elseif self.Shealth > 800 then
-			self.Shealth = 800
+		if self.SMH < 200 then
+			self.SMH = 200
+		elseif self.SMH > 800 then
+			self.SMH = 800
 		end
-		self.Mhealth = self.Shealth 
 end
 
 function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu
@@ -73,17 +68,63 @@ function ENT:Touch(ent) -- Zombies need all the help they can get :-(
 	end
 end
 
-function ENT:InitCreateBull()
-		//Ailia
+--function ENT:InitCreateBull()
+--		local ang = self:GetAngles()
+--		local spawners = ents.FindByClass("sent_spawner")
+--
+--		local bull = ents.Create("npc_bullseye")
+--		local pos = spawners[math.random(1,#spawners)]:GetPos()
+--
+--		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))	
+--
+--		bullpos = self:WorldToLocal(bullpos)
+--
+--		local posone = self:OBBMaxs()
+--		local postwo = self:OBBMins()
+--
+--		local xd = posone.x - postwo.x
+--		local yd = posone.y - postwo.y
+--		local zd = posone.z - postwo.z
+--
+--		local xy = xd*yd
+--		local xz = xd*zd
+--		local yz = yd*zd
+--
+--		if xy > xz && xy > yz then 
+--		bullpos.z = self:OBBCenter().x
+--		elseif xz > yz && xz > xy then
+--		bullpos.x = self:OBBCenter().z
+--		else
+--		bullpos.y = self:OBBCenter().y
+--		end
+--
+--		bullpos = self:LocalToWorld(bullpos)
+--
+--		bull:SetPos(bullpos)
+--		bull:SetParent(self.Entity)
+--		bull:SetKeyValue("health","9999")
+--		bull:SetKeyValue("minangle","360")
+--		bull:SetKeyValue("spawnflags","1049092")
+--		bull:SetNotSolid( true )
+--		bull:Spawn()
+--		bull:Activate()
+--		self:SetAngles(ang)
+--end
+
+function ENT:Think()
+end
+
+function ENT:Prepare()
+	self.Mhealth=self.SMH
+	--self:InitCreateBull() -- Inline Bullseye code
+	
 		local ang = self:GetAngles()
 		local spawners = ents.FindByClass("sent_spawner")
  
 		local bull = ents.Create("npc_bullseye")
 		local pos = spawners[math.random(1,#spawners)]:GetPos()
- 
-		local npz = self:LocalToWorld(self:OBBCenter())
- 
-		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,npz.z))	
+  
+		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))	
  
 		bullpos = self:WorldToLocal(bullpos)
  
@@ -116,40 +157,21 @@ function ENT:InitCreateBull()
 		bull:SetNotSolid( true )
 		bull:Spawn()
 		bull:Activate()
-		--self.Bull = bull
 		self:SetAngles(ang)
-		/*
-		local vis = ents.Create("prop_physics") --- debugging position code
-		vis:SetPos(bullpos)
-		vis:SetParent(self.Entity)
-		vis:SetColor(255,100,100,100)
-		vis:SetModel("models/props_junk/wood_crate001a.mdl")
-		vis:SetNotSolid( true )
-		vis:Spawn()
-		vis:Activate()
-		*/
-		//Ailia
-end
-
-function ENT:Think()
-end
-
-function ENT:Prepare()
-	self:CalculateHealth()
-	--if ValidEntity(self.Bull) then
-	--	self.Bull:Remove()
-	--end
-	self:InitCreateBull()
+	
 	local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-1000), ents.FindByClass("sent_*"))
 	if trace.HitWorld then
 		if trace.Fraction > .01 then
 			self.Mhealth = self.Mhealth / (10*trace.Fraction)
 		end
 	end
+	
 	local propcount = #ents.FindByClass("sent_prop")
 	self.Mhealth = self.Mhealth - ((propcount / 3) * self.Mhealth / 320) --less health for more props
+	
+	if self.Mhealth <= 50 then self.Mhealth = 50 end
 	self.Shealth = self.Mhealth
-	if self.Mhealth <= 50 then self.Mhealth = 50 self.Shealth = 50 end
+	
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
 	self:SetColor(255,255,255,255)
 	self.Entity:SetMoveType( MOVETYPE_NONE )
