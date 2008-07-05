@@ -660,7 +660,9 @@ function GM:EndVote()
 			v:ChatPrint("The current map has won the vote!")
 			voting = false
 			v.mapvoted = false
+			v:ChatPrint("Map voting is now disabled!")
 		end
+		VOTE_ENABLE_TIME = CurTime() + VOTE_ENABLE_TIME
 		return
 	end
 	for k,v in pairs(player.GetAll()) do
@@ -765,12 +767,12 @@ function GM:PlayerDeath( ply, wep, killer )
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
 		end
+		timer.Simple(0.1,CheckDead)
 	end
 	
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
-	timer.Simple(0.1,CheckDead)
 	ply:AddDeaths(1)	
 	return true
 end
