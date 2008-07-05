@@ -57,6 +57,16 @@ function PANEL:Init( )
 			function( ) end,
 			"Set", "Cancel" )
 	end )
+	self:AddAdminButton( "Change Map", "Force an instant change map.", function( )
+		Derma_StringRequest( "Map name",
+			"Enter map name (without .bsp)",
+			tostring( GetMap() ),
+			function( Str )
+				RunConsoleCommand( "Admin", "map", Str )
+			end,
+			function( ) end,
+			"ChangeMap!", "Cancel" )
+	end )
 	self:AddAdminButton( "Give selection SWEP", "Gives you the SWEP used to select props for saving.", function( )
 		RunConsoleCommand( "admin", "select" )
 	end )
@@ -133,3 +143,13 @@ function PANEL:Setup( mat )
 end
 
 vgui.Register( "onslaught_iconbutton", PANEL, "DButton" )
+
+function GetMap()
+	local worldspawn = ents.GetByIndex(0)
+	local mapname = worldspawn:GetModel()
+
+	mapname = string.gsub(mapname,"(%w*/)","")
+	mapname = string.gsub(mapname,".bsp","")
+
+	return mapname
+end 

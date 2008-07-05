@@ -409,6 +409,12 @@ function AdminMenu(ply,com,args)
 				umsg.String( v )
 			end
 		umsg.End( )
+	elseif args[1] == "map" then
+		for k,v in pairs(player.GetAll()) do
+			v:ChatPrint("Admin: "..ply:Nick().." changed map to ".. args[2])
+			GAMEMODE:SaveAllProfiles()
+			GAMEMODE:ChangeMap(args[2])
+		end
 	end
 	
 end
