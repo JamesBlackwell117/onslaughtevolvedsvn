@@ -213,7 +213,7 @@ function ENT:OnTakeDamage(dmg)
 	self.Shealth = self.Shealth - damage 
 	self:UpdateColour()
 	if self.Shealth <= 0 then
-		self:Dissolve()
+		self:Remove()
 	elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
 		self.Entity:Ignite(8,150)
 	end
