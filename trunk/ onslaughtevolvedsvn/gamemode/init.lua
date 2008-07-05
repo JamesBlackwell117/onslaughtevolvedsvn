@@ -164,28 +164,26 @@ function GM:StartBattle()
 	print("[ONSLAUGHT] Battle phase started!")
 	NextRound = CurTime() + BATTLETIME
 	PHASE = "BATTLE"
-	for k,v in pairs(ents.FindByClass("sent_prop")) do
-		timer.Simple(k*0.05, v.Prepare, v)
+
+
+	for k,v in pairs( ents.GetAll( ) ) do
+		if v:IsWeapon( ) || v:GetClass() == "ose_mines" || v:IsNPC() then
+			v:Remove( )
+		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
+			timer.Simple(k*0.05, v.Prepare, v)
+		elseif v:IsPlayer() then
+			v.Voted = false
+			v:KillSilent()
+			v.NextSpawn = CurTime() + 3
+			v.FullRound = true
+		end
 	end
-	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		timer.Simple(k*0.05, v.Prepare, v)
-	end
-	for k,v in pairs(ents.FindByClass("sent_ladder")) do
-		timer.Simple(k*0.05, v.Prepare, v)
-	end
-	for k,v in pairs(ents.FindByClass("sent_ammo_dispenser")) do
-		timer.Simple(k*0.05, v.Prepare, v)
-	end
+
+
 	umsg.Start("StartBattle")
 	umsg.End() 
 	for k,v in pairs(ents.FindByName("ose_battle")) do
 		v:Fire("trigger",0,3)
-	end
-	for k,v in pairs(player.GetAll()) do
-		v.Voted = false
-		v:KillSilent()
-		v.NextSpawn = CurTime() + 3
-		v.FullRound = true
 	end
 end
 
@@ -249,23 +247,15 @@ function GM:StartBuild()
 	NextRound = CurTime() + BUILDTIME
 	voted = 0
 	for k,v in pairs( ents.GetAll( ) ) do
-		if v:IsWeapon( ) then
+		if v:IsWeapon( ) || v:GetClass() == "ose_mines" || v:IsNPC() then
 			v:Remove( )
-		end
-		if v:GetClass() != "npc_bullseye" && v:IsNPC() then
-			v:Remove()
-		end
-		if v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" then
+		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
 			v.Shealth = v.Mhealth
 			v:UpdateColour()
 			v:Extinguish()
 			v:GetPhysicsObject():EnableMotion(false)
 			v:SetMoveType(MOVETYPE_VPHYSICS)
-		end
-		if v:GetClass() == "ose_mines" then
-			v:Remove()
-		end
-		if v:IsPlayer() then
+		elseif v:IsPlayer() then
 			v:KillSilent()
 			v.NextSpawn = CurTime() + 5
 		end
@@ -1071,7 +1061,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	end
 	
 	if ValidEntity(ent.Owner) then
-		if ent.Shealth then
+		if ent.Shealth && ent.Shealth > 0 then
 			ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + ent.Shealth)
 			ent.Owner:Message("+"..math.Round(ent.Shealth).." [Deleted Item]", Color(100,255,100,255))
 		end

@@ -9,7 +9,7 @@ ENT.Model = ""
 ENT.Owner = nil
 ENT.LastTouch = CurTime()
 ENT.Prepared = false
-ENT.Bull = nil
+--ENT.Bull = nil
 
 
 function ENT:Initialize()
@@ -116,7 +116,7 @@ function ENT:InitCreateBull()
 		bull:SetNotSolid( true )
 		bull:Spawn()
 		bull:Activate()
-		self.Bull = bull
+		--self.Bull = bull
 		self:SetAngles(ang)
 		/*
 		local vis = ents.Create("prop_physics") --- debugging position code
@@ -135,11 +135,10 @@ function ENT:Think()
 end
 
 function ENT:Prepare()
-	print("PREPARING")
 	self:CalculateHealth()
-	if ValidEntity(self.Bull) then
-		self.Bull:Remove()
-	end
+	--if ValidEntity(self.Bull) then
+	--	self.Bull:Remove()
+	--end
 	self:InitCreateBull()
 	local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-1000), ents.FindByClass("sent_*"))
 	if trace.HitWorld then
