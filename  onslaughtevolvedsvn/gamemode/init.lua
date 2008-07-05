@@ -165,16 +165,16 @@ function GM:StartBattle()
 	NextRound = CurTime() + BATTLETIME
 	PHASE = "BATTLE"
 	for k,v in pairs(ents.FindByClass("sent_prop")) do
-		v:Prepare()
+		timer.Simple(k*0.05, v.Prepare, v)
 	end
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		v:Prepare()
+		timer.Simple(k*0.05, v.Prepare, v)
 	end
 	for k,v in pairs(ents.FindByClass("sent_ladder")) do
-		v:Prepare()
+		timer.Simple(k*0.05, v.Prepare, v)
 	end
 	for k,v in pairs(ents.FindByClass("sent_ammo_dispenser")) do
-		v:Prepare()
+		timer.Simple(k*0.05, v.Prepare, v)
 	end
 	umsg.Start("StartBattle")
 	umsg.End() 

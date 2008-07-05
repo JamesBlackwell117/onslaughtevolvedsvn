@@ -135,6 +135,7 @@ function ENT:Think()
 end
 
 function ENT:Prepare()
+	print("PREPARING")
 	self:CalculateHealth()
 	if ValidEntity(self.Bull) then
 		self.Bull:Remove()
