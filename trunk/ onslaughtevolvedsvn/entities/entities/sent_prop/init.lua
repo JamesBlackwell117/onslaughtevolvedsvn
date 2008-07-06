@@ -23,6 +23,8 @@ function ENT:Initialize()
 		phys:EnableMotion(false)
 		self:SetUnFreezable( true )
 		self:CalculateHealth()
+		self.Mhealth = self.SMH
+		self.Shealth = self.SMH
 	end
 	
 end
@@ -35,8 +37,6 @@ function ENT:CalculateHealth()
 		elseif self.SMH > 800 then
 			self.SMH = 800
 		end
-		self.Mhealth = self.SMH
-		self.Shealth = self.SMH
 end
 
 function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu
@@ -180,9 +180,6 @@ function ENT:Prepare()
 end
 
 function ENT:UpdateColour()
-	if self.Shealth > self.Mhealth then
-		self.Shealth = self.Mhealth
-	end
 	local col = (self.Shealth / self.Mhealth) * 255
 	self.Entity:SetColor(col, col, col, 255)
 end
