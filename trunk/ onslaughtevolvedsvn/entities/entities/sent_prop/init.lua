@@ -35,6 +35,8 @@ function ENT:CalculateHealth()
 		elseif self.SMH > 800 then
 			self.SMH = 800
 		end
+		self.Mhealth = self.SMH
+		self.Shealth = self.SMH
 end
 
 function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu

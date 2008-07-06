@@ -19,23 +19,6 @@ function ENT:Initialize()
 	timer.Simple(0.9,  function(self) if ValidEntity(self) then self.Remove(self) end end, self.Entity)
 end
 
-
-function ENT:SpawnFunction( ply, tr)
-
-	if ( !tr.Hit ) then return end
-	
-	local SpawnPos = tr.HitPos + tr.HitNormal * 16
-	
-	local ent = ents.Create( "sent_prop" )
-	
-	ent:SetPos( SpawnPos )
-	ent:Spawn()
-	ent:Activate()
-	
-	return ent
-	
-end
-
 function ENT:Touch(ent)
 	if ent:IsNPC() && ent:GetClass() != "npc_turret_floor" then
 		ent.Igniter = self.Owner
