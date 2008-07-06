@@ -14,6 +14,7 @@ include( "cl_panels.lua" )
 
 for k,v in pairs( file.Find( "../materials/onslaught/*" ) ) do
 	resource.AddFile( "materials/onslaught/" .. v )
+	print("Adding: materials/onslaught/" .. v)
 end
 
 local NextRound = BUILDTIME + CurTime( )
@@ -620,6 +621,7 @@ concommand.Add("votemap", Votemap)
 
 function SaveProfile(ply,cmd,args)
 	print("Manually saving profile for: "..ply:Nick())
+	ply:ChatPrint("Your kill profile has been saved!")
 	local name = string.Replace( ply:SteamID(), ":", "." )
 	local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 	file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
@@ -679,7 +681,7 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 		dmg:ScaleDamage(2)
 	end
 	if dmg:GetInflictor():GetClass() == "crossbow_bolt" then
-		return dmg
+		if math.random(1,3) == 1 then return 0 else return dmg end
 	end
 	if dmg:GetInflictor():IsPlayer() then
 		local wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
@@ -724,10 +726,6 @@ end
 
 function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
-	if ply:IsAdmin() then
-		ply:SetNWInt("rank", #RANKS)
-		return
-	end
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:ChatPrint("You are now a "..v.NAME.." rank!")
@@ -832,6 +830,10 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 				return false
 			end
 		end
+	else
+		if attacker:GetClass() == "worldspawn" then
+			return false
+		end
 	end
 	
 	if attacker:IsPlayer() then 
@@ -849,7 +851,7 @@ function GM:ScalePlayerDamage(ply, hitgrp, dmg)
 	if dmg:IsExplosionDamage() || dmg:GetAttacker():GetClass() == "weapon_shotgun" then
 		dmg:ScaleDamage(0.4)
 	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
-		dmg:ScaleDamage(7)
+		dmg:ScaleDamage(10)
 	elseif dmg:GetAttacker():GetClass() == "npc_manhack" then
 		dmg:ScaleDamage(2)
 	end
@@ -1067,9 +1069,9 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	end
 	
 	if ValidEntity(ent.Owner) then
-		if ent.Shealth && ent.Shealth > 0 then
-			ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + ent.Shealth)
-			ent.Owner:Message("+"..math.Round(ent.Shealth).." [Deleted Item]", Color(100,255,100,255))
+		if ent.SMH && ent.SMH > 0 then
+			ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + ent.SMH)
+			ent.Owner:Message("+"..math.Round(ent.SMH).." [Deleted Item]", Color(100,255,100,255))
 		end
 	end
 	
@@ -1162,7 +1164,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 		if killer:GetOwner():IsPlayer() then
 			plyobj = killer:GetOwner()
 		end
-	elseif killer == npc && npc:IsOnFire() && ValidEntity(npc.Igniter) then
+	elseif killer == npc && ValidEntity(npc.Igniter) then
 		plyobj = npc.Igniter
 	end
 	if !plyobj:IsPlayer() then return false end
@@ -1272,7 +1274,7 @@ function OSE_Spawn(ply,cmd,args)
 		ent:Remove()
 		return false
 	else
-		local prc = ent.Mhealth * 1.05
+		local prc = ent.SMH * 1.05
 		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - prc)
 		ply:Message((math.Round(prc * -1)).." [Spawned Item]", Color(255,100,100,255))
 	end
