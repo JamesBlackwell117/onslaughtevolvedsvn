@@ -14,7 +14,6 @@ include( "cl_panels.lua" )
 
 for k,v in pairs( file.Find( "../materials/onslaught/*" ) ) do
 	resource.AddFile( "materials/onslaught/" .. v )
-	print("Adding: materials/onslaught/" .. v)
 end
 
 local NextRound = BUILDTIME + CurTime( )
@@ -30,7 +29,7 @@ local Emeta = FindMetaTable( "Entity" )
 function Emeta:Dissolve()
 	if ( ValidEntity( self) && !self.Dissolving ) then
 		if self:GetClass() == "sent_prop" || self:GetClass() == "sent_ladder" || self:GetClass() == "sent_ammo_dispenser" || self:GetClass() == "sent_dispenser" then      
-			self.Shealth = 0
+			self.SMH = 0
 		end
 		
 		local dissolve = ents.Create( "env_entity_dissolver" )
@@ -517,8 +516,8 @@ function SellAll(ply,cmd,args)
 	for k,v in pairs(ents.FindByClass("sent_*")) do
 		if ValidEntity(v.Owner) then
 				if v.Owner == ply then
-				if v.Shealth then
-					mon = mon + v.Shealth
+				if v.SMH then
+					mon = mon + v.SMH
 					end
 					v:Dissolve()
 				end
@@ -620,7 +619,6 @@ end
 concommand.Add("votemap", Votemap)
 
 function SaveProfile(ply,cmd,args)
-	print("Manually saving profile for: "..ply:Nick())
 	ply:ChatPrint("Your kill profile has been saved!")
 	local name = string.Replace( ply:SteamID(), ":", "." )
 	local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
@@ -681,7 +679,7 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 		dmg:ScaleDamage(2)
 	end
 	if dmg:GetInflictor():GetClass() == "crossbow_bolt" then
-		if math.random(1,3) == 1 then return 0 else return dmg end
+		return dmg
 	end
 	if dmg:GetInflictor():IsPlayer() then
 		local wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
@@ -726,6 +724,10 @@ end
 
 function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
+	if ply:IsAdmin() then
+	ply:SetNWInt("rank", #RANKS)
+	return
+	end
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:ChatPrint("You are now a "..v.NAME.." rank!")
@@ -761,12 +763,12 @@ function GM:PlayerDeath( ply, wep, killer )
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
 		end
-		timer.Simple(0.1,CheckDead)
 	end
 	
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
+	timer.Simple(0.1,CheckDead)
 	ply:AddDeaths(1)	
 	return true
 end
