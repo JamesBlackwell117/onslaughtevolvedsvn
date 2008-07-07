@@ -10,4 +10,9 @@
 	"icon"		""
 	"info"		"Run away from various amounts of NPCs and defend your base!"
 	"hide"		"0"
+
+	"mappattern"
+	{
+		"1"	"^ose_"
+	}
 }
