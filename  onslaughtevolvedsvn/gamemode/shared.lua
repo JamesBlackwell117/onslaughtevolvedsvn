@@ -181,17 +181,14 @@ end
 				"models/Items/ammocrate_smg1.mdl"}
 	for k,v in pairs(MODELS) do
 		util.PrecacheModel(v)
-		print("Precaching: "..v)
 	end
 	
 	for k,v in pairs(Classes) do
 		util.PrecacheModel(v.MODEL)
-		print("Precaching: "..v.MODEL)
 	end
 	
 	for k,v in pairs(NPCS) do
 		util.PrecacheModel(v.MODEL)
-		print("Precaching: "..v.MODEL)
 	end
 	
 				
