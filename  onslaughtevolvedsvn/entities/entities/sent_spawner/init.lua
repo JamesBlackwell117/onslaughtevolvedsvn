@@ -61,10 +61,10 @@ function ENT:Think( )
 		end
 		
 		for k,v in pairs(self.Npcs) do
-			if v = "npc_hunter" && #ents.FindByClass("npc_hunter") >= MAXHUNTERS + math.Round(#player.GetAll()/4) then
+			if v == "npc_hunter" && #ents.FindByClass("npc_hunter") < MAXHUNTERS + math.Round(#player.GetAll()/4) then
 				npc = v
 				break
-			elseif v = "npc_manhack" && #ents.FindByClass("npc_manhack") >= MAXHACKS then
+			elseif v == "npc_manhack" && #ents.FindByClass("npc_manhack") < MAXHACKS then
 				npc = v
 				break
 			end
@@ -79,8 +79,8 @@ function ENT:Think( )
 				local flags = v.FLAGS
 				if v.KEYS then
 					local keys = v.KEYS
-					if k == 1 || k == 2 || k == 3 || k == 4 then
-						local rand = math.random(4)
+					if k == 1 || k == 2 || k == 3 then
+						local rand = math.random(3)
 						flags = NPCS[rand].FLAGS
 						keys = NPCS[rand].KEYS
 					end
