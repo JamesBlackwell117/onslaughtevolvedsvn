@@ -60,10 +60,13 @@ NPCS[9]  = {CLASS = "npc_antlion", 		 SQUAD = "ant", 	 FLAGS = 9984,   MONEY = 1
 NPCS[10]  = {CLASS = "npc_headcrab", 	 SQUAD = "crab",  FLAGS = 1796,   MONEY = 33,  MODEL = "models/headcrabclassic.mdl"}
 NPCS[11] = {CLASS = "npc_headcrab_fast", SQUAD = "crab",  FLAGS = 1796,   MONEY = 40,  MODEL = "models/headcrab.mdl"}
 NPCS[12] = {CLASS = "npc_metropolice", 	 SQUAD = "combine",  FLAGS = 403204,   MONEY = 50,  MODEL = "models/police.mdl",			  KEYS = "additionalequipment weapon_pistol"}
-NPCS[13] = {CLASS = "npc_antlionguard",  SQUAD = "ant", 	 FLAGS = 9988,   MONEY = 300,  MODEL = "models/antlion_guard.mdl"}
-NPCS[14] = {CLASS = "npc_rollermine",	 SQUAD = "roller",  FLAGS = 9988,   MONEY = 60,  MODEL = "models/roller.mdl", 		 		  KEYS = "uniformsightdist 1"}
+NPCS[13] = {CLASS = "npc_antlionguard",  SQUAD = "ant", 	 FLAGS = 9988,   MONEY = 700,  MODEL = "models/antlion_guard.mdl"}
+NPCS[14] = {CLASS = "npc_rollermine",	 SQUAD = "roller",  FLAGS = 9988,   MONEY = 175,  MODEL = "models/roller.mdl", 		 		  KEYS = "uniformsightdist 1"}
 NPCS[15] = {CLASS = "npc_poisonzombie",	 SQUAD = "zombies",  FLAGS = 9988,   MONEY = 125,  MODEL = "models/zombie/poison.mdl",		  KEYS = "crabcount 3"}
 NPCS[16] = {CLASS = "npc_headcrab_black",	 SQUAD = "crab",  FLAGS = 9988,   MONEY = 120,  MODEL = "models/headcrabblack.mdl"}
+NPCS[17]  = {CLASS = "npc_zombie_torso", 		 SQUAD = "zombies",  FLAGS = 1796, 	 MONEY = 50,  MODEL = "models/zombie/classic.mdl"}
+NPCS[18]  = {CLASS = "npc_fastzombie_torso", 	 SQUAD = "fzombies",  FLAGS = 1796,   MONEY = 75, MODEL = "models/zombie/fast.mdl"}
+
 
 npcs = {
 	npc_combine_s = "Combine Soldier",
@@ -71,10 +74,13 @@ npcs = {
 	npc_antlion = "Antlion",
 	npc_manhack = "Manhack",
 	npc_zombie = "Zombie",
+	npc_zombie_torso = "Zombie",
 	npc_zombine = "Zombine",
 	npc_fastzombie = "Fast zombie",
+	npc_fastzombie_torso = "Fast zombie",
 	npc_headcrab = "Headcrab",
 	npc_headcrab_fast = "Fast headcrab",
+	npc_headcrab_black = "Poison headcrab",
 	npc_metropolice = "Metro Police",
 	npc_rollermine = "Rollermine",
 	npc_poisonzombie = "Poison zombie",
