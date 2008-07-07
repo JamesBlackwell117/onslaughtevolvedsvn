@@ -63,7 +63,7 @@ function GM:PlayerInitialSpawn(ply)
 	end
 	timer.Simple(1,UpdateTime,ply)
 	if PHASE == "BATTLE" then
-		timer.Simple(0.2, ply.KillSilent, ply)
+		ply:Kill()
 	end
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
@@ -171,7 +171,7 @@ function GM:StartBattle()
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
-			v:KillSilent()
+			v:Kill()
 			v.NextSpawn = CurTime() + 3
 			v.FullRound = true
 		end
@@ -254,7 +254,7 @@ function GM:StartBuild()
 			v:GetPhysicsObject():EnableMotion(false)
 			v:SetMoveType(MOVETYPE_VPHYSICS)
 		elseif v:IsPlayer() then
-			v:KillSilent()
+			v:Kill()
 			v.NextSpawn = CurTime() + 5
 		end
 	end
@@ -302,7 +302,7 @@ function Class(ply,com,args)
 	if !Classes[newclass] then return end
 	ply:SetNetworkedInt("class", newclass )
 	if PHASE == "BATTLE" && ply:Alive() then
-		ply:KillSilent()
+		ply:Kill()
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
 		timer.Simple(0.1,CheckDead)
 	else
@@ -880,7 +880,7 @@ function NoClipThink()
 			v:SetPos(v:GetPos() + (v:GetVelocity() * -0.1))
 			v:SetVelocity(Vector(0,0,0))
 			if !v:IsInWorld() then
-				v:KillSilent()
+				v:Kill()
 				v:Message("Spy sappin' mah noclip protection", Color(255,100,100,255))
 			end
 		end
