@@ -79,8 +79,8 @@ function ENT:Think( )
 				local flags = v.FLAGS
 				if v.KEYS then
 					local keys = v.KEYS
-					if k == 1 || k == 2 || k == 3 then
-						local rand = math.random(3)
+					if k == 1 || k == 2 || k == 3 || k == 4 then
+						local rand = math.random(4)
 						flags = NPCS[rand].FLAGS
 						keys = NPCS[rand].KEYS
 					end

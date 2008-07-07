@@ -48,24 +48,24 @@ AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", QT = 1, PRICE = 300, MODEL = "models/
 
 
 NPCS = {}
-NPCS[1]	 = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 100, MODEL = "models/combine_soldier.mdl", 	  KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[2]  = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 140, MODEL = "models/combine_super_soldier.mdl", KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
-NPCS[3]  = {CLASS = "npc_combine_s", 	 SQUAD = "combine",  FLAGS = 403204, MONEY = 120, MODEL = "models/combine_soldier_prisonguard.mdl", 	  KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[4]  = {CLASS = "npc_hunter", 		 SQUAD = "hunter",  FLAGS = 9984, 	 MONEY = 500, MODEL = "models/hunter.mdl"}
-NPCS[5]  = {CLASS = "npc_manhack", 		 SQUAD = "hacks",  FLAGS = 263940, MONEY = 50,  MODEL = "models/manhack.mdl"}
-NPCS[6]  = {CLASS = "npc_zombie", 		 SQUAD = "zombies",  FLAGS = 1796, 	 MONEY = 75,  MODEL = "models/zombie/classic.mdl"}
-NPCS[7]  = {CLASS = "npc_fastzombie", 	 SQUAD = "fzombies",  FLAGS = 1796,   MONEY = 100, MODEL = "models/zombie/fast.mdl"}
-NPCS[8]  = {CLASS = "npc_zombine", 		 SQUAD = "zombies",  FLAGS = 1796,   MONEY = 100, MODEL = "models/zombie/zombie_soldier.mdl"}
-NPCS[9]  = {CLASS = "npc_antlion", 		 SQUAD = "ant", 	 FLAGS = 9984,   MONEY = 100, MODEL = "models/antlion.mdl", 	 		  KEYS = "radius 512"}
-NPCS[10]  = {CLASS = "npc_headcrab", 	 SQUAD = "crab",  FLAGS = 1796,   MONEY = 33,  MODEL = "models/headcrabclassic.mdl"}
-NPCS[11] = {CLASS = "npc_headcrab_fast", SQUAD = "crab",  FLAGS = 1796,   MONEY = 40,  MODEL = "models/headcrab.mdl"}
-NPCS[12] = {CLASS = "npc_metropolice", 	 SQUAD = "combine",  FLAGS = 403204,   MONEY = 50,  MODEL = "models/police.mdl",			  KEYS = "additionalequipment weapon_pistol"}
-NPCS[13] = {CLASS = "npc_antlionguard",  SQUAD = "ant", 	 FLAGS = 9988,   MONEY = 700,  MODEL = "models/antlion_guard.mdl"}
-NPCS[14] = {CLASS = "npc_rollermine",	 SQUAD = "roller",  FLAGS = 9988,   MONEY = 175,  MODEL = "models/roller.mdl", 		 		  KEYS = "uniformsightdist 1"}
-NPCS[15] = {CLASS = "npc_poisonzombie",	 SQUAD = "zombies",  FLAGS = 9988,   MONEY = 125,  MODEL = "models/zombie/poison.mdl",		  KEYS = "crabcount 3"}
-NPCS[16] = {CLASS = "npc_headcrab_black",	 SQUAD = "crab",  FLAGS = 9988,   MONEY = 120,  MODEL = "models/headcrabblack.mdl"}
-NPCS[17]  = {CLASS = "npc_zombie_torso", 		 SQUAD = "zombies",  FLAGS = 1796, 	 MONEY = 50,  MODEL = "models/zombie/classic.mdl"}
-NPCS[18]  = {CLASS = "npc_fastzombie_torso", 	 SQUAD = "fzombies",  FLAGS = 1796,   MONEY = 75, MODEL = "models/zombie/fast.mdl"}
+NPCS[1]	 = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier.mdl", 	  			KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS[2]  = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 140, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
+NPCS[3]  = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 120, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS[4]  = {CLASS = "npc_metropolice", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
+NPCS[5]  = {CLASS = "npc_hunter", 		 	SQUAD = "hunter",	FLAGS = 9984, 	MONEY = 500, 	MODEL = "models/hunter.mdl"}
+NPCS[6]  = {CLASS = "npc_manhack", 		 	SQUAD = "hacks",	FLAGS = 263940, MONEY = 50,  	MODEL = "models/manhack.mdl"}
+NPCS[7]  = {CLASS = "npc_zombie", 		 	SQUAD = "zombies",	FLAGS = 1796, 	MONEY = 75,  	MODEL = "models/zombie/classic.mdl"}
+NPCS[8]  = {CLASS = "npc_fastzombie", 	 	SQUAD = "fzombies",	FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/fast.mdl"}
+NPCS[9]  = {CLASS = "npc_zombine", 		 	SQUAD = "zombies",	FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/zombie_soldier.mdl"}
+NPCS[10] = {CLASS = "npc_antlion", 		 	SQUAD = "ant",		FLAGS = 9984,   MONEY = 100, 	MODEL = "models/antlion.mdl", 	 		  			KEYS = "radius 512"}
+NPCS[11] = {CLASS = "npc_headcrab", 	 	SQUAD = "crab",		FLAGS = 1796,   MONEY = 33,  	MODEL = "models/headcrabclassic.mdl"}
+NPCS[12] = {CLASS = "npc_headcrab_fast", 	SQUAD = "crab",		FLAGS = 1796,   MONEY = 40,  	MODEL = "models/headcrab.mdl"}
+NPCS[13] = {CLASS = "npc_antlionguard",  	SQUAD = "ant",		FLAGS = 9988,   MONEY = 700, 	MODEL = "models/antlion_guard.mdl"}
+NPCS[14] = {CLASS = "npc_rollermine",	 	SQUAD = "roller",	FLAGS = 9988,   MONEY = 175, 	MODEL = "models/roller.mdl", 		 		  		KEYS = "uniformsightdist 1"}
+NPCS[15] = {CLASS = "npc_poisonzombie",	 	SQUAD = "zombies",	FLAGS = 9988,   MONEY = 125, 	MODEL = "models/zombie/poison.mdl",		  			KEYS = "crabcount 3"}
+NPCS[16] = {CLASS = "npc_headcrab_black",	SQUAD = "crab",		FLAGS = 9988,   MONEY = 120, 	MODEL = "models/headcrabblack.mdl"}
+NPCS[17] = {CLASS = "npc_zombie_torso", 	SQUAD = "zombies",	FLAGS = 1796, 	MONEY = 50,  	MODEL = "models/zombie/classic.mdl"}
+NPCS[18] = {CLASS = "npc_fastzombie_torso",	SQUAD = "fzombies",	FLAGS = 1796,   MONEY = 75,	 	MODEL = "models/zombie/fast.mdl"}
 
 
 npcs = {
