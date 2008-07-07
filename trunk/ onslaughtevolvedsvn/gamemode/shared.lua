@@ -200,6 +200,7 @@ end
 	--PROP VARS--
 	FLAMABLE_PROPS = false
 	BATTLE_PHYS = false
+	PROP_CLEANUP = false
 	PROP_LIMIT = 25
 
 	--NETWORK VARS--

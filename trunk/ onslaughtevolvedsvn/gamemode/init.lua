@@ -916,9 +916,11 @@ function GM:PlayerDisconnected( ply )
 			if v.Owner == ply then v:Remove() end
 	end
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
-	timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
-	for k,v in pairs(player.GetAll()) do
-		v:Message("Removing "..ply:Nick().."'s props in "..PROP_DELETE_TIME.." seconds!")
+	if PROP_CLEANUP then
+		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
+		for k,v in pairs(player.GetAll()) do
+			v:Message("Removing "..ply:Nick().."'s props in "..PROP_DELETE_TIME.." seconds!")
+		end
 	end
 	local id = string.Replace( ply:SteamID(), ":", "." )
 	if file.Exists("onslaught_profiles/"..string.lower(id)..".txt") then
