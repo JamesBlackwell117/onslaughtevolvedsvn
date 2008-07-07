@@ -1,9 +1,9 @@
 "Gamemode"
 {
-	"name"		"Onslaught evolved 1.1"
-	"version"	"1.1"
+	"name"		"Onslaught Evolved"
+	"version"	"1.7"
 
-	"author_name"	"Conman420 and Xera"
+	"author_name"	"Conman420, Xera & Ailia"
 	"author_email"	""
 	"author_url"	"Facepunch thread"
 	
