@@ -171,7 +171,7 @@ function GM:StartBattle()
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
-			v:Kill()
+			v:KillSilent()
 			v.NextSpawn = CurTime() + 3
 			v.FullRound = true
 		end
