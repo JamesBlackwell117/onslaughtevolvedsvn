@@ -11,7 +11,6 @@ ENT.Delay = SPAWN_DELAY
 function ENT:KeyValue( key, value )
 	if key == "npc" then
 		self.Npcs = string.Explode(" ", value)
-		PrintTable(self.Npcs)
 		if self.Npcs[1] == nil then
 			ErrorNoHalt("WARNING!: sent_spawner keyvalues set up incorrectly!\n See a mapper!\n")
 			self.Npcs = npc_types

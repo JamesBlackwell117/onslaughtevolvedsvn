@@ -65,7 +65,6 @@ function GM:PlayerInitialSpawn(ply)
 	if PHASE == "BATTLE" then
 		timer.Simple(0.2, ply.KillSilent, ply)
 	end
-	PrintTable(discplayers)
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
 		local oldobj = discplayers[ply:SteamID()].OBJECT
