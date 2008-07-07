@@ -687,6 +687,8 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 			dmg:ScaleDamage(14)
 		elseif wep == "weapon_ar2" then
 			dmg:ScaleDamage(1.6)
+		elseif wep == "weapon_357" then
+			dmg:ScaleDamage(0.5)
 		end
 	end
 	local orig = dmg:GetDamage()
