@@ -75,10 +75,10 @@ function GM:DrawHUD()
 	local classid = ply:GetNetworkedInt("class") or 1
 	
 	draw.SimpleTextOutlined( "Class: "..Classes[classid].NAME, "HUD", W * 0.03, H * 0.82, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-	draw.SimpleTextOutlined( "Health: "..ply:Health().."/"..Mhlth, "HUD2", W * 0.03, H * 0.86, Color(255,255,255,255),0, 0, 1, Color(0,0,0,255) )
+	draw.SimpleTextOutlined( "Health: "..ply:Health().."/"..Mhlth, "HUD2", W * 0.03, H * 0.862, Color(255,255,255,255),0, 0, 1, Color(0,0,0,255) )
 	if cur_mag <= 0 && mags <= 0 then
 		if alt_mags > 0 then
-			draw.SimpleText( "Alt: "..alt_mags, "HUD", W * 0.18, H * 0.89, Color(255,255,255,255), 0, 0, 1)
+			draw.SimpleText( "Alt: "..alt_mags, "HUD", W * 0.18, H * 0.892, Color(255,255,255,255), 0, 0, 1)
 		end
 	else
 		if Weaponclass != ply:GetActiveWeapon():GetClass() then
@@ -94,14 +94,17 @@ function GM:DrawHUD()
 			local clipfraction = 1/(Maxammo)
 			
 			surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*(ammofraction), H / 40 )
+			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02), H / 40 )
+			
+			surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
+			surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction), H / 160 )
 			
 			surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
-			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*(ammofraction-clipfraction), H / 40 )
+			surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction-clipfraction), H / 160 )
 			
 			surface.SetDrawColor(255, 255, 255, 255)
 			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
-			draw.SimpleTextOutlined( "Ammo: "..mags, "HUD2", W * 0.03, H * 0.89, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+			draw.SimpleTextOutlined( "Ammo: "..mags, "HUD2", W * 0.03, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 		else
 			if cur_mag > Maxclip then Maxclip = cur_mag end
 			if mags+cur_mag > Maxammo then Maxammo = mags+cur_mag end
@@ -109,17 +112,21 @@ function GM:DrawHUD()
 			local clipfraction = cur_mag/(Maxammo)
 			
 			surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*(ammofraction), H / 40 )
+			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*cur_mag/Maxclip, H / 40 )
+			
+			surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
+			surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction), H / 160 )
 			
 			surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
-			surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*(ammofraction-clipfraction), H / 40 )
+			surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction-clipfraction), H / 160 )
 			
 			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
-			draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.89, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+			--surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
+			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 32 )
+			draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 			
 			if alt_mags > 0 then
-				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.89, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 			end
 		end
 	end
