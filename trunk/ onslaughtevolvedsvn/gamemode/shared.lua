@@ -32,16 +32,16 @@ WEAPON_SET[4] = {"weapon_crowbar","weapon_crossbow", "weapon_frag","weapon_357"}
 WEAPON_SET[5] = {"weapon_crowbar", "weapon_pistol", "weapon_frag", "swep_flamethrower", "swep_minemaker"}
 
 AMMOS = {}
-AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 150, PRICE = 200, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
-AMMOS[2] = {AMMO = "Pistol", NAME = "Pistol ammo", QT = 75, PRICE = 100, MODEL = "models/Items/BoxSRounds.mdl"}
-AMMOS[3] = {AMMO = "SMG1", NAME = "SMG ammo", QT = 100, PRICE = 200, MODEL = "models/Items/BoxMRounds.mdl"}
-AMMOS[4] = {AMMO = "BuckShot", NAME = "Buckshot", QT = 20, PRICE = 200, MODEL = "models/Items/BoxBuckshot.mdl"}
-AMMOS[5] = {AMMO = "357", NAME = "357 ammo", QT = 20, PRICE = 200, MODEL = "models/Items/357ammo.mdl"}
+AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 90, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
+AMMOS[2] = {AMMO = "Pistol", NAME = "Pistol ammo", QT = 72, PRICE = 100, MODEL = "models/Items/BoxSRounds.mdl"}
+AMMOS[3] = {AMMO = "SMG1", NAME = "SMG ammo", QT = 90, PRICE = 150, MODEL = "models/Items/BoxMRounds.mdl"}
+AMMOS[4] = {AMMO = "BuckShot", NAME = "Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxBuckshot.mdl"}
+AMMOS[5] = {AMMO = "357", NAME = "357 ammo", QT = 18, PRICE = 200, MODEL = "models/Items/357ammo.mdl"}
 AMMOS[6] = {AMMO = "AR2AltFire", NAME = "Combine Ball", QT = 1, PRICE = 400, MODEL = "models/Items/combine_rifle_ammo01.mdl"}
-AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", QT = 10, PRICE = 150, MODEL = "models/Items/CrossbowRounds.mdl"}
+AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", QT = 5, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
 AMMOS[8] = {AMMO = "grenade", NAME = "Grenade", QT = 1, PRICE = 300, MODEL = "models/Items/grenadeAmmo.mdl"}
-AMMOS[9] = {AMMO = "SMG1_Grenade", NAME = "Smg Grenade", QT = 2, PRICE = 250, MODEL = "models/Items/AR2_Grenade.mdl"}
-AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", QT = 200, PRICE = 100, MODEL = "models/props_junk/gascan001a.mdl"}
+AMMOS[9] = {AMMO = "SMG1_Grenade", NAME = "Smg Grenade", QT = 1, PRICE = 250, MODEL = "models/Items/AR2_Grenade.mdl"}
+AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", QT = 100, PRICE = 200, MODEL = "models/props_junk/gascan001a.mdl"}
 AMMOS[11] = {AMMO = "BuckShot", NAME = "Heavy Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxFlares.mdl"}
 AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", QT = 1, PRICE = 300, MODEL = "models/props_combine/combine_mine01.mdl"}
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
