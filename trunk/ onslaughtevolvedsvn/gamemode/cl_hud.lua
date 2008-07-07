@@ -87,7 +87,6 @@ function GM:DrawHUD()
 			Maxclip = 0
 		end	
 		if cur_mag == -1 then
-			
 			if 1 > Maxclip then Maxclip = 1 end
 			if mags > Maxammo then Maxammo = mags end
 			local ammofraction = (mags)/(Maxammo)
@@ -134,7 +133,7 @@ function GM:DrawHUD()
 	if TimeLeft <= 0 then TimeLeft = 0 end
 	draw.DrawText("Money: "..math.Round(LocalPlayer():GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * y1, MonCol,1)
 	draw.DrawText("Phase: "..PHASE, "ScoreboardText", W / 1.15, H * y2, Color(255,255,255,255),1)
-	draw.DrawText("Time Remaining: "..string.ToMinutesSeconds(TimeLeft), "ScoreboardText", W / 1.15 , H * y3, timecol,1)
+	draw.DrawText("Time Remaining: "..string.FormattedTime( TimeLeft, "%2i:%02i")  , "ScoreboardText", W / 1.15 , H * y3, timecol,1)
 	
 	
 	if GetConVarNumber( "ose_hidetips" ) != 1 then
