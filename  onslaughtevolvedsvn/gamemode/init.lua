@@ -126,6 +126,7 @@ function GM:PlayerSpawn(ply)
 	ply:UnSpectate() 
 	ply:SetTeam(ply:GetNWInt("rank") + 1)
 	ply:RemoveAllAmmo()
+	GAMEMODE:PlayerLoadout(ply) 
 	
 	if PHASE == "BUILD" then
 		GAMEMODE:SetPlayerSpeed(ply, 350, 500)
@@ -141,7 +142,6 @@ function GM:PlayerSpawn(ply)
 	end
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
 	ply:SetModel( modelname )
-	hook.Call( "PlayerLoadout", GAMEMODE, ply ) 
 	if ply.CusSpawn then
 		ply:SetPos(ply.CusSpawn)
 		ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
@@ -275,7 +275,6 @@ function GM:RestockPlayer(ply)
 		local class = ply:GetNWInt("class")
 		if table.HasValue(Classes[class].AMMO, k) then
 			ply:GiveAmmo(v.QT, v.AMMO)
-			print("Giving: "..v.AMMO..v.NAME)
 		end
 	end
 end
@@ -562,8 +561,7 @@ function GM:PlayerLoadout(ply)
 		for k,v in pairs(WEAPON_SET[ply:GetNetworkedInt("class")]) do
 			ply:Give(v)
 		end
-	end
-	if PHASE == "BUILD" then
+	elseif PHASE == "BUILD" then
 		ply:Give("weapon_physgun")
 		ply:Give( "swep_nocollide" )
 		ply:Give("swep_dispensermaker")
