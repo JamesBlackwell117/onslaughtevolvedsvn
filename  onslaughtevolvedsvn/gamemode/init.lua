@@ -962,16 +962,6 @@ function GM:GravGunOnPickedUp( ply,ent )
 end
 
 function GM:GravGunOnDropped( ply, ent )
-	if ent:GetClass() == "npc_turret_floor" then
-		ent.Controller.Shealth = TURRET_HEALTH
-		ent.Controller.Added = false
-		ent.Controller:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		local ang = ply:EyeAngles()
-		ent:SetAngles(Angle(0,ang.yaw,0))
-		ent:GetPhysicsObject():EnableMotion(false)
-		return true
-	end
 	return false
 end
 
