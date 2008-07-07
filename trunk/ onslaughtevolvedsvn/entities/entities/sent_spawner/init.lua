@@ -53,13 +53,23 @@ function ENT:Think( )
 				self.Entity:NextThink( CurTime( ) + self.Delay )
 				return true
 			end
-		end
-		if npc == "npc_manhack" then
+		elseif npc == "npc_manhack" then
 			if #ents.FindByClass("npc_manhack") >= MAXHACKS then
 				self.Entity:NextThink( CurTime( ) + self.Delay )
 				return true
 			end
 		end
+		
+		for k,v in pairs(self.Npcs) do
+			if v = "npc_hunter" && #ents.FindByClass("npc_hunter") >= MAXHUNTERS + math.Round(#player.GetAll()/4) then
+				npc = v
+				break
+			elseif v = "npc_manhack" && #ents.FindByClass("npc_manhack") >= MAXHACKS then
+				npc = v
+				break
+			end
+		end
+		
 		local ent = ents.Create( npc )
 		if !ValidEntity(ent) then return end --stop non existant npcs spawning
 		local SpawnPos = Vector( (self.Entity:GetPos( ).x + math.random( -200, 200 )), (self.Entity:GetPos( ).y + math.random( -200, 200 )), self.Entity:GetPos( ).z + 10 )
