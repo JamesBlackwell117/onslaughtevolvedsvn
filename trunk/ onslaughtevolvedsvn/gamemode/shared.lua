@@ -1,7 +1,7 @@
 
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
-GM.Name 	= "Onslaught: Evolved - 1.7.20"
+GM.Name 	= "Onslaught: Evolved - 1.7.23"
 GM.Author 	= "Conman420, Xera, & Ailia" -- DO NOT CHANGE THIS
 GM.Email 	= ""
 GM.Website 	= ""
@@ -125,7 +125,7 @@ end
 
 --VARIABLES---
 	--Core Gamemode Vars--
-	BUILDTIME = 720
+	BUILDTIME = 600
 	BATTLETIME = 900
 	SPAWN_TIME = 30 -- this is the base spawn time. The game adds 10 seconds to the spawn time for every player present on the server. So if there were 8 players the spawn time would be 30 + 80.
 	ANTILAG = false --turn on with caution!
@@ -198,7 +198,7 @@ end
 	DEATH_PENALTY = -1500
 
 	--PROP VARS--
-	FLAMABLE_PROPS = true
+	FLAMABLE_PROPS = false
 	BATTLE_PHYS = false
 	PROP_LIMIT = 25
 
