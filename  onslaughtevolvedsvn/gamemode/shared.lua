@@ -179,6 +179,7 @@ end
 				"models/props_c17/playgroundTick-tack-toe_post01.mdl",
 				"models/props_c17/FurnitureFridge001a.mdl",
 				"models/Items/ammocrate_smg1.mdl"}
+				
 	for k,v in pairs(MODELS) do
 		util.PrecacheModel(v)
 	end

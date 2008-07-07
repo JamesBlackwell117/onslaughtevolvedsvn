@@ -140,7 +140,6 @@ function GM:PlayerSpawn(ply)
 		ply:SetHealth(hlth)
 	end
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
-	util.PrecacheModel( modelname ) 
 	ply:SetModel( modelname )
 	hook.Call( "PlayerLoadout", GAMEMODE, ply ) 
 	if ply.CusSpawn then
