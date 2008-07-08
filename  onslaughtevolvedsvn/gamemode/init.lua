@@ -1273,6 +1273,7 @@ function OSE_Spawn(ply,cmd,args)
 end
  
 concommand.Add("gm_spawn", OSE_Spawn)
+
 function GM:ShutDown( )
 
 end
@@ -1280,7 +1281,6 @@ end
 function GM:DoPlayerDeath( ply, attacker, dmginfo )
 
 end
-
 
 function GM:CreateEntityRagdoll( entity, ragdoll )
 
