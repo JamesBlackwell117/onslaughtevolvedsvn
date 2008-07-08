@@ -25,6 +25,7 @@ function GM:Initialize( )
 	surface.CreateFont( "coolvetica", 48, 500, true, false, "ScoreboardHead" )
 	surface.CreateFont( "coolvetica", 24, 500, true, false, "ScoreboardSub" )
 	surface.CreateFont( "Tahoma", 16, 1000, true, false, "ScoreboardText" )
+	surface.CreateFont( "Tahoma", 18, 1000, true, false, "Message" )
 	
 end
 

@@ -12,8 +12,8 @@ function GM:DrawHUD()
 	-- messages
 	for k,v in pairs(Messages) do
 		local col = v.colour
-		local y = (H - 200) - ((CurTime() - v.Time) * 90) + (k * 12)
-		draw.SimpleTextOutlined(v.text,"ScoreboardText",W - 30,y,col,2,0,0.5,Color(50,50,50,255))
+		local y = (H - 200) - ((CurTime() - v.Time) * 100) + (k * 14)
+		draw.SimpleTextOutlined(v.text,"Message",W - 30,y,col,2,0,0.5,Color(50,50,50,255))
 		if v.Time - CurTime() <= -4 then
 			local newcol = Color(col.r,col.g,col.b,col.a - 10)
 			v.colour = newcol
