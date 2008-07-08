@@ -20,7 +20,7 @@ function GM:Initialize( )
 
 	GAMEMODE.ShowScoreboard = false
 	surface.CreateFont( "akbar", 20, 500, true, true, "HUD" )
-	surface.CreateFont( "akbar", 20, 700, true, false, "HUD2" )
+	surface.CreateFont( "akbar", 20, 600, true, false, "HUD2" )
 	surface.CreateFont( "akbar", 16, 500, true, true, "HUDs" )
 	surface.CreateFont( "coolvetica", 48, 500, true, false, "ScoreboardHead" )
 	surface.CreateFont( "coolvetica", 24, 500, true, false, "ScoreboardSub" )

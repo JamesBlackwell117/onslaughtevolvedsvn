@@ -54,7 +54,7 @@ function GM:DrawHUD()
 		 timecol = Color(255,100,100,255)
 	end
 	
-	surface.SetDrawColor(50, 50, 50, 150)
+	surface.SetDrawColor(50, 50, 50, 200)
 	surface.DrawRect( W * x, H * y, W * w, H * h ) -- left pannel
 	surface.DrawRect( W / 1.3, H * xY, W * 0.2, H *  xH) -- right
 
@@ -75,7 +75,7 @@ function GM:DrawHUD()
 	local classid = ply:GetNetworkedInt("class") or 1
 	
 	draw.SimpleTextOutlined( "Class: "..Classes[classid].NAME, "HUD", W * 0.03, H * 0.82, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-	draw.SimpleTextOutlined( "Health: "..ply:Health().."/"..Mhlth, "HUD2", W * 0.03, H * 0.862, Color(255,255,255,255),0, 0, 1, Color(0,0,0,255) )
+	draw.SimpleTextOutlined( "Health: "..ply:Health().."/"..Mhlth, "HUD2", W * 0.03, H * 0.86, Color(255,255,255,255),0, 0, 1, Color(0,0,0,255) )
 	if cur_mag <= 0 && mags <= 0 then
 		if alt_mags > 0 then
 			draw.SimpleText( "Alt: "..alt_mags, "HUD", W * 0.18, H * 0.892, Color(255,255,255,255), 0, 0, 1)
@@ -103,7 +103,7 @@ function GM:DrawHUD()
 			
 			surface.SetDrawColor(255, 255, 255, 255)
 			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
-			draw.SimpleTextOutlined( "Ammo: "..mags, "HUD2", W * 0.03, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+			draw.SimpleTextOutlined( "Ammo: "..mags, "HUD2", W * 0.03, H * 0.89, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 		else
 			if cur_mag > Maxclip then Maxclip = cur_mag end
 			if mags+cur_mag > Maxammo then Maxammo = mags+cur_mag end
@@ -120,12 +120,12 @@ function GM:DrawHUD()
 			surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction-clipfraction), H / 160 )
 			
 			surface.SetDrawColor(255, 255, 255, 255)
-			--surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
+			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
 			surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 32 )
-			draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+			draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 			
 			if alt_mags > 0 then
-				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.892, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 			end
 		end
 	end
