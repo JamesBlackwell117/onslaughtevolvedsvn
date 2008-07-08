@@ -88,7 +88,7 @@ function SWEP:PrimaryAttack()
 		disp:SetPos(trc.HitPos)
 		disp:SetAngles(ang)
 		disp.Owner = self.Owner
-		--disp:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		disp:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		disp:Spawn()
 		disp:Activate()
 		disp.Class = self.Owner:GetNWInt("class")
