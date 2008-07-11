@@ -115,7 +115,7 @@ function ENT:Think( )
 		
 		if table.HasValue(Zombies, ent:GetClass()) then
 			for k,v in pairs(ents.FindByClass("npc_bullseye")) do
-				local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-50), ents.FindByClass("sent_*"))
+				local trace = util.QuickTrace(v:GetPos(), Vector(0,0,-75), ents.FindByClass("sent_*"))
 				if trace.HitWorld then
 					ent:AddEntityRelationship(v, 1, 1 )
 				end
