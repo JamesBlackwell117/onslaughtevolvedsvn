@@ -671,27 +671,42 @@ end
 
 function GM:ScaleNPCDamage(npc,hit,dmg)
 	if npc:GetClass() == "npc_turret_floor" then return end
-	if hit == 1 then
-		dmg:ScaleDamage(2)
-	end
 	if dmg:GetInflictor():GetClass() == "crossbow_bolt" then
 		return dmg
+	elseif dmg:GetInflictor():GetClass() == "npc_turret_floor" then
+		dmg:SetDamage(6)
 	end
+		
 	if dmg:GetInflictor():IsPlayer() then
 		local wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
 		if wep == "weapon_shotgun" then -- the shotgun was pretty pathetic otherwise
-			dmg:ScaleDamage(14)
+			dmg:SetDamage(9)
 		elseif wep == "weapon_ar2" then
-			dmg:ScaleDamage(1.6)
+			dmg:SetDamage(11 * 1.4)
 		elseif wep == "weapon_357" then
-			dmg:ScaleDamage(0.5)
+			dmg:SetDamage(50)
+		elseif wep == "weapon_smg1" then
+			dmg:SetDamage(12)
+		elseif wep == "weapon_pistol" then
+			dmg:SetDamage(12)
+		elseif wep == "weapon_crowbar" then
+			dmg:SetDamage(25)
+		elseif wep == "swep_scatter" then
+			dmg:SetDamage(10)
 		end
 	end
-	local orig = dmg:GetDamage()
+	
+	if hit == 1 then
+		dmg:ScaleDamage(2)
+	end
+
 	local plycount = math.sqrt(#player.GetAll())
 	dmg:ScaleDamage(1 / plycount)
 	if dmg:GetDamage() < 1 then
 		dmg:SetDamage(1)
+	end
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint(dmg:GetDamage())
 	end
 	return dmg
 end
