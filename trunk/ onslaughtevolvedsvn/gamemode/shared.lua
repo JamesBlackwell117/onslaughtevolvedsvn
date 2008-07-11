@@ -158,13 +158,16 @@ end
 				"models/props_docks/dock01_pole01a_128.mdl",
 				"models/props_c17/door01_left.mdl",
 				"models/props_c17/shelfunit01a.mdl",
+				"models/props_interiors/Furniture_Couch02a.mdl",
 				"models/props_wasteland/kitchen_fridge001a.mdl",
+				"models/props_wasteland/kitchen_stove002a.mdl",
 				"models/props_combine/combine_barricade_short01a.mdl",
 				"models/props_junk/TrashDumpster02b.mdl",
 				"models/props_c17/oildrum001.mdl",
 				"models/props_c17/gravestone_coffinpiece002a.mdl",
 				"models/props_junk/PushCart01a.mdl",
 				"models/props_c17/FurnitureCouch001a.mdl",
+				"models/props_wasteland/laundry_cart001.mdl",
 				"models/props_trainstation/handrail_64decoration001a.mdl",
 				"models/props_trainstation/traincar_rack001.mdl",
 				"models/props_wasteland/laundry_basket001.mdl",
@@ -202,7 +205,7 @@ end
 	DEATH_PENALTY = -1500
 
 	--PROP VARS--
-	FLAMABLE_PROPS = false
+	FLAMABLE_PROPS = true
 	BATTLE_PHYS = false
 	PROP_CLEANUP = false
 	PROP_LIMIT = 25
@@ -217,7 +220,7 @@ end
 	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--
-	TURRET_COST = 1000
-	DISP_COST = 750
+	TURRET_COST = 700
+	DISP_COST = 600
 	DISP_RATE = 50 -- lower is faster
 	TURRET_HEALTH = 100
