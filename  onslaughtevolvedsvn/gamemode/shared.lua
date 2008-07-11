@@ -11,7 +11,7 @@ PHASE = "BUILD"
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
-Classes[1] = {NAME = "Scout", SPEED = 650, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,3,11,9}, MODEL = "models/player/Group03/Female_02.mdl", DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
+Classes[1] = {NAME = "Scout", SPEED = 650, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl", DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
 Classes[2] = {NAME = "Soldier", SPEED = 350, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
 Classes[3] = {NAME = "Engineer", SPEED = 300, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", DSCR = "A must have for any onslaught team. With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
 Classes[4] = {NAME = "Sniper", SPEED = 270, WEAPON_SET = 4, HEALTH = 80,AMMO = {8,7,5}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
@@ -25,7 +25,7 @@ TAUNTS[4] = {"vo/episode_1/npc/male01/cit_kill15.wav","vo/npc/male01/gotone01.wa
 TAUNTS[5] = {"vo/ravenholm/monk_kill01.wav","vo/ravenholm/monk_kill03.wav","vo/ravenholm/madlaugh01.wav","vo/ravenholm/monk_kill08.wav","vo/ravenholm/monk_kill05.wav","vo/ravenholm/madlaugh02.wav", "vo/ravenholm/madlaugh04.wav"}
 
 WEAPON_SET = {}
-WEAPON_SET[1] = {"weapon_crowbar","weapon_pistol","swep_scatter","weapon_smg1"}
+WEAPON_SET[1] = {"weapon_crowbar","weapon_pistol","swep_scatter"}
 WEAPON_SET[2] = {"weapon_crowbar","weapon_pistol", "weapon_frag", "weapon_ar2"}
 WEAPON_SET[3] = {"weapon_physcannon", "weapon_shotgun", "swep_repair", "swep_dispensermaker", "swep_turretmaker", "weapon_pistol"}
 WEAPON_SET[4] = {"weapon_crowbar","weapon_crossbow", "weapon_frag","weapon_357"}
