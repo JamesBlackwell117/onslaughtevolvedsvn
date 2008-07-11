@@ -705,9 +705,6 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 	if dmg:GetDamage() < 1 then
 		dmg:SetDamage(1)
 	end
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint(dmg:GetDamage())
-	end
 	return dmg
 end
 
