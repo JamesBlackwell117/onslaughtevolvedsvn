@@ -1164,11 +1164,9 @@ function GM:OnNPCKilled( npc, killer, wep)
 	end
 	local plyobj = killer
 	if killer:IsPlayer() then 
-	elseif ValidEntity(killer:GetOwner()) then
-		if killer:GetOwner():IsPlayer() then
+	elseif ValidEntity(killer:GetOwner()) && killer:GetOwner():IsPlayer() then
 			plyobj = killer:GetOwner()
-		end
-	elseif killer == npc && ValidEntity(npc.Igniter) then
+	elseif ValidEntity(npc.Igniter) then
 		plyobj = npc.Igniter
 	end
 	if !plyobj:IsPlayer() then return false end

@@ -21,7 +21,7 @@ end
 
 function ENT:Touch(ent)
 	if ent:IsNPC() && ent:GetClass() != "npc_turret_floor" then
-		ent.Igniter = self.Owner
+		ent.Igniter = self:GetOwner()
 		ent:Ignite(7,50)
 		ent:SetHealth(ent:Health()-2)
 	end
