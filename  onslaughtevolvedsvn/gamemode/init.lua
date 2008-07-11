@@ -1138,7 +1138,7 @@ end
 
 function Pmeta:Taunt()
 	self.LastTaunt = self.LastTaunt or CurTime()
-	if math.random(1,2) == 2 && self.LastTaunt + 30 <= CurTime() then
+	if math.random(1,2) == 2 && self.LastTaunt + 20 <= CurTime() then
 		local class = self:GetNWInt("class")
 		local taunts = TAUNTS[class]
 		self:EmitSound(taunts[math.random(1,#taunts)],140,100)
