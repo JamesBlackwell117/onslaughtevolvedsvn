@@ -150,7 +150,7 @@ function GM:DrawHUD()
 		if kills > killneeded || rank >= #RANKS then
 			draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
 		else
-			draw.SimpleText( "KILLS: "..kills.."/"..math.Clamp(killneeded - kills,0,killneeded).." kills until "..RANKS[rank + 1].NAME, "HUD", W * 0.71, H * 0.006 )
+			draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
 		end
 	end
 end
