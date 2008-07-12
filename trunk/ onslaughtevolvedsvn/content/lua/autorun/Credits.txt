@@ -1,5 +1,0 @@
-CREDITS:
-
-Credits to Avon for making this swep fix that was causing the custom SWEPS in ose go insane and fire far too often on the client
-
-Thanks Avon :D
