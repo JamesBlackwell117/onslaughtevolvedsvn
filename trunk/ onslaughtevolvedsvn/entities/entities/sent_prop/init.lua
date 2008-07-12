@@ -78,7 +78,7 @@ function ENT:Prepare()
 		trc.start = self:GetPos()
 		trc.endpos = self:GetPos()
 		trc.filter = self
-		trc = util.TraceLine( tr )
+		trc = util.TraceLine( trc ) --antiexploiting
 		if trc.HitWorld || !self:IsInWorld() then
 			self:Remove()
 		end

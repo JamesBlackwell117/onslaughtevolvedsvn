@@ -44,11 +44,6 @@ function SWEP:Initialize( )
 	end
 end
 
-function SWEP:Deploy()
-	self.Reloading = false
-	return true
-end
-
 function SWEP:PrimaryAttack()
 	if ( !self:CanPrimaryAttack()) then return end
 	self.Reloading = false
@@ -96,17 +91,7 @@ function SWEP:Reload()
 	if self.LastReload + 0.8 > CurTime() then return end
 	self.LastReload = CurTime()
 	self.Reloading = true
-	--self.Weapon:SetNextPrimaryFire(CurTime() + .3)
-	--self.Weapon:SetNextSecondaryFire(CurTime() + .3)
-	
-	--timer.Simple(0.1,function(self)
-		--if ValidEntity(self) then
-			--self:DefaultReload(ACT_SHOTGUN_RELOAD_START) 
-		--end 
-	--end, self )
-	
-	self:Weapon_SetActivity(ACT_SHOTGUN_RELOAD_START)
-	
+	self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
 	if self.AT == false then
 		self.AT = true
 		timer.Simple(.3,DoReload,self)
@@ -116,12 +101,14 @@ end
 
 function DoReload(swep)
 	if ValidEntity(swep) then 
-		if swep.Weapon:Clip1() >= swep.Primary.ClipSize || swep:Ammo1() <= 0 then swep.AT = false return end
+		if swep.Weapon:Clip1() >= swep.Primary.ClipSize || swep:Ammo1() <= 0 then swep.AT = false swep:SendWeaponAnim( ACT_SHOTGUN_RELOAD_FINISH ) swep:SetBodygroup(1,1) return end
 		if swep.Reloading == true then
-			swep:Weapon_SetActivity(ACT_SHOTGUN_RELOAD_FINISH)
+			swep:SetBodygroup(1,0)
+			swep:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
+			swep:SendWeaponAnim( ACT_VM_RELOAD )
 			swep.Owner:RemoveAmmo( 1, swep.Weapon:GetPrimaryAmmoType() )
 			swep.Weapon:SetClip1( swep.Weapon:Clip1() + 1 )
-			timer.Simple(.3,DoReload,swep)
+			timer.Simple(.4,DoReload,swep)
 		else
 			swep.AT = false
 			return

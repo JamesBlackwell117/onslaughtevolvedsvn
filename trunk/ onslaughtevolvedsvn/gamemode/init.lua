@@ -43,7 +43,7 @@ function Emeta:Dissolve()
 		dissolve:Fire( "Dissolve", "", 0 )
 		dissolve:Fire( "kill", "", 1 )
 
-		dissolve:EmitSound( Sound( "NPC_CombineBall.KillImpact" ) )
+		dissolve:EmitSound(Sound("weapons/physcannon/energy_sing_flyby1.wav"), 500,100)
 		self:Fire( "sethealth", "0", 0 )
 		self.Dissolving = true
 	end
@@ -914,7 +914,6 @@ function GM:ShutDown( )
 end
 
 function GM:PlayerDisconnected( ply )
-	print(ply:Nick().." BIBI!")
 	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
 		if v:GetOwner() == ply then v:Remove() end
 	end
@@ -1052,7 +1051,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	local trace = {}
 	trace.start = ply:GetShootPos()
-	trace.endpos = trace.start + (ply:GetAimVector() * 300)
+	trace.endpos = trace.start + (ply:GetAimVector() * 1000)
 	trace.filter = ply
 	local trc = util.TraceLine(trace)
 	
