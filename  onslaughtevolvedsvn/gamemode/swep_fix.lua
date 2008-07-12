@@ -10,6 +10,11 @@
 		
 	Sadly garry does not (want to?) fix it. Well here is the fix. it's licensed under the GPLv3 so do what you want with it <http://www.gnu.org/licenses/>.
 --]]
+
+print("------------------------------------------------------")
+print("-------Loading SWEP Multiplayer Fix by aVoN-----------")
+print("------------------------------------------------------")
+
 local COMPENSATION = 7; -- Ammount of compensation for Ping. I'm not suggesting to put this at any other value than 7
 if SERVER then AddCSLuaFile("autorun/swep_fix.lua") return end;
 local meta = FindMetaTable("Weapon");
