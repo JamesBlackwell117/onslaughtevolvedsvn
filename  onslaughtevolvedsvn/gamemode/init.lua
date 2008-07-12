@@ -734,10 +734,6 @@ end
 
 function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
-	if ply:IsAdmin() then
-	ply:SetNWInt("rank", #RANKS)
-	return
-	end
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:ChatPrint("You are now a "..v.NAME.." rank!")
