@@ -1,4 +1,4 @@
-
+include("swep_fix.lua")
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 GM.Name 	= "Onslaught: Evolved - 1.7.5"
@@ -28,7 +28,7 @@ WEAPON_SET = {}
 WEAPON_SET[1] = {"weapon_crowbar","weapon_pistol","swep_scatter"}
 WEAPON_SET[2] = {"weapon_crowbar","weapon_pistol", "weapon_frag", "weapon_ar2"}
 WEAPON_SET[3] = {"weapon_physcannon", "weapon_shotgun", "swep_repair", "swep_dispensermaker", "swep_turretmaker", "weapon_pistol"}
-WEAPON_SET[4] = {"weapon_crowbar","weapon_crossbow", "weapon_frag","weapon_357"}
+WEAPON_SET[4] = {"weapon_crowbar","swep_xbow", "weapon_frag","weapon_357"}
 WEAPON_SET[5] = {"weapon_crowbar", "weapon_pistol", "weapon_frag", "swep_flamethrower", "swep_minemaker"}
 
 AMMOS = {}

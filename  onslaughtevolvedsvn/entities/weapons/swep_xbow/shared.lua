@@ -28,11 +28,12 @@ SWEP.Primary.ClipSize = 1
 SWEP.Primary.DefaultClip = 1
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "xbowbolt"
-SWEP.Primary.Sound = Sound("Weapon_Shotgun.Single")
+SWEP.Primary.Sound = Sound("Weapon_Crossbow.Single")
 SWEP.Secondary.ClipSize	= -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo	= "none"
+SWEP.Zoomed = false
 
 SWEP.LastReload = CurTime()
 
@@ -48,15 +49,16 @@ end
 
 function SWEP:PrimaryAttack()
 	if ( !self:CanPrimaryAttack() ) then return end
-	self.Weapon:SetNextPrimaryFire(CurTime() + 2)
+	self.Weapon:SetNextPrimaryFire(CurTime() + 3)
 	if SERVER then
-		local bolt = ents.Create("prop_dynamic")
+		local bolt = ents.Create("ose_bolt")
+		bolt:SetOwner(self.Owner)
 		local ang = self.Owner:GetAimVector()
 		local pos = self.Owner:GetShootPos()
 		bolt:SetPos(pos + (ang * 10))
 		bolt:SetAngles(ang:Angle())
-		bolt:SetModel("models/crossbow_bolt.mdl")
-		bolt:SetVelocity(ang * 100)
+		bolt:SetVelocity(ang * 3500)
+		bolt:SetPhysicsAttacker( self.Owner )
 		bolt:Spawn()
 		bolt:Activate()
 	end
@@ -67,33 +69,13 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack( )
-	if ( self.Weapon:Clip1() < 3 ) then
-	 	self.Weapon:EmitSound( "Weapon_Pistol.Empty" ) 
- 		self.Weapon:SetNextPrimaryFire( CurTime() + 0.2 ) 
-		return
+	if !self.Zoomed then
+		self.Owner:SetFOV( 30, 0 )
+		self.Zoomed = true	
+	else
+		self.Zoomed = false
+		self.Owner:SetFOV( 80, 0 ) 
 	end
-	self.Weapon:SetNextSecondaryFire(CurTime() + 1.5)
-	self:ShootBullet( 7, 40, 0.3 )
-	self.Weapon:EmitSound(self.Primary.Sound) 
-	self:TakePrimaryAmmo( 3 )
-	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
-	self.Owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
-	if SERVER then
-		local aimvec = self.Owner:GetAimVector()
-		if aimvec:Angle().p >= 15 then
-			self.Owner:SetVelocity(aimvec * -600)
-		end
-		timer.Simple(0.15, function(self) if ValidEntity(self) then self:EmitSound("weapons/shotgun/shotgun_cock.wav") end end, self)
-	end
-	timer.Simple(0.2, function(self) if ValidEntity(self) then self:SendWeaponAnim(ACT_SHOTGUN_PUMP) end end, self)
-	self.Owner:ViewPunch(Vector(-10,0,0))
 end
 
 
-function SWEP:Reload()
-	self.Weapon:SetNextPrimaryFire(CurTime() + 0.7)
-	self.Weapon:SetNextSecondaryFire(CurTime() + 1)
-	timer.Simple(0.5,function(self) if ValidEntity(self) then self:DefaultReload(ACT_SHOTGUN_RELOAD_START) end end, self )
-	timer.Simple(0.5,function(self) if ValidEntity(self) then self:DefaultReload(ACT_SHOTGUN_RELOAD_FINISH) end end, self )
-	
-end
