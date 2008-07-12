@@ -70,55 +70,19 @@ function ENT:Touch(ent) -- Zombies need all the help they can get :-(
 	end
 end
 
---function ENT:InitCreateBull()
---		local ang = self:GetAngles()
---		local spawners = ents.FindByClass("sent_spawner")
---
---		local bull = ents.Create("npc_bullseye")
---		local pos = spawners[math.random(1,#spawners)]:GetPos()
---
---		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))	
---
---		bullpos = self:WorldToLocal(bullpos)
---
---		local posone = self:OBBMaxs()
---		local postwo = self:OBBMins()
---
---		local xd = posone.x - postwo.x
---		local yd = posone.y - postwo.y
---		local zd = posone.z - postwo.z
---
---		local xy = xd*yd
---		local xz = xd*zd
---		local yz = yd*zd
---
---		if xy > xz && xy > yz then 
---		bullpos.z = self:OBBCenter().x
---		elseif xz > yz && xz > xy then
---		bullpos.x = self:OBBCenter().z
---		else
---		bullpos.y = self:OBBCenter().y
---		end
---
---		bullpos = self:LocalToWorld(bullpos)
---
---		bull:SetPos(bullpos)
---		bull:SetParent(self.Entity)
---		bull:SetKeyValue("health","9999")
---		bull:SetKeyValue("minangle","360")
---		bull:SetKeyValue("spawnflags","1049092")
---		bull:SetNotSolid( true )
---		bull:Spawn()
---		bull:Activate()
---		self:SetAngles(ang)
---end
-
 function ENT:Think()
 end
 
 function ENT:Prepare()
-	self.Mhealth=self.SMH
-	--self:InitCreateBull() -- Inline Bullseye code
+		local trc = {}
+		trc.start = self:GetPos()
+		trc.endpos = self:GetPos()
+		trc.filter = self
+		trc = util.TraceLine( tr )
+		if trc.HitWorld || !self:IsInWorld() then
+			self:Remove()
+		end
+		self.Mhealth=self.SMH
 	
 		local ang = self:GetAngles()
 		local spawners = ents.FindByClass("sent_spawner")
@@ -129,7 +93,7 @@ function ENT:Prepare()
 		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))	
  
 		bullpos = self:WorldToLocal(bullpos)
- 
+		
 		local posone = self:OBBMaxs()
 		local postwo = self:OBBMins()
  
