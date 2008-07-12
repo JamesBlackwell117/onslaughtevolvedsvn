@@ -18,7 +18,7 @@ function ENT:Touch(ent)
 end
 
 function ENT:StartTouch(ent)
-	if table.HasValue(self.npcs, ent:GetClass) then
+	if table.HasValue(self.npcs, ent:GetClass()) then
 		print("[Force Lose] NPC has entered a force lose brush!")
 		for k,v in pairs(player.GetAll()) do
 			v:ChatPrint("You failed to keep the objective free of npcs!")
