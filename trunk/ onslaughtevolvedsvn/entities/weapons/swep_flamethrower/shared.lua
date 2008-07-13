@@ -18,8 +18,8 @@ end
 SWEP.ViewModel	= "models/weapons/v_smg1.mdl"
 SWEP.WorldModel	= "models/weapons/w_smg1.mdl"
 
-SWEP.Primary.ClipSize = 250
-SWEP.Primary.DefaultClip = 250
+SWEP.Primary.ClipSize = 50
+SWEP.Primary.DefaultClip = 50
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "AR2"
 SWEP.LastBall = CurTime()
