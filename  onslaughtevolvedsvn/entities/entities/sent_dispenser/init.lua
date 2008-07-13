@@ -32,7 +32,7 @@ function ENT:Use(act, cal)
 			if (self.Healing / 50) == math.Round(self.Healing / 50) && self.Healing > 49 then
 				if self.Class == 3 then
 					self.Owner:Message("+100 [Dispenser healing]", Color(100,255,100,255))
-					self.Owner:SetNWInt("money",self.OwnerGetNWInt("money") + 100)
+					self.Owner:SetNWInt("money",self.Owner:GetNWInt("money") + 100)
 				end
 			end
 		end
