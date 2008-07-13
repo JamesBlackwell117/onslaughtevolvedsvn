@@ -46,6 +46,13 @@ function PANEL:Init( )
 	table.insert( self.Buttons, b )
 	--------------------------------------------------------------------
 	local b = vgui.Create("DButton",self)
+	b:SetText("Help I'm stuck!")
+	function b.DoClick( b )
+		RunConsoleCommand("stuck")
+	end
+	table.insert( self.Buttons, b )
+	--------------------------------------------------------------------
+	local b = vgui.Create("DButton",self)
 	b:SetText("Votemap")
 	function b.DoClick( b )
 		MENU.MapLoad = vgui.Create( "onslaught_mapvote" )

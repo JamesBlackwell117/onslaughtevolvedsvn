@@ -49,6 +49,27 @@ function Emeta:Dissolve()
 	end
 end
 
+function Pmeta:IsStuck()
+	if self:GetCollisionGroup() == COLLISION_GROUP_DISSOLVING then
+		self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+		print("FALSE")
+		return false
+	end
+	local trc = {}
+	trc.start = self:GetPos()
+	trc.endpos = self:GetPos() + Vector(0,0,5)
+	trc.filter = self
+	trc = util.TraceLine( trc )
+	if trc.Hit then
+		self:SetCollisionGroup(COLLISION_GROUP_DISSOLVING)
+		timer.Simple(1,self.IsStuck, self)
+		print("TRUE")
+		return true
+	end
+	print("FALSE")
+	return false
+end
+
 
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
@@ -420,7 +441,7 @@ concommand.Add( "admin", AdminMenu )
 
 function GM:PlayerSay( ply, txt, pub )
 	if string.sub(txt,1,5) == "!help" then
-		ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn")
+		ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn, !stuck")
 	end
 	if string.sub(txt,1,5) == "!give" then
 		local args = string.Explode(" ", txt)
@@ -462,6 +483,9 @@ function GM:PlayerSay( ply, txt, pub )
 		ply:ChatPrint("Could not find the requested player!")
 		return ""
 	end
+	if string.sub(txt,1,6) == "!stuck" then
+		Stuck(ply)
+	end
 	if string.sub(txt,1,6) == "!spawn" then
 		SpawnPoint(ply)
 	end
@@ -477,6 +501,16 @@ function GM:PlayerSay( ply, txt, pub )
 	return txt
 end
 
+function Stuck(ply,cmd,args)
+	if ply:IsStuck() then
+		ply:Message("You are now nocollided with everything move to get unstuck!")
+	else
+		ply:Message("You are not stuck!")
+	end
+end
+
+concommand.Add("stuck", Stuck)
+
 function SpawnPoint(ply,cmd,args)
 	if ply:GetRank() < 3 then
 		ply:ChatPrint("You must be a corporal or above to use this command!")
@@ -484,14 +518,24 @@ function SpawnPoint(ply,cmd,args)
 	end
 	if PHASE == "BUILD" then
 		if not ply:IsInWorld( ) || ply:GetMoveType() == MOVETYPE_NOCLIP then
+			local trc = {}
+			trc.start = ply:GetPos()
+			trc.endpos = ply:GetPos() + ply:GetUp() * -200
+			trc.filter = ply
+			trc = util.TraceLine( trc ) --check if the player is standing above skybox (under the map) or a nodraw
+			if trc.HitSky || trc.HitNoDraw then
+				ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
+				return
+			end
+			ply.CusSpawn = ply:GetPos()
+			ply:Message("Set custom spawn!")
+			ply:Message("Say !resetspawn to reset your spawnpoint")
+		else
 			ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
 			return
 		end
-		ply.CusSpawn = ply:GetPos()
-		ply:Message("Set custom spawn!")
-		ply:Message("Say !resetspawn to reset your spawnpoint")
 	else
-		ply:Message("can't set spawn in battle phase", Color(255,100,100,255))
+		ply:Message("Can't set spawn in battle phase", Color(255,100,100,255))
 	end
 end
 
@@ -736,12 +780,11 @@ function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
-			ply:ChatPrint("You are now a "..v.NAME.." rank!")
 			ply:SetNWInt("rank", k)
-			GAMEMODE:SaveAllProfiles() --might as well
-			return
 		end
-	end	
+	end
+	ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
+	GAMEMODE:SaveAllProfiles() --might as well
 end
 
 function GM:PlayerDeath( ply, wep, killer )
