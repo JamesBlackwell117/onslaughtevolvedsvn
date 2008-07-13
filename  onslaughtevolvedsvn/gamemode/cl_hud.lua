@@ -23,6 +23,24 @@ function GM:DrawHUD()
 		end
 	end
 	
+	if GetConVarNumber( "ose_hidetips" ) != 1 then
+		surface.SetDrawColor(50, 50, 50, 150)
+		surface.DrawRect( 0,0, W, H * 0.04)
+		surface.SetDrawColor(255, 255, 255, 255)
+		surface.DrawOutlinedRect( 0,0, W, H * 0.04)
+		draw.SimpleText( "TIP: "..tip, "HUD", W * 0.01, H * 0.006 )
+		surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
+		local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
+		local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
+		local killneeded = nextrank.KILLS or 0
+		local rank = LocalPlayer():GetNWInt("rank") or 1
+		if kills > killneeded || rank >= #RANKS then
+			draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
+		else
+			draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
+		end
+	end
+	
 	if !ply:Alive() then return end
 	local Mhlth = 100
 	if PHASE == "BATTLE" then
@@ -134,25 +152,6 @@ function GM:DrawHUD()
 	draw.DrawText("Money: "..math.Round(LocalPlayer():GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * y1, MonCol,1)
 	draw.DrawText("Phase: "..PHASE, "ScoreboardText", W / 1.15, H * y2, Color(255,255,255,255),1)
 	draw.DrawText("Time Remaining: "..string.FormattedTime( TimeLeft, "%2i:%02i")  , "ScoreboardText", W / 1.15 , H * y3, timecol,1)
-	
-	
-	if GetConVarNumber( "ose_hidetips" ) != 1 then
-		surface.SetDrawColor(50, 50, 50, 150)
-		surface.DrawRect( 0,0, W, H * 0.04)
-		surface.SetDrawColor(255, 255, 255, 255)
-		surface.DrawOutlinedRect( 0,0, W, H * 0.04)
-		draw.SimpleText( "TIP: "..tip, "HUD", W * 0.01, H * 0.006 )
-		surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
-		local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
-		local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
-		local killneeded = nextrank.KILLS or 0
-		local rank = LocalPlayer():GetNWInt("rank") or 1
-		if kills > killneeded || rank >= #RANKS then
-			draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
-		else
-			draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
-		end
-	end
 end
 
 function GM:HUDDrawTargetID( )
