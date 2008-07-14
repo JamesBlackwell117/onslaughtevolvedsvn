@@ -775,10 +775,10 @@ function GM:CheckRanks(ply)
 	for k,v in pairs(RANKS) do
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:SetNWInt("rank", k)
+			ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
+			GAMEMODE:SaveAllProfiles() --might as well
 		end
 	end
-	ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
-	GAMEMODE:SaveAllProfiles() --might as well
 end
 
 function GM:PlayerDeath( ply, wep, killer )
