@@ -50,23 +50,16 @@ function Emeta:Dissolve()
 end
 
 function Pmeta:IsStuck()
-	if self:GetCollisionGroup() == COLLISION_GROUP_DISSOLVING then
-		self:SetCollisionGroup(COLLISION_GROUP_PLAYER)
-		print("FALSE")
-		return false
-	end
 	local trc = {}
 	trc.start = self:GetPos()
-	trc.endpos = self:GetPos() + Vector(0,0,5)
+	trc.endpos = self:GetPos() + Vector(0,0,15)
 	trc.filter = self
 	trc = util.TraceLine( trc )
 	if trc.Hit then
-		self:SetCollisionGroup(COLLISION_GROUP_DISSOLVING)
-		timer.Simple(1,self.IsStuck, self)
-		print("TRUE")
+		self:Kill()
+		self.NextSpawn = self.NextSpawn + 5
 		return true
 	end
-	print("FALSE")
 	return false
 end
 
@@ -1247,11 +1240,10 @@ function OSE_Spawn(ply,cmd,args)
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
 	end
-	if !table.HasValue(MODELS, model) then
+	if !MODELS[model] then
 		ply:ChatPrint("That model is disallowed!")
 		return
 	end
-
 	
 	local class = "sent_prop"
 	if model == "models/Items/ammocrate_smg1.mdl" then
@@ -1288,8 +1280,9 @@ function OSE_Spawn(ply,cmd,args)
  
 	if !tr.Hit then return end
  
-	local ang = ply:EyeAngles() 
- 	ang.yaw = ang.yaw + 180
+	local ang = ply:EyeAngles()
+	ang.yaw = ang.yaw + 180
+	if MODELS[model].ANG then ang.yaw = ang.yaw + MODELS[model].ANG.yaw end
  	ang.roll = 0 
  	ang.pitch = 0 
 	local ent = ents.Create(class)
