@@ -5,21 +5,6 @@ include('shared.lua')
 ENT.LastUse = CurTime()
 ENT.Healing = 0
 
-function ENT:Initialize()   
-	self.Entity:SetModel("models/props_combine/health_charger001.mdl")
-	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )   
-	self.Entity:SetSolid( SOLID_VPHYSICS )      
-	
-	
-	local phys = self.Entity:GetPhysicsObject()  	
-	if (phys:IsValid()) then  		
-		phys:Wake()
-		phys:EnableMotion(false)
-	end
-end
-
-
 function ENT:Use(act, cal)
 	if !act:IsPlayer() then return end
 	if self.LastUse + 0.08 < CurTime() then

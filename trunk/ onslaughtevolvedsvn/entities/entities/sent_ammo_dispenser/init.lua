@@ -6,19 +6,6 @@ ENT.LastUse = CurTime()
 ENT.AutomaticFrameAdvance = true
 ENT.LastTouch = 0
 
-function ENT:Initialize()   
-	self.Entity:SetModel("models/Items/ammocrate_smg1.mdl")
-	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )   
-	self.Entity:SetSolid( SOLID_VPHYSICS )      
-	
-	local phys = self.Entity:GetPhysicsObject()  	
-	if (phys:IsValid()) then  		
-		phys:Wake()
-		phys:EnableMotion(false)
-	end
-end
-
 function ENT:Close()
 	local sequence = self.Entity:LookupSequence("Idle")
 	self.Entity:SetSequence(sequence)
