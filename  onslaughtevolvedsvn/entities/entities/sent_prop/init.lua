@@ -30,13 +30,7 @@ function ENT:Initialize()
 end
 
 function ENT:CalculateHealth()
-		self.SMH = self.Entity:GetPhysicsObject():GetMass() * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100
-		
-		if self.SMH < 200 then
-			self.SMH = 200
-		elseif self.SMH > 800 then
-			self.SMH = 800
-		end
+		self.SMH = math.Clamp(self.Entity:GetPhysicsObject():GetMass() * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100,200,800)
 end
 
 function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu
