@@ -11,7 +11,6 @@ function PANEL:Init( )
  	self.IconList:EnableHorizontal( true ) 
  	self.IconList:SetPadding( 4 ) 
 	self.IconList:SetVisible( true ) 
-	self.IconList:NoClipping(false)
 	
 	for k,v in pairs( MODELS ) do
 		local ico = vgui.Create( "DModelPanel", self )
@@ -40,6 +39,14 @@ function PANEL:Init( )
 		ico:InvalidateLayout( true ) 
 		ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
 		self.IconList:AddItem( ico )
+	end
+end
+
+function PANEL:Think()
+	if self:GetParent():GetActiveTab():GetPanel() == self then
+		self:GetParent():GetParent():SetSize(360,700)
+	else 
+		self:GetParent():GetParent():SetSize(360,350) 
 	end
 end
 
