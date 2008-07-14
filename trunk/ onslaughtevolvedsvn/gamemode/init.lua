@@ -1239,10 +1239,16 @@ function OSE_Spawn(ply,cmd,args)
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
 	end
-	if !table.HasValue(MODELS, model) then
-		ply:ChatPrint("That model is disallowed!")
-		return
+	local valid = false
+	local defaultangle
+	for k,v in pairs( MODELS ) do
+		if v.MDL == model then
+		 valid = true 
+		if v.ANG then defaultangle = v.ANG end
+		break
+		end
 	end
+	if valid == false then return end
 
 	
 	local class = "sent_prop"
@@ -1284,6 +1290,7 @@ function OSE_Spawn(ply,cmd,args)
  	ang.yaw = ang.yaw + 180
  	ang.roll = 0 
  	ang.pitch = 0 
+ 	if defaultangle then ang = ang + defaultangle end
 	local ent = ents.Create(class)
 	ent:SetAngles(ang)
 	ent:SetPos(tr.HitPos)
