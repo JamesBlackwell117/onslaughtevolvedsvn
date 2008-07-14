@@ -100,7 +100,7 @@ function GM:PlayerInitialSpawn(ply)
 		local name = string.Replace( ply:SteamID(), ":", "." )
 		local read = util.KeyValuesToTable( file.Read( "onslaught_profiles/"..name..".txt") )
 		ply:SetNetworkedInt( "kills", read.kills)
-		GAMEMODE:CheckRanks(ply)
+		GAMEMODE:CheckRanks(ply,true)
 	end
 end
 
@@ -768,7 +768,7 @@ function CheckDead()
 	end
 end
 
-function GM:CheckRanks(ply)
+function GM:CheckRanks(ply,join)
 	local kills = ply:GetNWInt("kills")
 	local rank = ply:GetNWInt("rank")
 	local newrank = rank
@@ -779,13 +779,16 @@ function GM:CheckRanks(ply)
 	end
 	if newrank > rank then
 		ply:SetNWInt("rank", newrank)
+		ply:SetTeam(newrank+1)
+		if !join then
 		ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
 		GAMEMODE:SaveAllProfiles()
+		end
 	end
 end
 
 function GM:PlayerDeath( ply, wep, killer )
-	GAMEMODE:CheckRanks(ply)
+	--GAMEMODE:CheckRanks(ply,false)
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
@@ -1206,6 +1209,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 	if !plyobj:IsPlayer() then return false end
 	self:CalculatePowerups(npc,plyobj,wep)
 	self:AddNPCKillMoney(class,plyobj,bonus)
+	GAMEMODE:CheckRanks(plyobj,false)
 end
 
 function GM:AddNPCKillMoney(class,ply,bonus)
