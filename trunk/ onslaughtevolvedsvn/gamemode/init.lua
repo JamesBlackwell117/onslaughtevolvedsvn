@@ -107,7 +107,6 @@ function GM:PlayerInitialSpawn(ply)
 		local name = string.Replace( ply:SteamID(), ":", "." )
 		local read = util.KeyValuesToTable( file.Read( "onslaught_profiles/"..name..".txt") )
 		ply:SetNetworkedInt( "kills", read.kills)
-		ply:SetNetworkedInt( "rank", read.rank)
 		GAMEMODE:CheckRanks(ply)
 	end
 end
@@ -440,59 +439,65 @@ end
 concommand.Add( "admin", AdminMenu )
 
 function GM:PlayerSay( ply, txt, pub )
-	if string.sub(txt,1,1) == "!" then
-		if string.sub(txt,1,5) == "!help" then
-			ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn")
-		elseif string.sub(txt,1,5) == "!give" then
-			local args = string.Explode(" ", txt)
-			if #args != 3 || tonumber(args[3]) <= 0 then
-				ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
-				return ""
-			elseif ply:GetNetworkedInt("money") <= tonumber(args[3]) then
-				ply:ChatPrint("You do not have enough money to give that amount!")
-				return ""
-			else
-				for k,v in pairs(player.GetAll()) do
-					if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-						v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-						ply:SetNetworkedInt("money", ply:GetNetworkedInt("money") - tonumber(args[3]))
-						v:ChatPrint(ply:Nick().." gave you "..args[3].." money!")
-						ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
-						return ""
-					end
-				end
-				ply:ChatPrint("Could not find the requested player!")
-			end
-		elseif string.sub(txt,1,6) == "!agive" then
-			local args = string.Explode(" ", txt)
-			if !ply:IsAdmin() then ply:ChatPrint("You need to be an admin to use this command!") 
-			elseif #args != 3 || tonumber(args[3]) <= 0 then
-				ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
-				return ""
-			else
-				for k,v in pairs(player.GetAll()) do
-					if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-						v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-						v:ChatPrint("Admin: "..ply:Nick().." gave you "..args[3].." money!")
-						ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
-						return ""
-					end
-				end
-				ply:ChatPrint("Could not find the requested player!")
-			end
-		elseif string.sub(txt,1,6) == "!spawn" then
-			SpawnPoint(ply)
-		elseif string.sub(txt,1,11) == "!resetspawn" then
-			ResetSpawn(ply)
-		elseif string.sub(txt,1,8) == "!sellall" then
-			SellAll(ply)
-		elseif string.sub(txt,1,9) == "!voteskip" then
-			VoteSkip(ply)
-		end
-	return ""
-	else
-	return txt
+	if string.sub(txt,1,5) == "!help" then
+		ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn, !stuck")
 	end
+	if string.sub(txt,1,5) == "!give" then
+		local args = string.Explode(" ", txt)
+		if #args != 3 || tonumber(args[3]) <= 0 then
+			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+			return ""
+		end
+		if ply:GetNetworkedInt("money") <= tonumber(args[3]) then
+			ply:ChatPrint("You do not have enough money to give that amount!")
+			return ""
+		end
+		for k,v in pairs(player.GetAll()) do
+			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
+				ply:SetNetworkedInt("money", ply:GetNetworkedInt("money") - tonumber(args[3]))
+				v:ChatPrint(ply:Nick().." gave you "..args[3].." money!")
+				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+				return txt
+			end
+		end
+		ply:ChatPrint("Could not find the requested player!")
+		return ""
+	end
+	if string.sub(txt,1,6) == "!agive" then
+		if !ply:IsAdmin() then ply:ChatPrint("You need to be an admin to use this command!") return "" end
+		local args = string.Explode(" ", txt)
+		if #args != 3 || tonumber(args[3]) <= 0 then
+			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+			return ""
+		end
+		for k,v in pairs(player.GetAll()) do
+			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
+				v:ChatPrint("Admin: "..ply:Nick().." gave you "..args[3].." money!")
+				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+				return txt
+			end
+		end
+		ply:ChatPrint("Could not find the requested player!")
+		return ""
+	end
+	if string.sub(txt,1,6) == "!stuck" then
+		Stuck(ply)
+	end
+	if string.sub(txt,1,6) == "!spawn" then
+		SpawnPoint(ply)
+	end
+	if string.sub(txt,1,11) == "!resetspawn" then
+		ResetSpawn(ply)
+	end
+	if string.sub(txt,1,8) == "!sellall" then
+		SellAll(ply)
+	end
+	if string.sub(txt,1,9) == "!voteskip" then
+		VoteSkip(ply)
+	end
+	return txt
 end
 
 function Stuck(ply,cmd,args)
@@ -512,6 +517,9 @@ function SpawnPoint(ply,cmd,args)
 	end
 	if PHASE == "BUILD" then
 		if not ply:IsInWorld( ) || ply:GetMoveType() == MOVETYPE_NOCLIP then
+			ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
+			return
+		else
 			local trc = {}
 			trc.start = ply:GetPos()
 			trc.endpos = ply:GetPos() + ply:GetUp() * -200
@@ -524,9 +532,6 @@ function SpawnPoint(ply,cmd,args)
 			ply.CusSpawn = ply:GetPos()
 			ply:Message("Set custom spawn!")
 			ply:Message("Say !resetspawn to reset your spawnpoint")
-		else
-			ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
-			return
 		end
 	else
 		ply:Message("Can't set spawn in battle phase", Color(255,100,100,255))
@@ -772,17 +777,22 @@ end
 
 function GM:CheckRanks(ply)
 	local kills = ply:GetNWInt("kills")
+	local rank = ply:GetNWInt("rank")
+	local newrank = rank
 	for k,v in pairs(RANKS) do
-		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
-			ply:SetNWInt("rank", k)
-			ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
-			ply:SetTeam(k+1)
-			GAMEMODE:SaveAllProfiles() --might as well
+		if k > rank && kills >= v.KILLS then
+			newrank = k
 		end
+	end
+	if newrank > rank then
+		ply:SetNWInt("rank", newrank)
+		ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
+		GAMEMODE:SaveAllProfiles()
 	end
 end
 
 function GM:PlayerDeath( ply, wep, killer )
+	GAMEMODE:CheckRanks(ply)
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
@@ -1147,7 +1157,6 @@ end
 
 function Pmeta:GetRank()
 	local rank = self:GetNWInt("rank")
-	if self:IsAdmin() then rank = #RANKS end
 	return rank
 end
 
@@ -1204,7 +1213,6 @@ function GM:OnNPCKilled( npc, killer, wep)
 	if !plyobj:IsPlayer() then return false end
 	self:CalculatePowerups(npc,plyobj,wep)
 	self:AddNPCKillMoney(class,plyobj,bonus)
-	GAMEMODE:CheckRanks(plyobj)
 end
 
 function GM:AddNPCKillMoney(class,ply,bonus)
@@ -1239,10 +1247,10 @@ function OSE_Spawn(ply,cmd,args)
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
 	end
-	local defaultangle
-
-	if not MODELS[model] then return end
-	if MODELS[model].ANG then defaultangle = MODELS[model].ANG end
+	if !table.HasValue(MODELS, model) then
+		ply:ChatPrint("That model is disallowed!")
+		return
+	end
 
 	
 	local class = "sent_prop"
@@ -1284,7 +1292,6 @@ function OSE_Spawn(ply,cmd,args)
  	ang.yaw = ang.yaw + 180
  	ang.roll = 0 
  	ang.pitch = 0 
- 	if defaultangle then ang = ang + defaultangle end
 	local ent = ents.Create(class)
 	ent:SetAngles(ang)
 	ent:SetPos(tr.HitPos)
@@ -1300,17 +1307,17 @@ function OSE_Spawn(ply,cmd,args)
  
 	ent:SetPos( vFlushPoint )
 	//endgarry
-	local prc = ent.SMH * 1.05
 	if not ent:IsInWorld( ) then
 		ent:Remove()
 		ply:ChatPrint( "Prop was outside of the world!" )
 		return false
-	elseif prc > ply:GetNetworkedInt( "money") then
+	elseif ent.Mhealth > ply:GetNetworkedInt( "money") then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		ent:Remove()
 		return false
 	else
+		local prc = ent.SMH * 1.05
 		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - prc)
 		ply:Message((math.Round(prc * -1)).." [Spawned Item]", Color(255,100,100,255))
 	end
