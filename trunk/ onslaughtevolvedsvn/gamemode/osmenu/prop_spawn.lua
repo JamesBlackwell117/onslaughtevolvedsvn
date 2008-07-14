@@ -6,12 +6,25 @@ function PANEL:Init( )
 	self.Label:SetTextColor( Color( 255, 255, 255, 255 ) )
 	self.Label:SizeToContents( )
 	
-	self.IconList = vgui.Create( "DPanelList", self )
-	self.IconList:EnableVerticalScrollbar( true ) 
- 	self.IconList:EnableHorizontal( true ) 
- 	self.IconList:SetPadding( 4 ) 
-	self.IconList:SetVisible( true ) 
+	self.ListList = vgui.Create( "DPanelList", self )
 	
+	self.IconList = {}
+	self.IconListCollapse = {}
+	for k,v in pairs (MODELGROUPS) do
+	self.IconList[k] = vgui.Create( "DPanelList", self )
+	self.IconList[k]:EnableVerticalScrollbar( true ) 
+ 	self.IconList[k]:EnableHorizontal( true ) 
+ 	self.IconList[k]:SetPadding( 4 ) 
+	self.IconList[k]:SetVisible( true ) 
+	
+	self.IconListCollapse[k] = vgui.Create( "DCollapsibleCategory", self )
+	self.IconListCollapse[k]:SetSize( 610,20 ) 
+	self.IconListCollapse[k]:SetLabel( v ) 
+	self.IconListCollapse[k]:SetVisible( true ) 
+	self.IconListCollapse[k]:SetContents(self.IconList[k])
+	self.ListList:AddItem( self.IconListCollapse[k] )
+	end
+			
 	for k,v in pairs( MODELS ) do
 		local ico = vgui.Create( "DModelPanel", self )
 		ico:SetModel(k)
@@ -38,13 +51,15 @@ function PANEL:Init( )
 		
 		ico:InvalidateLayout( true ) 
 		ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
-		self.IconList:AddItem( ico )
+		if v.GROUP then
+		self.IconList[v.GROUP]:AddItem( ico )
+		end
 	end
 end
 
 function PANEL:Think()
 	if self:GetParent():GetActiveTab():GetPanel() == self then
-		self:GetParent():GetParent():SetSize(360,700)
+		self:GetParent():GetParent():SetSize(360+256,750)
 	else 
 		self:GetParent():GetParent():SetSize(360,350) 
 	end
@@ -53,8 +68,13 @@ end
 function PANEL:PerformLayout( )
 	self:StretchToParent( 2, 24, 2, 2 )
 	self.Label:SetPos( 2, 2 )
-	self.IconList:StretchToParent( 4, 26, 4, 4 ) 
- 	self.IconList:InvalidateLayout() 
+	self.ListList:StretchToParent( 4, 26, 4, 4 ) 
+ 	self.ListList:InvalidateLayout() 
+	for k,v in pairs (self.IconList) do
+	--v:StretchToParent( 4, 26, 4, 4 ) 
+	v:SizeToContents( )
+ 	v:InvalidateLayout() 
+	end
 end
 
 vgui.Register( "onslaught_PropSpawn", PANEL, "DPanel" )
