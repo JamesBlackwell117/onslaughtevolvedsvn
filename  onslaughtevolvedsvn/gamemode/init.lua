@@ -440,65 +440,59 @@ end
 concommand.Add( "admin", AdminMenu )
 
 function GM:PlayerSay( ply, txt, pub )
-	if string.sub(txt,1,5) == "!help" then
-		ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn, !stuck")
-	end
-	if string.sub(txt,1,5) == "!give" then
-		local args = string.Explode(" ", txt)
-		if #args != 3 || tonumber(args[3]) <= 0 then
-			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
-			return ""
-		end
-		if ply:GetNetworkedInt("money") <= tonumber(args[3]) then
-			ply:ChatPrint("You do not have enough money to give that amount!")
-			return ""
-		end
-		for k,v in pairs(player.GetAll()) do
-			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-				ply:SetNetworkedInt("money", ply:GetNetworkedInt("money") - tonumber(args[3]))
-				v:ChatPrint(ply:Nick().." gave you "..args[3].." money!")
-				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
-				return txt
+	if string.sub(txt,1,1) == "!" then
+		if string.sub(txt,1,5) == "!help" then
+			ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn")
+		elseif string.sub(txt,1,5) == "!give" then
+			local args = string.Explode(" ", txt)
+			if #args != 3 || tonumber(args[3]) <= 0 then
+				ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+				return ""
+			elseif ply:GetNetworkedInt("money") <= tonumber(args[3]) then
+				ply:ChatPrint("You do not have enough money to give that amount!")
+				return ""
+			else
+				for k,v in pairs(player.GetAll()) do
+					if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+						v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
+						ply:SetNetworkedInt("money", ply:GetNetworkedInt("money") - tonumber(args[3]))
+						v:ChatPrint(ply:Nick().." gave you "..args[3].." money!")
+						ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+						return ""
+					end
+				end
+				ply:ChatPrint("Could not find the requested player!")
 			end
-		end
-		ply:ChatPrint("Could not find the requested player!")
-		return ""
-	end
-	if string.sub(txt,1,6) == "!agive" then
-		if !ply:IsAdmin() then ply:ChatPrint("You need to be an admin to use this command!") return "" end
-		local args = string.Explode(" ", txt)
-		if #args != 3 || tonumber(args[3]) <= 0 then
-			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
-			return ""
-		end
-		for k,v in pairs(player.GetAll()) do
-			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-				v:ChatPrint("Admin: "..ply:Nick().." gave you "..args[3].." money!")
-				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
-				return txt
+		elseif string.sub(txt,1,6) == "!agive" then
+			local args = string.Explode(" ", txt)
+			if !ply:IsAdmin() then ply:ChatPrint("You need to be an admin to use this command!") 
+			elseif #args != 3 || tonumber(args[3]) <= 0 then
+				ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+				return ""
+			else
+				for k,v in pairs(player.GetAll()) do
+					if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+						v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
+						v:ChatPrint("Admin: "..ply:Nick().." gave you "..args[3].." money!")
+						ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+						return ""
+					end
+				end
+				ply:ChatPrint("Could not find the requested player!")
 			end
+		elseif string.sub(txt,1,6) == "!spawn" then
+			SpawnPoint(ply)
+		elseif string.sub(txt,1,11) == "!resetspawn" then
+			ResetSpawn(ply)
+		elseif string.sub(txt,1,8) == "!sellall" then
+			SellAll(ply)
+		elseif string.sub(txt,1,9) == "!voteskip" then
+			VoteSkip(ply)
 		end
-		ply:ChatPrint("Could not find the requested player!")
-		return ""
-	end
-	if string.sub(txt,1,6) == "!stuck" then
-		Stuck(ply)
-	end
-	if string.sub(txt,1,6) == "!spawn" then
-		SpawnPoint(ply)
-	end
-	if string.sub(txt,1,11) == "!resetspawn" then
-		ResetSpawn(ply)
-	end
-	if string.sub(txt,1,8) == "!sellall" then
-		SellAll(ply)
-	end
-	if string.sub(txt,1,9) == "!voteskip" then
-		VoteSkip(ply)
-	end
+	return ""
+	else
 	return txt
+	end
 end
 
 function Stuck(ply,cmd,args)
