@@ -173,7 +173,7 @@ function PANEL:Init( )
 			
 			local center = ent:OBBCenter()
 			local dist = ent:BoundingRadius()*1.2
-			local hlth = math.Round(math.Clamp(ent:GetPhysicsObject():GetMass() * (ent:OBBMins():Distance(ent:OBBMaxs())) / 100,200,800))
+			local hlth = math.Round(math.Clamp(ent:GetPhysicsObject():GetMass() * (ent:OBBMins():Distance(ent:OBBMaxs())) / 100,200,800)*1.05)
 			
 			ent:Remove()
 		
