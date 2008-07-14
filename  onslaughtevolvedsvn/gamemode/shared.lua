@@ -119,9 +119,9 @@ RANKS[5] = {NAME = "Second Lieutenant", KILLS = 2000, COLOR = Color( 200, 100, 1
 RANKS[6] = {NAME = "Lieutenant", KILLS = 3000, COLOR = Color( 255, 100, 100, 255 )}
 RANKS[7] = {NAME = "Captain", KILLS = 5000, COLOR = Color( 50, 50, 80, 255 )}
 RANKS[8] = {NAME = "General", KILLS = 8000, COLOR = Color( 50, 50, 50, 255 )}
-RANKS[9] = {NAME = "Jesus", KILLS = 20000, COLOR = Color( 255, 105, 180, 255)}
-RANKS[10] = {NAME = "Fuckin' Godlike", KILLS = 50000, COLOR = Color(255, 0, 0,255)}
-RANKS[11] = {NAME = "Ultimate Epic of Epicness", KILLS = 100000, COLOR = Color( 255, 100, 100, 255 )}
+RANKS[9] = {NAME = "Jesus", KILLS = 15000, COLOR = Color( 255, 105, 180, 255)}
+RANKS[10] = {NAME = "Fuckin' Godlike", KILLS = 30000, COLOR = Color(255, 0, 0,255)}
+RANKS[11] = {NAME = "Ultimate Epic of Epicness", KILLS = 60000, COLOR = Color( 255, 100, 100, 255 )}
 
 
 for k,v in pairs(RANKS) do

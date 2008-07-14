@@ -171,11 +171,25 @@ function GM:HUDDrawTargetID( )
 	if ent:IsPlayer( ) then
 		surface.SetFont( "ScoreboardText" )
 		local w, h = surface.GetTextSize( ent:GetName( ) )
+		
 		if w > 100 then
-			draw.RoundedBox( 8, midx - ( w / 2 ) - 2, y + 26, w + 5, bh, Color( 0, 0, 255, 200 ) )
+			surface.SetDrawColor(50, 50, 50, 200)
+			surface.DrawRect(  midx - ( w / 2 ) - 2, y + 26, w + 5, bh )
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.DrawOutlinedRect(  midx - ( w / 2 ) - 2, y + 26, w + 5, bh )
+
+			--surface.SetDrawColor(255, 255, 255, 255)
+			--surface.DrawOutlinedRect( W * x, H * y, W * w, H * h ) -- left outline
+			--surface.DrawOutlinedRect( W / 1.3, H * xY, W * 0.2, H *  xH) -- right
+			--draw.RoundedBox( 8, midx - ( w / 2 ) - 2, y + 26, w + 5, bh, Color( 0, 0, 255, 200 ) )
 		else
-			draw.RoundedBox( 8, midx - 50, y + 46, 100, bh, Color( 0, 0, 255, 200 ) )
+			surface.SetDrawColor(50, 50, 50, 200)
+			surface.DrawRect(  midx - 50, y + 46, 100, bh )
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.DrawOutlinedRect(  midx - 50, y + 46, 100, bh )
 		end
+		
+		
 		
 		draw.Text( {
 			text = "Health: " .. ent:Health( ),
@@ -219,8 +233,11 @@ function GM:HUDDrawTargetID( )
 		
 		surface.SetFont( "ScoreboardText" )
 		local w, h = surface.GetTextSize( name.."\n"..name2 )
-		draw.RoundedBox( 8, midx - ( w / 2 ) - 4, midy - ( h / 2 ) - 4 + 26, w + 8, h + 8, col )
-		
+		surface.SetDrawColor(50, 50, 50, 200)
+		surface.DrawRect(  midx - 50, y + 46, 100, bh )
+		surface.DrawRect( midx - ( w / 2 ) - 4, midy - ( h / 2 ) - 4 + 26, w + 8, h + 8 )
+		surface.SetDrawColor(255, 255, 255, 255)
+		surface.DrawOutlinedRect( midx - ( w / 2 ) - 4, midy - ( h / 2 ) - 4 + 26, w + 8, h + 8 )
 		draw.Text( {
 			text = name,
 			font = "ScoreboardText",
