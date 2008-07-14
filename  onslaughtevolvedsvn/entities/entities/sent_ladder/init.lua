@@ -3,10 +3,6 @@ AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
 
-ENT.Model = ""
-ENT.Shealth = 150
-ENT.Mhealth = 150
-
 function ENT:Initialize()  
 	self.Entity:SetModel(self.Model)
 	self.Entity:PhysicsInit( SOLID_BBOX )
