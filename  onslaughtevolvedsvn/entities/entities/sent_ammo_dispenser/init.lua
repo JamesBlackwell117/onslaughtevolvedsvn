@@ -4,8 +4,6 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 ENT.LastUse = CurTime()
 ENT.AutomaticFrameAdvance = true
-ENT.Shealth = 300
-ENT.Mhealth = 300
 ENT.LastTouch = 0
 
 function ENT:Initialize()   
