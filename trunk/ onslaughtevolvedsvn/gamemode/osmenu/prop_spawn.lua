@@ -147,21 +147,41 @@ function PANEL:Init( )
 	self.Label = vgui.Create( "DLabel", self )
 	self.Label:SetText( "Click on an icon to spawn a prop." )
 	self.Label:SetTextColor( Color( 255, 255, 255, 255 ) )
-	self.Label:SizeToContents( )	
+	self.Label:SizeToContents( )
 	
 	self.IconList = vgui.Create( "DPanelList", self )
 	self.IconList:EnableVerticalScrollbar( true ) 
  	self.IconList:EnableHorizontal( true ) 
  	self.IconList:SetPadding( 4 ) 
 	self.IconList:SetVisible( true ) 
+	self.IconList:NoClipping(false)
 	
 	for k,v in pairs( MODELS ) do
-		local ico = vgui.Create( "SpawnIcon", self )
-		ico:SetModel(v)
-		ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", v, 0) end
-		ico:SetIconSize( 64 ) 
+		local ico = vgui.Create( "DModelPanel", self )
+		ico:SetModel(k)
+		ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, 0) end
+		ico:SetSize(64,64)
+
+			local ent = ents.Create("prop_physics")
+			ent:SetAngles(Angle(0,0,0))
+			ent:SetPos(Vector(0,0,0))
+			ent:SetModel(k)
+			ent:Spawn()
+			ent:Activate()
+			ent:PhysicsInit( SOLID_VPHYSICS )    
+
+			
+			local center = ent:OBBCenter()
+			local dist = ent:BoundingRadius()*1.2
+			local hlth = math.Round(math.Clamp(ent:GetPhysicsObject():GetMass() * (ent:OBBMins():Distance(ent:OBBMaxs())) / 100,200,800))
+			
+			ent:Remove()
+		
+		ico:SetLookAt( center )
+		ico:SetCamPos( center+Vector(dist,dist,dist) )
+		
 		ico:InvalidateLayout( true ) 
-		ico:SetToolTip( Format( "%s", v ) ) 
+		ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
 		self.IconList:AddItem( ico )
 	end
 end
