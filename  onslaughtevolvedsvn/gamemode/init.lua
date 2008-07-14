@@ -1239,16 +1239,10 @@ function OSE_Spawn(ply,cmd,args)
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
 	end
-	local valid = false
 	local defaultangle
-	for k,v in pairs( MODELS ) do
-		if v.MDL == model then
-		 valid = true 
-		if v.ANG then defaultangle = v.ANG end
-		break
-		end
-	end
-	if valid == false then return end
+
+	if not MODELS[model] then return end
+	if MODELS[model].ANG then defaultangle = MODELS[model].ANG end
 
 	
 	local class = "sent_prop"
@@ -1306,17 +1300,17 @@ function OSE_Spawn(ply,cmd,args)
  
 	ent:SetPos( vFlushPoint )
 	//endgarry
+	local prc = ent.SMH * 1.05
 	if not ent:IsInWorld( ) then
 		ent:Remove()
 		ply:ChatPrint( "Prop was outside of the world!" )
 		return false
-	elseif ent.Mhealth > ply:GetNetworkedInt( "money") then
+	elseif prc > ply:GetNetworkedInt( "money") then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		ent:Remove()
 		return false
 	else
-		local prc = ent.SMH * 1.05
 		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - prc)
 		ply:Message((math.Round(prc * -1)).." [Spawned Item]", Color(255,100,100,255))
 	end
