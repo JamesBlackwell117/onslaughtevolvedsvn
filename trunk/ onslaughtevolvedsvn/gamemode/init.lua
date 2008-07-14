@@ -776,13 +776,13 @@ function GM:CheckRanks(ply)
 		if k > ply:GetNWInt("rank") && kills >= v.KILLS then
 			ply:SetNWInt("rank", k)
 			ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
+			ply:SetTeam(k+1)
 			GAMEMODE:SaveAllProfiles() --might as well
 		end
 	end
 end
 
 function GM:PlayerDeath( ply, wep, killer )
-	GAMEMODE:CheckRanks(ply)
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
@@ -1204,6 +1204,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 	if !plyobj:IsPlayer() then return false end
 	self:CalculatePowerups(npc,plyobj,wep)
 	self:AddNPCKillMoney(class,plyobj,bonus)
+	GAMEMODE:CheckRanks(plyobj)
 end
 
 function GM:AddNPCKillMoney(class,ply,bonus)
