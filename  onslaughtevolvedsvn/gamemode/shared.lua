@@ -141,50 +141,50 @@ end
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
 	
 	
-	MODELS =   {"models/props_c17/display_cooler01a.mdl",
-				"models/props_c17/furnitureStove001a.mdl",
-				"models/props_combine/breendesk.mdl",
-				"models/props_lab/blastdoor001c.mdl",
-				"models/props_lab/blastdoor001b.mdl",
-				"models/props_junk/wood_crate001a.mdl",
-				"models/props_junk/wood_crate002a.mdl",
-				"models/props_wasteland/controlroom_filecabinet002a.mdl",
-				"models/props_wasteland/wood_fence01a.mdl",
-				"models/props_wasteland/wood_fence02a.mdl",
-				"models/props_wasteland/kitchen_counter001b.mdl",
-				"models/props_interiors/VendingMachineSoda01a_door.mdl",
-				"models/props_interiors/VendingMachineSoda01a.mdl",
-				"models/props_pipes/concrete_pipe001a.mdl",
-				"models/props_docks/dock01_pole01a_128.mdl",
-				"models/props_c17/door01_left.mdl",
-				"models/props_c17/shelfunit01a.mdl",
-				"models/props_interiors/Furniture_Couch02a.mdl",
-				"models/props_wasteland/kitchen_fridge001a.mdl",
-				"models/props_wasteland/kitchen_stove002a.mdl",
-				"models/props_combine/combine_barricade_short01a.mdl",
-				"models/props_junk/TrashDumpster02b.mdl",
-				"models/props_c17/oildrum001.mdl",
-				"models/props_c17/gravestone_coffinpiece002a.mdl",
-				"models/props_junk/PushCart01a.mdl",
-				"models/props_c17/FurnitureCouch001a.mdl",
-				"models/props_wasteland/laundry_cart001.mdl",
-				"models/props_trainstation/handrail_64decoration001a.mdl",
-				"models/props_trainstation/traincar_rack001.mdl",
-				"models/props_wasteland/laundry_basket001.mdl",
-				"models/props_wasteland/prison_celldoor001a.mdl",
-				"models/props_rooftop/chimneypipe01a.mdl",
-				"models/props_wasteland/prison_bedframe001b.mdl",
-				"models/props_junk/iBeam01a.mdl",
-				"models/props_debris/metal_panel01a.mdl",
-				"models/props_debris/metal_panel02a.mdl",
-				"models/props_c17/metalladder002.mdl",
-				"models/props_c17/concrete_barrier001a.mdl",
-				"models/props_c17/playgroundTick-tack-toe_post01.mdl",
-				"models/props_c17/FurnitureFridge001a.mdl",
-				"models/Items/ammocrate_smg1.mdl"}
+	MODELS =   {{MDL = "models/props_c17/display_cooler01a.mdl"},
+				{MDL = "models/props_c17/furnitureStove001a.mdl"},
+				{MDL = "models/props_combine/breendesk.mdl"},
+				{MDL = "models/props_lab/blastdoor001c.mdl"},
+				{MDL = "models/props_lab/blastdoor001b.mdl"},
+				{MDL = "models/props_junk/wood_crate001a.mdl"},
+				{MDL = "models/props_junk/wood_crate002a.mdl"},
+				{MDL = "models/props_wasteland/controlroom_filecabinet002a.mdl"},
+				{MDL = "models/props_wasteland/wood_fence01a.mdl", ANG = Angle(0,90,0)},
+				{MDL = "models/props_wasteland/wood_fence02a.mdl"},
+				{MDL = "models/props_wasteland/kitchen_counter001b.mdl"},
+				{MDL = "models/props_interiors/VendingMachineSoda01a_door.mdl"},
+				{MDL = "models/props_interiors/VendingMachineSoda01a.mdl"},
+				{MDL = "models/props_pipes/concrete_pipe001a.mdl"},
+				{MDL = "models/props_docks/dock01_pole01a_128.mdl"},
+				{MDL = "models/props_c17/door01_left.mdl"},
+				{MDL = "models/props_c17/shelfunit01a.mdl"},
+				{MDL = "models/props_interiors/Furniture_Couch02a.mdl"},
+				{MDL = "models/props_wasteland/kitchen_fridge001a.mdl"},
+				{MDL = "models/props_wasteland/kitchen_stove002a.mdl"},
+				{MDL = "models/props_combine/combine_barricade_short01a.mdl"},
+				{MDL = "models/props_junk/TrashDumpster02b.mdl"},
+				{MDL = "models/props_c17/oildrum001.mdl"},
+				{MDL = "models/props_c17/gravestone_coffinpiece002a.mdl"},
+				{MDL = "models/props_junk/PushCart01a.mdl"},
+				{MDL = "models/props_c17/FurnitureCouch001a.mdl"},
+				{MDL = "models/props_wasteland/laundry_cart001.mdl"},
+				{MDL = "models/props_trainstation/handrail_64decoration001a.mdl"},
+				{MDL = "models/props_trainstation/traincar_rack001.mdl"},
+				{MDL = "models/props_wasteland/laundry_basket001.mdl"},
+				{MDL = "models/props_wasteland/prison_celldoor001a.mdl"},
+				{MDL = "models/props_rooftop/chimneypipe01a.mdl"},
+				{MDL = "models/props_wasteland/prison_bedframe001b.mdl"},
+				{MDL = "models/props_junk/iBeam01a.mdl"},
+				{MDL = "models/props_debris/metal_panel01a.mdl"},
+				{MDL = "models/props_debris/metal_panel02a.mdl"},
+				{MDL = "models/props_c17/metalladder002.mdl"},
+				{MDL = "models/props_c17/concrete_barrier001a.mdl"},
+				{MDL = "models/props_c17/playgroundTick-tack-toe_post01.mdl"},
+				{MDL = "models/props_c17/FurnitureFridge001a.mdl"},
+				{MDL = "models/Items/ammocrate_smg1.mdl"}}
 				
 	for k,v in pairs(MODELS) do
-		util.PrecacheModel(v)
+		util.PrecacheModel(v.MDL)
 	end
 	
 	for k,v in pairs(Classes) do
@@ -205,7 +205,7 @@ end
 	DEATH_PENALTY = -1500
 
 	--PROP VARS--
-	FLAMABLE_PROPS = true
+	FLAMABLE_PROPS = false
 	BATTLE_PHYS = false
 	PROP_CLEANUP = false
 	PROP_LIMIT = 25
