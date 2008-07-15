@@ -4,6 +4,13 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 ENT.LastUse = CurTime()
 ENT.Healing = 0
+ENT.Model = "models/props_combine/health_charger001.mdl"
+ENT.Juice = 100
+
+function ENT:Initialize()
+	local sequence = self.Entity:LookupSequence("Idle")
+	self.Entity:ResetSequence(sequence)
+end
 
 function ENT:Use(act, cal)
 	if !act:IsPlayer() then return end
@@ -24,4 +31,8 @@ function ENT:Use(act, cal)
 		timer.Simple(2, act.Extinguish, act)
 		self.LastUse = CurTime()
 	end
+end
+
+function ENT:Off()
+
 end

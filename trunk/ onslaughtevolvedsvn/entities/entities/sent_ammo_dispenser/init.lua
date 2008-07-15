@@ -5,20 +5,31 @@ include('shared.lua')
 ENT.LastUse = CurTime()
 ENT.AutomaticFrameAdvance = true
 ENT.LastTouch = 0
+ENT.Open = false
+ENT.User = nil
 
 function ENT:Close()
-	local sequence = self.Entity:LookupSequence("Idle")
-	self.Entity:SetSequence(sequence)
+	local sequence = self.Entity:LookupSequence("Close")
+	self.Entity:ResetSequence(sequence)
+	self.Open = false
+	self.User = nil
 end
 
 function ENT:Use(act, cal)
+	if act:KeyDownLast(IN_USE) then return end 
 	if !act:IsPlayer() then return end
 	if PHASE == "BUILD" then return end
-	if self.LastUse + 2 > CurTime() then return end
+	if self.Open && self.User != act then
+		act:Message(self.User:Nick().." is currently using this ammo bin")
+		return
+	elseif self.User == act then
+		return
+	end
+	self.User = act
+	self.Open = true
 	local sequence = self.Entity:LookupSequence("Open")
-	self.Entity:SetSequence(sequence)
-	timer.Simple(1.5,self.Close,self)
-	act:Ammo()
+	self.Entity:ResetSequence(sequence)
+	act:Ammo(self)
 	self.Entity:EmitSound("items/ammocrate_open.wav",90,100)
 	self.LastUse = CurTime()
 end

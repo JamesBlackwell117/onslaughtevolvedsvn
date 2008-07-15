@@ -31,13 +31,13 @@ function PANEL:Init( )
 		ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, 0) end
 		ico:SetSize(64,64)
 
-			local ent = ents.Create("prop_physics")
-			ent:SetAngles(Angle(0,0,0))
-			ent:SetPos(Vector(0,0,0))
-			ent:SetModel(k)
-			ent:Spawn()
-			ent:Activate()
-			ent:PhysicsInit( SOLID_VPHYSICS )    
+		local ent = ents.Create("prop_physics") -- lol ailias filthy hack
+		ent:SetAngles(Angle(0,0,0))
+		ent:SetPos(Vector(0,0,0))
+		ent:SetModel(k)
+		ent:Spawn()
+		ent:Activate()
+		ent:PhysicsInit( SOLID_VPHYSICS )    
 
 			
 			local center = ent:OBBCenter()

@@ -100,7 +100,8 @@ function GM:PlayerInitialSpawn(ply)
 		local name = string.Replace( ply:SteamID(), ":", "." )
 		local read = util.KeyValuesToTable( file.Read( "onslaught_profiles/"..name..".txt") )
 		ply:SetNetworkedInt( "kills", read.kills)
-		GAMEMODE:CheckRanks(ply,true)
+		ply:SetNetworkedInt( "rank", read.rank)
+		GAMEMODE:CheckRanks(ply)
 	end
 end
 
@@ -281,34 +282,6 @@ function GM:StartBuild()
 	umsg.Start("StartBuild")
 	umsg.End()
 end
-
-function GM:RestockPlayer(ply)
-	if !ply then return end
-	for k,v in pairs(AMMOS) do
-		local class = ply:GetNWInt("class")
-		if table.HasValue(Classes[class].AMMO, k) then
-			ply:GiveAmmo(v.QT, v.AMMO)
-		end
-	end
-end
-
-function BuyAmmo(ply, com, args)
-	if !args[1] then return end
-	ply.LastBuy = CurTime()
-	local mon = ply:GetNWInt("money")
-	local ammotogive = AMMOS[tonumber(args[1])]
-	if mon - ammotogive.PRICE < 0 then
-		ply:Message("Insufficient Funds!", Color(255,100,100,255))
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-	else
-		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
-		ply:SetNWInt("money",mon - ammotogive.PRICE)
-		ply:GiveAmmo(ammotogive.QT, ammotogive.AMMO)
-		ply:Message("Bought "..ammotogive.QT.." of "..ammotogive.NAME,Color(255,100,100,255), true)
-	end
-end
-
-concommand.Add( "buy_ammo", BuyAmmo )
 
 function Class(ply,com,args)
 	local newclass = tonumber(args[1])
@@ -749,7 +722,7 @@ function GM:Initialize()
 	if not file.Exists( "onslaught_profiles" ) then
 		file.CreateDir( "onslaught_profiles" )
 	end
-	game.ConsoleCommand("mp_falldamage 1\n")
+	game.ConsoleCommand("mp_falldamage 1\n") -- we could do this in the scaleplayerdamage but I think the engines function works best
 	self.SaveProps = { }
 	GAMEMODE:StartBuild()
 	
@@ -773,8 +746,9 @@ function GM:CheckRanks(ply,join)
 	local rank = ply:GetNWInt("rank")
 	local newrank = rank
 	for k,v in pairs(RANKS) do
-		if k > rank && kills >= v.KILLS then
+		if kills >= v.KILLS then
 			newrank = k
+			print("NEW: "..newrank)
 		end
 	end
 	if newrank > rank then
@@ -1100,7 +1074,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if !trc.Entity then return false end
 	if !trc.Entity:IsValid( ) then return false end
-	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" && trc.Entity:GetClass() != "sent_dispenser" then return false end
+	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" then return false end
 	
 	local ent = trc.Entity
 
@@ -1146,10 +1120,52 @@ function Pmeta:GetClass()
 	return Classes[self:GetNWInt("class")]
 end
 
-function Pmeta:Ammo()
+function GM:RestockPlayer(ply)
+	if !ply then return end
+	for k,v in pairs(AMMOS) do
+		local class = ply:GetNWInt("class")
+		if table.HasValue(Classes[class].AMMO, k) then
+			ply:GiveAmmo(v.QT, v.AMMO)
+		end
+	end
+end
+
+function BuyAmmo(ply, com, args)
+	if !ply.AmmoBin then return end
+	if !args[1] then return end
+	local mon = ply:GetNWInt("money")
+	local ammotogive = AMMOS[tonumber(args[1])]
+	if !ammotogive then return false end
+	if mon - ammotogive.PRICE < 0 then
+		ply:Message("Insufficient Funds!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+	else
+		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
+		ply:SetNWInt("money",mon - ammotogive.PRICE)
+		ply:GiveAmmo(ammotogive.QT, ammotogive.AMMO)
+		ply:Message("Bought "..ammotogive.QT.." of "..ammotogive.NAME,Color(255,100,100,255), true)
+	end
+end
+
+concommand.Add( "buy_ammo", BuyAmmo )
+
+function Pmeta:Ammo(bin)
+	self.AmmoBin = bin
+	self:Freeze(true)
+	bin.InUse = true
 	umsg.Start("openammo", self)
 	umsg.End()
 end
+
+function CloseAmmo(ply)
+	if !ply.AmmoBin then return end
+	ply.AmmoBin:Close()
+	ply.AmmoBin = nil
+	ply:Freeze(false)
+	ply.AmmoBin.InUse = false
+end
+
+concommand.Add("ammo_closed", CloseAmmo)
 
 function Pmeta:GetRank()
 	local rank = self:GetNWInt("rank")

@@ -38,7 +38,7 @@ AMMOS[3] = {AMMO = "SMG1", NAME = "SMG ammo", QT = 90, PRICE = 150, MODEL = "mod
 AMMOS[4] = {AMMO = "BuckShot", NAME = "Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxBuckshot.mdl"}
 AMMOS[5] = {AMMO = "357", NAME = "357 ammo", QT = 18, PRICE = 200, MODEL = "models/Items/357ammo.mdl"}
 AMMOS[6] = {AMMO = "AR2AltFire", NAME = "Combine Ball", QT = 1, PRICE = 400, MODEL = "models/Items/combine_rifle_ammo01.mdl"}
-AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", QT = 5, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
+AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", QT = 10, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
 AMMOS[8] = {AMMO = "grenade", NAME = "Grenade", QT = 1, PRICE = 300, MODEL = "models/Items/grenadeAmmo.mdl"}
 AMMOS[9] = {AMMO = "SMG1_Grenade", NAME = "Smg Grenade", QT = 1, PRICE = 250, MODEL = "models/Items/AR2_Grenade.mdl"}
 AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", QT = 100, PRICE = 200, MODEL = "models/props_junk/gascan001a.mdl"}
@@ -137,7 +137,7 @@ end
 	ANTILAG = false --turn on with caution!
 	BUILD_NOCLIP = true -- whether or not noclip should be allowed in build
 	VOTE_TIME = 30 -- how long players have to vote for a map.
-	VOTE_ENABLE_TIME = 1800 -- how long the current map has to go on for until map voting is allowed.
+	VOTE_ENABLE_TIME = 1800 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
 	
 	

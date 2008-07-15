@@ -46,7 +46,7 @@ function ENT:Think( )
 		for k,v in pairs(NPCS) do
 			Spwnd = Spwnd + #ents.FindByClass(v.CLASS)
 		end
-		if Spwnd <= MAX_NPCS then
+		if Spwnd < MAX_NPCS then
 			if #player.GetAll( ) == 0 then return end
 			local npc = self.Npcs[ math.random( 1, #self.Npcs) ]
 			if npc == "npc_hunter" then
