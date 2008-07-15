@@ -87,6 +87,8 @@ function GM:RenderScreenspaceEffects( )
 end
 
 CreateClientConVar("ose_hidetips", "0", true, false)
+CreateClientConVar("ose_hud", "0", true, false)
+
 
 tip = TIPS[1]
 
