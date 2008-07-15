@@ -1160,9 +1160,9 @@ end
 function CloseAmmo(ply)
 	if !ply.AmmoBin then return end
 	ply.AmmoBin:Close()
+	ply.AmmoBin.InUse = false
 	ply.AmmoBin = nil
 	ply:Freeze(false)
-	ply.AmmoBin.InUse = false
 end
 
 concommand.Add("ammo_closed", CloseAmmo)
