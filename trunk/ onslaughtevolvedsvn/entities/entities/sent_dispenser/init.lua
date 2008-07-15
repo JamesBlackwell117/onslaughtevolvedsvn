@@ -7,11 +7,6 @@ ENT.Healing = 0
 ENT.Model = "models/props_combine/health_charger001.mdl"
 ENT.Juice = 100
 
-function ENT:Initialize()
-	local sequence = self.Entity:LookupSequence("Idle")
-	self.Entity:ResetSequence(sequence)
-end
-
 function ENT:Use(act, cal)
 	if !act:IsPlayer() then return end
 	if self.LastUse + 0.08 < CurTime() then
