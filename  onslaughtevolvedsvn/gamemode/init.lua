@@ -1136,7 +1136,7 @@ function BuyAmmo(ply, com, args)
 	local mon = ply:GetNWInt("money")
 	local ammotogive = AMMOS[tonumber(args[1])]
 	if !ammotogive then return false end
-	if mon - ammotogive.PRICE < 0 then
+	if mon - ammotogive.PRICE <= 0 then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 	else
