@@ -44,6 +44,11 @@ function SWEP:Initialize( )
 	end
 end
 
+function SWEP:Deploy()
+	self.Reloading = false
+	return true
+end
+
 function SWEP:PrimaryAttack()
 	if ( !self:CanPrimaryAttack()) then return end
 	self.Reloading = false
