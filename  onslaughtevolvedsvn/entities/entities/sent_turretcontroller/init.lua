@@ -65,8 +65,8 @@ function ENT:OnTakeDamage(dmg)
 			return dmg
 		end
 	end
-	self.Turret:SetNWInt("health",self.Shealth)
 	self.Shealth = self.Shealth - dmg:GetDamage() 
+	self.Turret:SetNWInt("health",self.Shealth)
 	if self.Shealth <= 0 then
 		self:DoExplosions()
 	end
@@ -81,7 +81,7 @@ function ENT:DoExplosions(id)
 	util.Effect( "Explosion", effectdata )
 	self.Turret:Remove()
 	self.Entity:Remove()
-	self.Owner:Message("One of you turrets has died!",Color(255,100,100,255))
+	self:GetOwner():Message("One of you turrets has died!",Color(255,100,100,255))
 end
 
 
