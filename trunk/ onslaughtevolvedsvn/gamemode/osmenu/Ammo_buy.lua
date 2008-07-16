@@ -56,11 +56,12 @@ function PANEL:PerformLayout()
 end
 
 function PANEL:Close()
- 	self:SetVisible( false ) 
+ 	--self:SetVisible( false ) 
    	RememberCursorPosition( )
 	gui.EnableScreenClicker( false )
 	RunConsoleCommand("ammo_closed")
 	ammoup = false
+	self:Remove()
 end
 
 vgui.Register( "onslaught_ammobuy", PANEL, "DFrame" )
