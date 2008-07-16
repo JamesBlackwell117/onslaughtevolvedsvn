@@ -173,6 +173,19 @@ function GM:DrawHUD()
 		if hpct > crnd/2 then
 			draw.RoundedBox(crnd,20,H-41-hbaroff,hpct,20,Color(191, 0, 0, 127))
 		end
+		
+		-- turret health bars
+		local turoff = 24
+		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+			if v:GetNWEntity( "Owner", LocalPlayer( ) ) == LocalPlayer() then
+				draw.RoundedBox(crnd,19,H-42-hbaroff-turoff,W/6,22,bkdrop)
+				local turhpct = math.Clamp(W*v:GetNWInt("health")/600-2,0,W/6-2)
+				if turhpct > crnd/2 then
+					draw.RoundedBox(crnd,20,H-41-hbaroff-turoff,turhpct,20,Color(220, 220, 0, 95))
+				end
+				turoff = turoff + 24
+			end
+		end
 
 	else
 		local W,H = ScrW(), ScrH()
