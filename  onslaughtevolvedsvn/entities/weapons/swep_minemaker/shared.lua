@@ -44,7 +44,6 @@ function SWEP:PrimaryAttack()
 			self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return 
 	end 
-	self:TakePrimaryAmmo(1)
 	local trace = {}
 	trace.start = self.Owner:GetShootPos()
 	trace.endpos = trace.start + (self.Owner:GetAimVector() * 150)
@@ -54,6 +53,7 @@ function SWEP:PrimaryAttack()
 	if !trc.Entity then return end
 	local class = trc.Entity:GetClass()
 	if class != "sent_prop" && trc.HitNonWorld then return end
+	self:TakePrimaryAmmo(1)
 	local mine = ents.Create("ose_mines")
 	mine:SetPos(trc.HitPos)
 	local ang = trc.HitNormal:Angle()
