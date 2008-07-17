@@ -156,7 +156,7 @@ end
 	MODELS["models/props_interiors/VendingMachineSoda01a_door.mdl"] = {GROUP = 1}
 	MODELS["models/props_interiors/VendingMachineSoda01a.mdl"] = {GROUP = 2}
 	MODELS["models/props_pipes/concrete_pipe001a.mdl"] = {GROUP = 4}
-	MODELS["models/props_docks/dock01_pole01a_128.mdl"] = {GROUP = 3}
+	--MODELS["models/props_docks/dock01_pole01a_128.mdl"] = {GROUP = 3}
 	MODELS["models/props_c17/door01_left.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/shelfunit01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 1}
 	MODELS["models/props_interiors/Furniture_Couch02a.mdl"] = {GROUP = 5}
@@ -169,11 +169,11 @@ end
 	MODELS["models/props_junk/PushCart01a.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureCouch001a.mdl"] = {GROUP = 5}
 	MODELS["models/props_wasteland/laundry_cart001.mdl"] = {GROUP = 5}
-	MODELS["models/props_trainstation/handrail_64decoration001a.mdl"] = {GROUP = 3}
+	--MODELS["models/props_trainstation/handrail_64decoration001a.mdl"] = {GROUP = 3}
 	MODELS["models/props_trainstation/traincar_rack001.mdl"] = {GROUP = 3}
 	MODELS["models/props_wasteland/laundry_basket001.mdl"] = {GROUP = 5}
 	MODELS["models/props_wasteland/prison_celldoor001a.mdl"] = {GROUP = 1}
-	MODELS["models/props_rooftop/chimneypipe01a.mdl"] = {GROUP = 3}
+	--MODELS["models/props_rooftop/chimneypipe01a.mdl"] = {GROUP = 3}
 	MODELS["models/props_wasteland/prison_bedframe001b.mdl"] = {GROUP = 5}
 	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3}
 	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1}
