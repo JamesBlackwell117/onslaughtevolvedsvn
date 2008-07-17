@@ -38,7 +38,7 @@ function GM:DrawHUD()
 		local nextrank = RANKS[rank + 1] or RANKS[rank]
 		local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
 		
-		-- messages
+		--messages
 		for k,v in pairs(Messages) do
 			local col = v.colour
 			local y = (H - 200) - ((CurTime() - v.Time) * 100) + (k * 14)
@@ -141,14 +141,6 @@ function GM:DrawHUD()
 			local clipfraction = cur_mag/Maxclip
 		
 		
-			if Maxclip > 0 then
-				draw.RoundedBox(crnd,19,H-56,W/6*Maxclip/20, 22, bkdrop)
-				if cur_mag > 0 then
-					draw.RoundedBox(crnd,20,H-55,math.Clamp(W/6*clipfraction*Maxclip/20-2,0,W/6*Maxclip/20-2), 20, Color(190, 200, 220, 95))
-				end
-				hbaroff = 24
-			end
-			
 			if Maxammo > 0 then
 				local maxclips = math.Clamp(math.ceil(Maxammo/math.Clamp(Maxclip,1,math.huge))-1,-1,math.Round(W/36))
 				local clips = math.Clamp(math.floor(mags/math.Clamp(Maxclip,1,math.huge))-1,-1,math.Round(W/36))
@@ -165,6 +157,14 @@ function GM:DrawHUD()
 				end
 				hbaroff = hbaroff + 14
 			end
+			
+			if Maxclip > 0 then
+				draw.RoundedBox(crnd,19,H-42-hbaroff,W/6*Maxclip/20, 22, bkdrop)
+				if cur_mag > 0 then
+					draw.RoundedBox(crnd,20,H-41-hbaroff,math.Clamp(W/6*clipfraction*Maxclip/20-2,0,W/6*Maxclip/20-2), 20, Color(190, 200, 220, 95))
+				end
+				hbaroff = hbaroff + 24
+			end
 		end
 	
 		local hpct = math.Clamp(W*ply:Health()/600-2,0,W*maxhealth/600-2)
@@ -175,15 +175,15 @@ function GM:DrawHUD()
 		end
 		
 		-- turret health bars
-		local turoff = 24
+		local turoff = 14
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-			if v:GetNWEntity( "Owner", LocalPlayer( ) ) == LocalPlayer() then
-				draw.RoundedBox(crnd,19,H-42-hbaroff-turoff,W/6,22,bkdrop)
+			if v:GetNWEntity( "Owner" ) == LocalPlayer() then
+				draw.RoundedBox(crnd,19,H-42-hbaroff-turoff,W/6,12,bkdrop)
 				local turhpct = math.Clamp(W*v:GetNWInt("health")/600-2,0,W/6-2)
 				if turhpct > crnd/2 then
-					draw.RoundedBox(crnd,20,H-41-hbaroff-turoff,turhpct,20,Color(220, 220, 0, 95))
+					draw.RoundedBox(crnd,20,H-41-hbaroff-turoff,turhpct,10,Color(220, 220, 0, 95))
 				end
-				turoff = turoff + 24
+				turoff = turoff + 14
 			end
 		end
 
