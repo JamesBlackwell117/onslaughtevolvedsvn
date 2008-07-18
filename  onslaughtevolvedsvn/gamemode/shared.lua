@@ -188,6 +188,8 @@ end
 	
 	MODELS["models/props_combine/combine_mine01.mdl"] = {GROUP = 6, PLYCLASS = 5, CLASS = "ose_mines", NAME = "Mine", LIMIT = 10, COST = 300, EXTBUILD = nil, ALLOWBATTLE = true}	
 	
+	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true}	
+	
 	include("extbuild.lua")
 	
 		
