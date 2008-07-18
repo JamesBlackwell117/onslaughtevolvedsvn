@@ -1181,6 +1181,16 @@ function Pmeta:Message(txt,col,msg)
 	umsg.End()
 end
 
+function Pmeta:MdlMessage(mdl,txt,col,msg)
+	local colour = col or Color(255,255,255,255)
+	umsg.Start("ose_mdl_msg", self)
+		umsg.String(tostring(mdl))
+		umsg.String(tostring(txt))
+		umsg.String(colour.r.." "..colour.g.." "..colour.b.." "..colour.a)
+		umsg.Bool(msg)
+	umsg.End()
+end
+
 function Pmeta:AddHealth(health)
 	if self:Health() + health > self:GetMaxHealth() then
 		self:SetHealth(self:GetMaxHealth())
@@ -1235,6 +1245,7 @@ function GM:AddNPCKillMoney(class,ply,bonus)
 	end
 	local givemoney = npc.MONEY or 50
 	local name = npcs[class] or class
+	local mdl = npc.MODEL or "models/headcrab.mdl"
 	givemoney = givemoney + bonus
 
 	ply:SetNetworkedInt("money",ply:GetNetworkedInt( "money") + givemoney)
@@ -1266,29 +1277,24 @@ function OSE_Spawn(ply,cmd,args)
 	end
 	
 	local class = "sent_prop"
-	if model == "models/Items/ammocrate_smg1.mdl" then
-		for k,v in pairs(ents.FindByClass("sent_ammo_dispenser")) do
-			if v.Owner == ply then ply:Message("You can only spawn one ammo dispenser", Color(255,100,100,255)) return end
+	local name = "Prop"
+	if MODELS[model].CLASS then class = MODELS[model].CLASS end
+	if MODELS[model].NAME then name = MODELS[model].NAME end
+	
+	local propcount = 0
+	for k,v in pairs(ents.FindByClass(class)) do
+		if v.Owner == ply || v:GetOwner() == ply then
+			propcount = propcount + 1
 		end
-		class = "sent_ammo_dispenser"
-	elseif model == "models/props_c17/metalladder002.mdl" then
-		class = "sent_ladder"
-		local propcount = 0
-		for k,v in pairs(ents.FindByClass("sent_ladder")) do
-			if v.Owner == ply then
-				propcount = propcount + 1
-			end
-		end
-		if propcount > 2 then ply:Message("Ladder Limit Reached!", Color(255,100,100,255)) return end
-	else
-		class = "sent_prop"
-		local propcount = 0
-		for k,v in pairs(ents.FindByClass("sent_prop")) do
-			if v.Owner == ply then
-				propcount = propcount + 1
-			end
-		end
-		if propcount > PROP_LIMIT then ply:Message("Prop Limit Reached!", Color(255,100,100,255)) return end
+	end
+	if MODELS[model].LIMIT then 
+		if propcount > MODELS[model].LIMIT then 
+		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+		return 
+		end 
+	elseif propcount > PROP_LIMIT then 
+		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+		return 
 	end
  
 	local trace = {} 
