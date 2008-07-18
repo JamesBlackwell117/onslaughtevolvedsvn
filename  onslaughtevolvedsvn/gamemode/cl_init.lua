@@ -159,3 +159,75 @@ function Message(um)
 end
 
 usermessage.Hook("ose_msg", Message) 
+
+local function GetTargetPos(ent)
+	local attach = nil
+	if ent:IsPlayer() 
+	|| ent:GetModel() == "models/zombie/classic.mdl"
+	 || ent:GetModel() == "models/zombie/zombie_soldier.mdl"
+	  || ent:GetModel() == "models/combine_soldier.mdl"
+	  || ent:GetModel() == "models/combine_super_soldier.mdl"
+	  || ent:GetModel() == "models/combine_soldier_prisonguard.mdl"
+	   || ent:GetModel() == "models/police.mdl"
+	    || ent:GetModel() == "models/zombie/fast.mdl"
+	     || ent:GetModel() == "models/zombie/poison.mdl" then
+		attach = ent:GetAttachment(2)
+		end
+		
+		if attach then
+			if ent:GetModel() == "models/zombie/classic.mdl" || ent:GetModel() == "models/zombie/zombie_soldier.mdl" then
+				return attach.Pos + ent:GetAngles():Forward() * 2
+			elseif ent:GetModel() == "models/police.mdl" || ent:GetModel() == "models/combine_super_soldier.mdl" || ent:GetModel() == "models/combine_soldier_prisonguard.mdl" || ent:GetModel() == "models/combine_soldier.mdl" then
+				return attach.Pos + ent:GetAngles():Forward() * 8 + ent:GetAngles():Up() * 4 + ent:GetAngles():Right() * 4
+			elseif ent:GetModel() == "models/zombie/fast.mdl" then
+				return attach.Pos + ent:GetAngles():Forward() * 2
+			else
+				return attach.Pos
+			end
+		end
+				
+	return ent:OBBCenter() 
+end
+
+function MdlMessage(um)
+	local mdl = tostring(um:ReadString())
+	local txt = tostring(um:ReadString())
+	local coltable = string.Explode(" ", um:ReadString())
+	local msg = um:ReadBool() or false
+	--if msg then
+	--	print(txt)
+	--end
+	--local col = Color(coltable[1], coltable[2], coltable[3], coltable[4])
+	--msg = {}
+	--msg.id = #Messages + 1
+	--msg.text = txt
+	--msg.colour = col
+	--msg.Time = CurTime()
+	--Messages[#Messages + 1] = msg
+	
+	
+	local mdlmsg = vgui.Create( "onslaught_message" )
+	mdlmsg.mdl:SetModel(mdl)
+	mdlmsg.mdl:SetSize( 80,80 )
+			
+	local ent = ents.Create("prop_physics") -- lol ailias filthy hack
+	ent:SetAngles(Angle(0,0,0))
+	ent:SetPos(Vector(0,0,0))
+	ent:SetModel(mdl)
+	ent:Spawn()
+	ent:Activate()
+	ent:PhysicsInit( SOLID_VPHYSICS )    
+
+	local dist = ent:BoundingRadius()*1.2
+	local center = GetTargetPos(ent)
+	--if center == ent:OBBCenter() then dist = ent:BoundingRadius()*1.2 else dist = ent:BoundingRadius()/3 end
+			
+	ent:Remove()
+			
+	mdlmsg.mdl:SetLookAt( center )
+	mdlmsg.mdl:SetCamPos( center+Vector(-dist,-dist,dist) )
+	mdlmsg.mdl:SetPos(244,20)
+
+end
+
+usermessage.Hook("ose_mdl_msg", MdlMessage) 
