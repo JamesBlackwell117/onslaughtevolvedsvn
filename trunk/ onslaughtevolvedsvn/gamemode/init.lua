@@ -241,6 +241,7 @@ function GM:StartBuild()
 		end
 		ROUND_ID = ROUND_ID - 0.5
 		BATTLETIME = BATTLETIME - 60
+		if BATTLETIME < MINBATTLETIME then BATTLETIME = MINBATTLETIME end
 		for k,v in pairs(player.GetAll()) do
 			v:Message("Took 60 seconds from battle time!")
 		end

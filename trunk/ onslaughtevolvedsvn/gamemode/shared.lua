@@ -134,6 +134,7 @@ end
 	--Core Gamemode Vars--
 	BUILDTIME = 600
 	BATTLETIME = 900
+	MINBATTLETIME = 600
 	SPAWN_TIME = 30 -- this is the base spawn time. The game adds 10 seconds to the spawn time for every player present on the server. So if there were 8 players the spawn time would be 30 + 80.
 	ANTILAG = false --turn on with caution!
 	BUILD_NOCLIP = true -- whether or not noclip should be allowed in build
@@ -183,7 +184,7 @@ end
 	MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2}
 	
-	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
+	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, COST = 800, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
 	
 	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
 	
@@ -220,7 +221,7 @@ end
 				
 	
 	--MONEY VARIABLES--
-	STARTING_MONEY = 25000
+	STARTING_MONEY = 20000
 	
 	LADDER_COST = 800
 	LIVE_BONUS = 5000
