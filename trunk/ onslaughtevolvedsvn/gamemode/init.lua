@@ -182,7 +182,7 @@ function GM:StartBattle()
 		if v:IsWeapon( ) then
 			v:Remove( )
 		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
-			if MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
+			if ValidEntity(v:GetOwner()) && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
 			else v:Remove() end
 		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
 			timer.Simple(k*0.05, v.Prepare, v)
@@ -262,8 +262,11 @@ function GM:StartBuild()
 	NextRound = CurTime() + BUILDTIME
 	voted = 0
 	for k,v in pairs( ents.GetAll( ) ) do
-		if v:IsWeapon( ) || v:GetClass() == "ose_mines" || v:IsNPC() then
+		if v:IsWeapon( ) then
 			v:Remove( )
+		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
+			if ValidEntity(v:GetOwner()) && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
+			else v:Remove() end
 		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
 			v.Shealth = v.Mhealth
 			v:UpdateColour()
@@ -575,7 +578,7 @@ function GM:PlayerLoadout(ply)
 		end
 	elseif PHASE == "BUILD" then
 		ply:Give("weapon_physgun")
-		ply:Give( "swep_nocollide" )
+		--ply:Give( "swep_nocollide" )
 		ply:Give("swep_dispensermaker")
 	end
 end
