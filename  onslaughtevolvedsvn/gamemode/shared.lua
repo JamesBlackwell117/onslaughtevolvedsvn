@@ -178,11 +178,11 @@ end
 	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3}
 	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1}
 	MODELS["models/props_debris/metal_panel02a.mdl"] = {GROUP = 1}
-	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6}
+	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
 	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4}
 	MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2}
-	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6}
+	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
 	
 	MODELGROUPS = {}
 	MODELGROUPS[1] = "Walls"
