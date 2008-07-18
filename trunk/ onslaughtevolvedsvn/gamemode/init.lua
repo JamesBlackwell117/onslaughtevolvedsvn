@@ -179,8 +179,11 @@ function GM:StartBattle()
 
 
 	for k,v in pairs( ents.GetAll( ) ) do
-		if v:IsWeapon( ) || v:GetClass() == "ose_mines" || v:IsNPC() then
+		if v:IsWeapon( ) then
 			v:Remove( )
+		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
+			if MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
+			else v:Remove() end
 		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
@@ -1354,7 +1357,7 @@ function OSE_Spawn(ply,cmd,args)
 		end
 	end
 	if MODELS[model].EXTBUILD then 
-		MODELS[model].EXTBUILD(ent, ply)
+		MODELS[model].EXTBUILD(ent, ply, tr)
 	end
 end
  
