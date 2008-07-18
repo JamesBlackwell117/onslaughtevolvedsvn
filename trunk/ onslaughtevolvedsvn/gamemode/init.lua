@@ -598,8 +598,8 @@ function GM:PlayerLoadout(ply)
 		end
 	elseif PHASE == "BUILD" then
 		ply:Give("weapon_physgun")
-		--ply:Give( "swep_nocollide" )
-		ply:Give("swep_dispensermaker")
+		ply:Give( "swep_nocollide" )
+		--ply:Give("swep_dispensermaker")
 	end
 end
 
