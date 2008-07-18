@@ -119,9 +119,10 @@ RANKS[5] = {NAME = "Second Lieutenant", KILLS = 2000, COLOR = Color( 200, 100, 1
 RANKS[6] = {NAME = "Lieutenant", KILLS = 3000, COLOR = Color( 255, 100, 100, 255 )}
 RANKS[7] = {NAME = "Captain", KILLS = 5000, COLOR = Color( 50, 50, 80, 255 )}
 RANKS[8] = {NAME = "General", KILLS = 8000, COLOR = Color( 50, 50, 50, 255 )}
-RANKS[9] = {NAME = "Jesus", KILLS = 15000, COLOR = Color( 255, 105, 180, 255)}
-RANKS[10] = {NAME = "Fuckin' Godlike", KILLS = 30000, COLOR = Color(255, 0, 0,255)}
-RANKS[11] = {NAME = "Ultimate Epic of Epicness", KILLS = 60000, COLOR = Color( 255, 100, 100, 255 )}
+RANKS[9] = {NAME = "Commander", KILLS = 15000, COLOR = Color( 105, 255, 105, 255)}
+RANKS[10] = {NAME = "Jesus", KILLS = 20000, COLOR = Color( 255, 105, 180, 255)}
+RANKS[11] = {NAME = "Fuckin' Godlike", KILLS = 30000, COLOR = Color(255, 0, 0,255)}
+RANKS[12] = {NAME = "Ultimate Epic of Epicness", KILLS = 60000, COLOR = Color( 255, 100, 100, 255 )}
 
 
 for k,v in pairs(RANKS) do
@@ -178,10 +179,12 @@ end
 	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3}
 	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1}
 	MODELS["models/props_debris/metal_panel02a.mdl"] = {GROUP = 1}
-	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
 	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4}
 	MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2}
+	
+	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
+	
 	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
 	
 	MODELS["models/Combine_turrets/Floor_turret.mdl"] = {ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_floor", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}

@@ -778,15 +778,14 @@ function GM:CheckRanks(ply,join)
 	for k,v in pairs(RANKS) do
 		if kills >= v.KILLS then
 			newrank = k
-			print("NEW: "..newrank)
 		end
 	end
 	if newrank > rank then
 		ply:SetNWInt("rank", newrank)
 		ply:SetTeam(newrank+1)
 		if !join then
-		ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
-		GAMEMODE:SaveAllProfiles()
+			ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
+			GAMEMODE:SaveAllProfiles()
 		end
 	end
 end
@@ -1174,14 +1173,15 @@ function BuyAmmo(ply, com, args)
 	local mon = ply:GetNWInt("money")
 	local ammotogive = AMMOS[tonumber(args[1])]
 	if !ammotogive then return false end
-	if mon - ammotogive.PRICE <= 0 then
+	local amt = tonumber(args[2])
+	if mon - ammotogive.PRICE*amt <= 0 then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 	else
 		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
-		ply:SetNWInt("money",mon - ammotogive.PRICE)
-		ply:GiveAmmo(ammotogive.QT, ammotogive.AMMO)
-		ply:Message("Bought "..ammotogive.QT.." of "..ammotogive.NAME,Color(255,100,100,255), true)
+		ply:SetNWInt("money",mon - ammotogive.PRICE*amt)
+		ply:GiveAmmo(ammotogive.QT*amt, ammotogive.AMMO)
+		ply:Message("Bought "..ammotogive.QT*amt.." of "..ammotogive.NAME,Color(255,100,100,255), true)
 	end
 end
 

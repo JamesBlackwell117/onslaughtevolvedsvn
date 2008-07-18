@@ -4,7 +4,6 @@ local PANEL = { }
 
 function PANEL:Init( )
 	ammoup = true
-	AMMO = self
 	self.IconList = vgui.Create( "DPanelList", self )
 	self.IconList:EnableVerticalScrollbar( true ) 
  	self.IconList:EnableHorizontal( true ) 
@@ -19,7 +18,7 @@ function PANEL:Init( )
 		if table.HasValue(Classes[class].AMMO, k) then
 			local ammo = vgui.Create( "DModelPanel", self )
 			ammo:SetModel(v.MODEL)
-			ammo.DoClick = function( ammo ) RunConsoleCommand("buy_ammo", k) end
+			ammo.DoClick = function( ammo ) local amt if LocalPlayer():KeyDown(IN_SPEED) then amt=3 else amt = 1 end RunConsoleCommand("buy_ammo", k, amt) end
 			ammo:SetSize( 80,80 )
 			
 			local ent = ents.Create("prop_physics") -- lol ailias filthy hack
@@ -68,11 +67,7 @@ end
 vgui.Register( "onslaught_ammobuy", PANEL, "DFrame" )
 
 function create()
-	if AMMO == nil or not AMMO:IsValid( ) then
-		vgui.Create( "onslaught_ammobuy" )
-	else
-		AMMO:SetVisible( true )
-	end
+	vgui.Create( "onslaught_ammobuy" )
 	gui.EnableScreenClicker( true )
 	RestoreCursorPosition( )
 end
