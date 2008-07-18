@@ -1339,7 +1339,7 @@ function OSE_Spawn(ply,cmd,args)
  
 	local trace = {} 
  	trace.start = ply:GetShootPos()
- 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * 1000) 
+ 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * 200) 
  	trace.filter = ply
  
  	local tr = util.TraceLine( trace ) 
