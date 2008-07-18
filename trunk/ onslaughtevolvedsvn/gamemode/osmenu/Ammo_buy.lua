@@ -11,11 +11,9 @@ function PANEL:Init( )
  	self.IconList:SetPadding( 4 ) 
 	self.IconList:SetVisible( true ) 
 	self:SetDraggable(false)
-	self:SetSize( 258, 278)
-	self:Center()
 	
 	self:SetTitle("Click on the ammo icon to buy it!")
-	
+	local ammos = 0
 	for k,v in pairs(AMMOS) do
 		local class = LocalPlayer():GetNWInt("class")
 		if table.HasValue(Classes[class].AMMO, k) then
@@ -45,8 +43,11 @@ function PANEL:Init( )
 			ammo:InvalidateLayout( true )
 			ammo:SetToolTip( v.NAME.." \nCost: "..v.PRICE.."\nAmount: "..v.QT ) 
 			self.IconList:AddItem( ammo )
+			ammos = ammos + 1
 		end
 	end
+	self:SetSize( 18+ammos*80, 118)
+	self:Center()
 end
 
 function PANEL:PerformLayout()
