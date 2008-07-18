@@ -305,8 +305,8 @@ function Class(ply,com,args)
 	
 				if ValidEntity(v.Owner) then owner = v.Owner elseif ValidEntity(v:GetOwner()) then owner = v:GetOwner() end
 	
-				if owner then
-					if owner == ply && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
+				if owner && owner == ply then
+					if MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
 					elseif MODELS[v:GetModel()] && MODELS[v:GetModel()].COST then
 						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[v:GetModel()].COST)
 						owner:Message("+"..math.Round(MODELS[v:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
