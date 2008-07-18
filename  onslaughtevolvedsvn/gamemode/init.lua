@@ -299,6 +299,26 @@ function Class(ply,com,args)
 		timer.Simple(0.1,CheckDead)
 	else
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
+		for k,v in pairs( ents.GetAll( ) ) do
+			if v:IsNPC() || v:GetClass() == "ose_mines" then
+				local owner
+	
+				if ValidEntity(v.Owner) then owner = v.Owner elseif ValidEntity(v:GetOwner()) then owner = v:GetOwner() end
+	
+				if owner then
+					if owner == ply && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
+					elseif MODELS[v:GetModel()] && MODELS[v:GetModel()].COST then
+						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[v:GetModel()].COST)
+						owner:Message("+"..math.Round(MODELS[v:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
+						v:Remove()
+					elseif v.SMH && v.SMH > 0 then
+						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + v.SMH)
+						owner:Message("+"..math.Round(v.SMH).." [Deleted Item]", Color(100,255,100,255))
+						v:Remove()
+					end
+				end
+			end
+		end
 	end
 end
 
