@@ -183,7 +183,12 @@ end
 	MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2}
 	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
+	MODELS["models/Combine_turrets/Floor_turret.mdl"] = {GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_floor", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true}
+
 	
+	include("extbuild.lua")
+	
+		
 	MODELGROUPS = {}
 	MODELGROUPS[1] = "Walls"
 	MODELGROUPS[2] = "Boxes"
@@ -191,6 +196,7 @@ end
 	MODELGROUPS[4] = "Other"
 	MODELGROUPS[5] = "Junk"
 	MODELGROUPS[6] = "Special"
+	
 				
 	for k,v in pairs(MODELS) do
 		util.PrecacheModel(k)
