@@ -307,7 +307,7 @@ function Class(ply,com,args)
 	
 				if owner && owner == ply then
 					if MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
-					elseif MODELS[v:GetModel()] && MODELS[v:GetModel()].COST then
+					elseif MODELS[v:GetModel()] && MODELS[v:GetModel()].COST && !v.Dissolving then
 						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[v:GetModel()].COST)
 						owner:Message("+"..math.Round(MODELS[v:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
 						v:Remove()
@@ -545,16 +545,20 @@ function SellAll(ply,cmd,args)
 		return
 	end
 	local mon = 0
-	for k,v in pairs(ents.FindByClass("sent_*")) do
-		if ValidEntity(v.Owner) then
-				if v.Owner == ply then
-				if v.SMH then
-					mon = mon + v.SMH
-					end
-					v:Dissolve()
-				end
+	for k,v in pairs(ents.GetAll()) do
+		local owner
+		if ValidEntity(v.Owner) then owner = v.Owner elseif ValidEntity(v:GetOwner()) then owner = v:GetOwner() end
+		
+		if owner && owner == ply then
+			if MODELS[v:GetModel()] && MODELS[v:GetModel()].COST && !v.Dissolving then
+				mon = mon + MODELS[v:GetModel()].COST
+				v:Dissolve()
+			elseif v.SMH && v.SMH > 0 then
+				mon = mon + v.SMH
+				v:Dissolve()
 			end
 		end
+	end
 	if(mon > 0) then
 	ply:SetNWInt("money", ply:GetNWInt("money") + mon)
 	ply:Message("+"..math.Round(mon).." [Sold all props]", Color(100,255,100,255))
@@ -1116,7 +1120,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 			ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. owner:Nick( ))
 			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 			return false
-		elseif MODELS[ent:GetModel()] && MODELS[ent:GetModel()].COST then
+		elseif MODELS[ent:GetModel()] && MODELS[ent:GetModel()].COST && !ent.Dissolving then
 			owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[ent:GetModel()].COST)
 			owner:Message("+"..math.Round(MODELS[ent:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
 		elseif ent.SMH && ent.SMH > 0 then
@@ -1303,14 +1307,17 @@ function OSE_Spawn(ply,cmd,args)
 	local model = tostring(args[1])
 	if MODELS[model].ALLOWBATTLE then
 	elseif PHASE == "BATTLE"  then
-		ply:ChatPrint( "You can't spawn props in battle mode!" )
+		ply:Message("You can't spawn props in battle mode!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end
 	if !MODELS[model] then
-		ply:ChatPrint("That model is disallowed!")
+		ply:Message("That model is disallowed!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	elseif MODELS[model].PLYCLASS && MODELS[model].PLYCLASS != ply:GetNWInt("class") then
-		ply:ChatPrint("Your Class cannot use that!")
+		ply:Message("Your Class cannot use that!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end
 	
@@ -1336,10 +1343,13 @@ function OSE_Spawn(ply,cmd,args)
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return 
 	end
+	
+	local tracelen = 1000
+	if MODELS[model].RANGE then tracelen = MODELS[model].RANGE end
  
 	local trace = {} 
  	trace.start = ply:GetShootPos()
- 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * 200) 
+ 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * tracelen) 
  	trace.filter = ply
  
  	local tr = util.TraceLine( trace ) 
