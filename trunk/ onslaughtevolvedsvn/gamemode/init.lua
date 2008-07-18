@@ -1077,20 +1077,28 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if !trc.Entity then return false end
 	if !trc.Entity:IsValid( ) then return false end
-	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" then return false end
+	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" && trc.Entity:GetClass() != "sent_dispenser" && trc.Entity:GetClass() != "ose_mines" && trc.Entity:GetClass() != "npc_floor_turret" && trc.Entity:GetClass() != "sent_turretcontroller"  then return false end
 	
 	local ent = trc.Entity
-
-	if ValidEntity(ent.Owner) and ent.Owner != ply and !ply:IsAdmin() then
-		ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick( ))
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-		return false
-	end
 	
-	if ValidEntity(ent.Owner) then
-		if ent.SMH && ent.SMH > 0 then
-			ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + ent.SMH)
-			ent.Owner:Message("+"..math.Round(ent.SMH).." [Deleted Item]", Color(100,255,100,255))
+	if ent.Turret then ent = ent.Turret end 
+	
+	local owner
+	
+	if ValidEntity(ent.Owner) then owner = ent.Owner elseif ValidEntity(ent:GetOwner()) then owner = ent:GetOwner() end
+	
+
+	if owner then
+		if owner != ply and !ply:IsAdmin() then
+			ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. owner:Nick( ))
+			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+			return false
+		elseif MODELS[ent:GetModel()] && MODELS[ent:GetModel()].COST then
+			owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[ent:GetModel()].COST)
+			owner:Message("+"..math.Round(MODELS[ent:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
+		elseif ent.SMH && ent.SMH > 0 then
+			owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + ent.SMH)
+			owner:Message("+"..math.Round(ent.SMH).." [Deleted Item]", Color(100,255,100,255))
 		end
 	end
 	
@@ -1270,7 +1278,7 @@ end
 function OSE_Spawn(ply,cmd,args)
 	if !args[1] then return end
 	local model = tostring(args[1])
-	if MODELS[model].ALLOWBATTLE && MODELS[model].ALLOWBATTLE == true then
+	if MODELS[model].ALLOWBATTLE then
 	elseif PHASE == "BATTLE"  then
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
@@ -1314,46 +1322,50 @@ function OSE_Spawn(ply,cmd,args)
  	local tr = util.TraceLine( trace ) 
  
 	if !tr.Hit then return end
- 
-	local ang = ply:EyeAngles()
-	ang.yaw = ang.yaw + 180
-	if MODELS[model].ANG then ang.yaw = ang.yaw + MODELS[model].ANG.yaw end
- 	ang.roll = 0 
- 	ang.pitch = 0 
-	local ent = ents.Create(class)
-	ent:SetAngles(ang)
-	ent:SetPos(tr.HitPos)
-	ent:SetModel(model)
-	ent.Owner = ply
-	ent:Spawn()
-	ent:Activate()
-	//garry
-	local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )	// Find a point that is definitely out of the object in the direction of the floor 
-	vFlushPoint = ent:NearestPoint( vFlushPoint )			// Find the nearest point inside the object to that point 
-	vFlushPoint = ent:GetPos() - vFlushPoint				// Get the difference 
-	vFlushPoint = tr.HitPos + vFlushPoint					// Add it to our target pos 
- 
-	ent:SetPos( vFlushPoint )
-	//endgarry
 	
-	local cost = MODELS[model].COST or ent.SMH or 1000
-	cost = cost * 1.05
+	local ent
 	
-	if not ent:IsInWorld( ) then
-		ent:Remove()
-		ply:ChatPrint( "Prop was outside of the world!" )
-		return
-	elseif cost > ply:GetNetworkedInt( "money") then
-		ply:Message("Insufficient Funds!", Color(255,100,100,255))
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-		ent:Remove()
-		return
-	else
-		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - cost)
-		if MODELS[model].NAME then
-		ply:Message((math.Round(cost * -1)).." [Spawned "..MODELS[model].NAME.."]", Color(255,100,100,255))
+	if !MODELS[model].DONTSPAWN then 
+		local ang = ply:EyeAngles()
+		ang.yaw = ang.yaw + 180
+		if MODELS[model].ANG then ang.yaw = ang.yaw + MODELS[model].ANG.yaw end
+ 		ang.roll = 0 
+ 		ang.pitch = 0 
+		ent = ents.Create(class)
+		ent:SetAngles(ang)
+		ent:SetPos(tr.HitPos)
+		ent:SetModel(model)
+		ent.Owner = ply
+		ent:Spawn()
+		ent:Activate()
+		//garry
+		local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )	// Find a point that is definitely out of the object in the direction of the floor 
+		vFlushPoint = ent:NearestPoint( vFlushPoint )			// Find the nearest point inside the object to that point 
+		vFlushPoint = ent:GetPos() - vFlushPoint				// Get the difference 
+		vFlushPoint = tr.HitPos + vFlushPoint					// Add it to our target pos 
+	 
+		ent:SetPos( vFlushPoint )
+		//endgarry
+		
+		local cost = MODELS[model].COST or ent.SMH or 1000
+		cost = cost * 1.05
+		
+		if not ent:IsInWorld( ) then
+			ent:Remove()
+			ply:ChatPrint( "Prop was outside of the world!" )
+			return
+		elseif cost > ply:GetNetworkedInt( "money") then
+			ply:Message("Insufficient Funds!", Color(255,100,100,255))
+			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+			ent:Remove()
+			return
 		else
-		ply:Message((math.Round(cost * -1)).." [Spawned Item]", Color(255,100,100,255))
+			ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - cost)
+			if MODELS[model].NAME then
+			ply:Message((math.Round(cost * -1)).." [Spawned "..MODELS[model].NAME.."]", Color(255,100,100,255))
+			else
+			ply:Message((math.Round(cost * -1)).." [Spawned Item]", Color(255,100,100,255))
+			end
 		end
 	end
 	if MODELS[model].EXTBUILD then 
