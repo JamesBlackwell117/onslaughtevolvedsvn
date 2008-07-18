@@ -6,6 +6,7 @@ if SERVER then
 	AddCSLuaFile( "osmenu/Ammo_buy.lua")
 	AddCSLuaFile( "osmenu/commands.lua" )
 	AddCSLuaFile( "osmenu/mapload.lua" )
+	AddCSLuaFile( "osmenu/Message.lua" )
 	return
 end
 
@@ -16,6 +17,7 @@ include( "osmenu/fileload.lua" )
 include( "osmenu/Ammo_buy.lua" )
 include( "osmenu/commands.lua" )
 include( "osmenu/mapload.lua")
+include( "osmenu/Message.lua")
 
 local W, H = ScrW(), ScrH()
 

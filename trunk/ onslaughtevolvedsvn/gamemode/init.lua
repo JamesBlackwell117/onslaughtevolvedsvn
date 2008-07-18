@@ -1288,12 +1288,14 @@ function OSE_Spawn(ply,cmd,args)
 		end
 	end
 	if MODELS[model].LIMIT then 
-		if propcount > MODELS[model].LIMIT then 
-		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
-		return 
+		if propcount >= MODELS[model].LIMIT then 
+			ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+			return 
 		end 
-	elseif propcount > PROP_LIMIT then 
+	elseif propcount >= PROP_LIMIT then 
 		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return 
 	end
  
@@ -1329,12 +1331,12 @@ function OSE_Spawn(ply,cmd,args)
 	if not ent:IsInWorld( ) then
 		ent:Remove()
 		ply:ChatPrint( "Prop was outside of the world!" )
-		return false
+		return
 	elseif ent.Mhealth > ply:GetNetworkedInt( "money") then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		ent:Remove()
-		return false
+		return
 	else
 		local prc = ent.SMH * 1.05
 		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - prc)
