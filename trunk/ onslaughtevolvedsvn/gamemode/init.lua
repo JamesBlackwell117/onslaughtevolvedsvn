@@ -1267,12 +1267,16 @@ end
 function OSE_Spawn(ply,cmd,args)
 	if !args[1] then return end
 	local model = tostring(args[1])
-	if PHASE == "BATTLE" then
+	if MODELS[model].ALLOWBATTLE && MODELS[model].ALLOWBATTLE == true then
+	elseif PHASE == "BATTLE"  then
 		ply:ChatPrint( "You can't spawn props in battle mode!" )
 		return
 	end
 	if !MODELS[model] then
 		ply:ChatPrint("That model is disallowed!")
+		return
+	elseif MODELS[model].PLYCLASS && MODELS[model].PLYCLASS != ply:GetNWInt("class") then
+		ply:ChatPrint("Your Class cannot use that!")
 		return
 	end
 	
@@ -1328,19 +1332,29 @@ function OSE_Spawn(ply,cmd,args)
  
 	ent:SetPos( vFlushPoint )
 	//endgarry
+	
+	local cost = MODELS[model].COST or ent.SMH or 1000
+	cost = cost * 1.05
+	
 	if not ent:IsInWorld( ) then
 		ent:Remove()
 		ply:ChatPrint( "Prop was outside of the world!" )
 		return
-	elseif ent.Mhealth > ply:GetNetworkedInt( "money") then
+	elseif cost > ply:GetNetworkedInt( "money") then
 		ply:Message("Insufficient Funds!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		ent:Remove()
 		return
 	else
-		local prc = ent.SMH * 1.05
-		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - prc)
-		ply:Message((math.Round(prc * -1)).." [Spawned Item]", Color(255,100,100,255))
+		ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - cost)
+		if MODELS[model].NAME then
+		ply:Message((math.Round(cost * -1)).." [Spawned "..MODELS[model].NAME.."]", Color(255,100,100,255))
+		else
+		ply:Message((math.Round(cost * -1)).." [Spawned Item]", Color(255,100,100,255))
+		end
+	end
+	if MODELS[model].EXTBUILD then 
+		MODELS[model].EXTBUILD(ent, ply)
 	end
 end
  
