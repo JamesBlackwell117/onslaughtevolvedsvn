@@ -189,7 +189,7 @@ function GM:StartBattle()
 		elseif v:IsPlayer() then
 			v.Voted = false
 			v:KillSilent()
-			v.NextSpawn = CurTime() + 3
+			v.NextSpawn = CurTime() + 1
 			v.FullRound = true
 		end
 	end
@@ -296,7 +296,7 @@ function Class(ply,com,args)
 	if PHASE == "BATTLE" && ply:Alive() then
 		ply:Kill()
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
-		timer.Simple(0.1,CheckDead)
+		timer.Simple(2,CheckDead)
 	else
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
 		for k,v in pairs( ents.GetAll( ) ) do
@@ -807,7 +807,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	end
 	
 	if PHASE == "BUILD" then
-		ply.NextSpawn = CurTime() + 5
+		ply.NextSpawn = CurTime() + 1
 		return true
 	end
  
@@ -820,7 +820,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
-	timer.Simple(0.1,CheckDead)
+	timer.Simple(2,CheckDead)
 	ply:AddDeaths(1)	
 	return true
 end
@@ -979,7 +979,7 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
-	timer.Simple(0.1,CheckDead)
+	timer.Simple(2,CheckDead)
 end
 
 function GM:DeleteProps(ply, ID, nick)
