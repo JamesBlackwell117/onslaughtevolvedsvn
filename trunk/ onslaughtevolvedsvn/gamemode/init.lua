@@ -498,7 +498,7 @@ function GM:PlayerSay( ply, txt, pub )
 end
 
 function Stuck(ply,cmd,args)
-	if ply:IsStuck() then
+	if !ply:IsStuck() then
 		ply:Message("You are not stuck!")
 	end
 end
