@@ -33,6 +33,7 @@ function ENT:Initialize()
 	pos:SetParent(self)
 	pos:Spawn()
 	pos:Activate()
+	timer.Simple(1,self.SendOwner,self)
 end
 
 function ENT:SpawnFunction( ply, tr)
