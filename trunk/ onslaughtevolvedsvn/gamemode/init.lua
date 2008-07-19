@@ -1384,6 +1384,12 @@ function OSE_Spawn(ply,cmd,args)
 		local cost = MODELS[model].COST or ent.SMH or 1000
 		cost = cost * 1.05
 		
+		if args[2] then 
+			if tonumber(args[2]) < util.GetModelInfo(ent:GetModel()).SkinCount then
+				ent:SetSkin(tonumber(args[2]))
+			end
+		end
+		
 		if not ent:IsInWorld( ) then
 			ent:Remove()
 			ply:ChatPrint( "Prop was outside of the world!" )
