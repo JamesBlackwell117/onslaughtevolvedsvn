@@ -45,7 +45,8 @@ function PANEL:Init( )
 			ico.Skin = math.random(0,util.GetModelInfo(k).SkinCount-1)
 			ico.Entity:SetSkin(ico.Skin)
 			ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, ico.Skin) end
-			ico.DoRightClick = function( ico ) ico.Skin = ico.Skin + 1 if ico.Skin == util.GetModelInfo(k).SkinCount then ico.Skin = 0 end ico.Entity:SetSkin(ico.Skin) ico:InvalidateLayout( true ) end
+			ico.DoRightClick = function(ico) PANEL:OpenMen(ico, k)end 
+
 			ico:SetSize(64,64)
 			ico:SetLookAt( center )
 			ico:SetCamPos( center+Vector(dist,dist,dist) )
@@ -58,6 +59,25 @@ function PANEL:Init( )
 		end
 		ent:Remove()
 	end
+end
+
+function PANEL:OpenMen(ico, model)
+	local icomenu = DermaMenu()
+	if util.GetModelInfo(model).SkinCount > 1 then
+		icomenu:AddOption("ChangeSkin",function()
+										ico.Skin = ico.Skin or math.random(0,util.GetModelInfo(model).SkinCount-1)
+										ico.Skin = ico.Skin + 1 
+										if ico.Skin == util.GetModelInfo(model).SkinCount then
+											ico.Skin = 0
+										end 
+										ico.Entity:SetSkin(ico.Skin)
+										ico:InvalidateLayout( true )
+									end)
+		icomenu:AddSpacer()
+	end
+	icomenu:AddOption("Delete all of type", function() print(model) RunConsoleCommand("deletemodel", model) end)
+	icomenu:Open() 
+
 end
 
 function PANEL:Think()
