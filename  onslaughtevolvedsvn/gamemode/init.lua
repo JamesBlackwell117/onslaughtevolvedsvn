@@ -50,36 +50,20 @@ function Emeta:Dissolve()
 end
 
 function Pmeta:IsStuck()
-	local ang = self:EyeAngles()
-	local dirs = {
-		ang:Forward(),		
-		ang:Forward() * -1,
-		ang:Right(),
-		ang:Right() * -1,
-		ang:Up(),
-		ang:Up() * -1
-	}
-	local hits = 0
-	for k,v in pairs(dirs) do
 		local trc = {}
-		trc.start = self:GetPos()
-		trc.endpos = self:GetPos() + v
+		trc.start = self:LocalToWolrd(self:OBBMaxs())
+		trc.endpos = self:LocalToWolrd(self:OBBMins())
 		trc.filter = self
 		trc = util.TraceLine( trc )
 		if trc.Hit then
-			hits = hits + 1
+			self.NextSpawn = CurTime() + 5
+			self:Kill()
+			return true
 		end
-	end
-	if hits >= 4 then
-		self.NextSpawn = CurTime() + 5
-		self:Kill()
-		return true
-	end
 	return false
 end
 
 function Pmeta:GetDefaultClass()
-	print(self:GetInfo("ose_defaultclass"))
 	for k,v in pairs(Classes) do
 		if v.NAME == self:GetInfo("ose_defaultclass") then
 			self:SetNetworkedInt( "class", k)
@@ -225,12 +209,6 @@ function GM:StartBattle()
 	umsg.End() 
 	for k,v in pairs(ents.FindByName("ose_battle")) do
 		v:Fire("trigger",0,3)
-	end
-end
-
-function GM:Prep()
-	for k,v in pairs(ents.FindByClass("sent_prop")) do
-		timer.Simple(k * 0.05, v.Prepare,v)
 	end
 end
 
@@ -965,7 +943,7 @@ function NoClipThink()
 	end
 end
 
-hook.Add("Think", "NoThink", NoClipThink)
+hook.Add("Think", "NoClipThink", NoClipThink)
 
 function GM:SaveAllProfiles()
 	for k,ply in pairs(player.GetAll()) do
