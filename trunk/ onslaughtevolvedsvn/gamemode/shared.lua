@@ -37,13 +37,13 @@ AMMOS[2] = {AMMO = "Pistol", NAME = "Pistol ammo", QT = 72, PRICE = 100, MODEL =
 AMMOS[3] = {AMMO = "SMG1", NAME = "SMG ammo", QT = 90, PRICE = 150, MODEL = "models/Items/BoxMRounds.mdl"}
 AMMOS[4] = {AMMO = "BuckShot", NAME = "Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxBuckshot.mdl"}
 AMMOS[5] = {AMMO = "357", NAME = "357 ammo", QT = 18, PRICE = 200, MODEL = "models/Items/357ammo.mdl"}
-AMMOS[6] = {AMMO = "AR2AltFire", NAME = "Combine Ball", QT = 1, PRICE = 400, MODEL = "models/Items/combine_rifle_ammo01.mdl"}
-AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", QT = 10, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
-AMMOS[8] = {AMMO = "grenade", NAME = "Grenade", QT = 1, PRICE = 300, MODEL = "models/Items/grenadeAmmo.mdl"}
+AMMOS[6] = {AMMO = "AR2AltFire", NAME = "Combine Ball", SMULT = 2, QT = 1, PRICE = 400, MODEL = "models/Items/combine_rifle_ammo01.mdl"}
+AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", SMULT = 2, QT = 10, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
+AMMOS[8] = {AMMO = "grenade", NAME = "Grenade", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/Items/grenadeAmmo.mdl"}
 AMMOS[9] = {AMMO = "SMG1_Grenade", NAME = "Smg Grenade", QT = 1, PRICE = 250, MODEL = "models/Items/AR2_Grenade.mdl"}
-AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", QT = 100, PRICE = 200, MODEL = "models/props_junk/gascan001a.mdl"}
+AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", SMULT = 2, QT = 100, PRICE = 200, MODEL = "models/props_junk/gascan001a.mdl"}
 AMMOS[11] = {AMMO = "BuckShot", NAME = "Heavy Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxFlares.mdl"}
-AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", QT = 1, PRICE = 300, MODEL = "models/props_combine/combine_mine01.mdl"}
+AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/props_combine/combine_mine01.mdl"}
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
