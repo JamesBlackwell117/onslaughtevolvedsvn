@@ -26,35 +26,36 @@ function PANEL:Init( )
 	end
 			
 	for k,v in pairs( MODELS ) do
-		local ico = vgui.Create( "DModelPanel", self )
-		ico:SetModel(k)
-		ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, 0) end
-		ico:SetSize(64,64)
-
 		local ent = ents.Create("prop_physics") -- lol ailias filthy hack
 		ent:SetAngles(Angle(0,0,0))
 		ent:SetPos(Vector(0,0,0))
 		ent:SetModel(k)
+		print(ent:GetModel())
+		PrintTable(	util.GetModelInfo( ent:GetModel() ))
 		ent:Spawn()
 		ent:Activate()
 		ent:PhysicsInit( SOLID_VPHYSICS )    
 
-			
+		if ValidEntity(ent:GetPhysicsObject()) then
 			local center = ent:OBBCenter()
 			local dist = ent:BoundingRadius()*1.2
 			local hlth = math.Round(math.Clamp(ent:GetPhysicsObject():GetMass() * (ent:OBBMins():Distance(ent:OBBMaxs())) / 100,200,800)*1.05)
 			if v.COST then hlth = v.COST*1.05 end
 			
-			ent:Remove()
+			local ico = vgui.Create( "DModelPanel", self )
+			ico:SetModel(k)
+			ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, 0) end
+			ico:SetSize(64,64)
+			ico:SetLookAt( center )
+			ico:SetCamPos( center+Vector(dist,dist,dist) )
 		
-		ico:SetLookAt( center )
-		ico:SetCamPos( center+Vector(dist,dist,dist) )
-		
-		ico:InvalidateLayout( true ) 
-		ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
-		if v.GROUP then
-		self.IconList[v.GROUP]:AddItem( ico )
+			ico:InvalidateLayout( true ) 
+			ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
+			if v.GROUP then
+				self.IconList[v.GROUP]:AddItem( ico )
+			end
 		end
+		ent:Remove()
 	end
 end
 
