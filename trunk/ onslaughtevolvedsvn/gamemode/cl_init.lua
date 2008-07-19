@@ -88,6 +88,7 @@ end
 
 CreateClientConVar("ose_hidetips", "0", true, false)
 CreateClientConVar("ose_hud", "0", true, false)
+CreateClientConVar("ose_defaultclass", "Scout", true, true)
 
 
 tip = TIPS[1]
