@@ -60,7 +60,11 @@ function GM:DrawHUD()
 		
 		draw.RoundedBox(crnd,W-19-W/6,H-42,W/6,22,bkdrop)
 		draw.RoundedBox(crnd,W-18-W/6*TimeLeft/TTimeleft,H-41,W/6*TimeLeft/TTimeleft-2,20,timecolor)
-			
+		
+		if LocalPlayer():KeyDown(IN_WALK) then
+		--draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+		end
+		
 		-- money calcs and draw
 		if money > Maxmoney then Maxmoney = money end
 		local wads = math.ceil(Maxmoney/5000)
@@ -80,36 +84,12 @@ function GM:DrawHUD()
 		
 		-- rank calcs and draw
 		if currank != nextrank then
-			local prbk = Color(
-			prevrank.COLOR.r*2/3,
-			prevrank.COLOR.g*2/3,
-			prevrank.COLOR.b*2/3,
-			bkdrop.a
-			)
-			local crbk = Color(
-			currank.COLOR.r*2/3,
-			currank.COLOR.g*2/3,
-			currank.COLOR.b*2/3,
-			bkdrop.a
-			)
-			local nrbk = Color(
-			nextrank.COLOR.r*2/3,
-			nextrank.COLOR.g*2/3,
-			nextrank.COLOR.b*2/3,
-			bkdrop.a
-			)
-			local prc = Color(
-			prevrank.COLOR.r,
-			prevrank.COLOR.g,
-			prevrank.COLOR.b,
-			95
-			)
-			local crc = Color(
-			currank.COLOR.r,
-			currank.COLOR.g,
-			currank.COLOR.b,
-			95
-			)
+			local prbk = Color(prevrank.COLOR.r*2/3,prevrank.COLOR.g*2/3,prevrank.COLOR.b*2/3,bkdrop.a)
+			local crbk = Color(currank.COLOR.r*2/3,currank.COLOR.g*2/3,currank.COLOR.b*2/3,bkdrop.a)
+			local nrbk = Color(nextrank.COLOR.r*2/3,nextrank.COLOR.g*2/3,nextrank.COLOR.b*2/3,bkdrop.a)
+			local prc = Color(prevrank.COLOR.r,prevrank.COLOR.g,prevrank.COLOR.b,95)
+			local crc = Color(currank.COLOR.r,currank.COLOR.g,currank.COLOR.b,95)
+			
 			local rankpct = (kills-currank.KILLS) / (nextrank.KILLS-currank.KILLS)
 			if prevrank != currank then
 			draw.RoundedBox(crnd,W-19-W/6,H-90,W/6/5,22,prbk)
