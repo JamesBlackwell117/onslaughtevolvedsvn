@@ -1160,11 +1160,16 @@ end
 
 function GM:RestockPlayer(ply)
 	if !ply then return end
-	for k,v in pairs(AMMOS) do
-		local class = ply:GetNWInt("class")
-		if table.HasValue(Classes[class].AMMO, k) then
-			ply:GiveAmmo(v.QT, v.AMMO)
-		end
+	--for k,v in pairs(AMMOS) do
+	--	local class = ply:GetNWInt("class")
+	--	if table.HasValue(Classes[class].AMMO, k) then
+	--		ply:GiveAmmo(v.QT, v.AMMO)
+	--	end
+	--end
+	local class = ply:GetNWInt("class")
+	for k,v in pairs(Classes[class].AMMO) do
+		local mult = AMMOS[v].SMULT or 1
+		ply:GiveAmmo(AMMOS[v].QT*2*mult, AMMOS[v].AMMO)
 	end
 end
 
