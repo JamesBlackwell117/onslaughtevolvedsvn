@@ -51,8 +51,8 @@ end
 
 function Pmeta:IsStuck()
 		local trc = {}
-		trc.start = self:LocalToWolrd(self:OBBMaxs())
-		trc.endpos = self:LocalToWolrd(self:OBBMins())
+		trc.start = self:LocalToWorld(self:OBBMaxs())
+		trc.endpos = self:LocalToWorld(self:OBBMins())
 		trc.filter = self
 		trc = util.TraceLine( trc )
 		if trc.Hit then
