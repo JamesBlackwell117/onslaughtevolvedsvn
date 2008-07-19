@@ -50,19 +50,43 @@ function Emeta:Dissolve()
 end
 
 function Pmeta:IsStuck()
-	local trc = {}
-	trc.start = self:GetPos()
-	trc.endpos = self:GetPos() + Vector(0,0,15)
-	trc.filter = self
-	trc = util.TraceLine( trc )
-	if trc.Hit then
+	local ang = self:EyeAngles()
+	local dirs = {
+		ang:Forward(),		
+		ang:Forward() * -1,
+		ang:Right(),
+		ang:Right() * -1,
+		ang:Up(),
+		ang:Up() * -1
+	}
+	local hits = 0
+	for k,v in pairs(dirs) do
+		local trc = {}
+		trc.start = self:GetPos()
+		trc.endpos = self:GetPos() + v
+		trc.filter = self
+		trc = util.TraceLine( trc )
+		if trc.Hit then
+			hits = hits + 1
+		end
+	end
+	if hits >= 4 then
+		self.NextSpawn = CurTime() + 5
 		self:Kill()
-		self.NextSpawn = self.NextSpawn + 5
 		return true
 	end
 	return false
 end
 
+function Pmeta:GetDefaultClass()
+	print(self:GetInfo("ose_defaultclass"))
+	for k,v in pairs(Classes) do
+		if v.NAME == self:GetInfo("ose_defaultclass") then
+			self:SetNetworkedInt( "class", k)
+			break
+		end
+	end
+end
 
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
@@ -72,13 +96,11 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNetworkedInt( "money", STARTING_MONEY )
 	ply:SetNetworkedInt( "class", 1 )
 	ply:SetNetworkedInt( "rank", 1 )
+	timer.Simple(2,ply.GetDefaultClass, ply)
 	for k,v in pairs(player.GetAll()) do
 		v:ChatPrint(ply:Nick().." has finished joining the server!")
 	end
 	timer.Simple(1,UpdateTime,ply)
-	if PHASE == "BATTLE" then
-		ply:Kill()
-	end
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
 		local oldobj = discplayers[ply:SteamID()].OBJECT
@@ -102,6 +124,10 @@ function GM:PlayerInitialSpawn(ply)
 		ply:SetNetworkedInt( "kills", read.kills)
 		ply:SetNetworkedInt( "rank", read.rank)
 		GAMEMODE:CheckRanks(ply)
+	end
+	if PHASE == "BATTLE" then
+		timer.Simple(0.01, ply.KillSilent, ply)
+		ply.NextSpawn = CurTime() + 5
 	end
 end
 
@@ -495,8 +521,6 @@ end
 
 function Stuck(ply,cmd,args)
 	if ply:IsStuck() then
-		ply:Message("You are now nocollided with everything move to get unstuck!")
-	else
 		ply:Message("You are not stuck!")
 	end
 end
@@ -835,7 +859,6 @@ function GM:PlayerDeathThink( ply )
 	if ply.NextSpawn == nil then
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	end
-
 	if ply.NextSpawn > CurTime( ) then
 		local players = player.GetAll()
 		if ply:KeyReleased( IN_ATTACK ) then
@@ -1307,6 +1330,28 @@ function GM:CalculatePowerups(npc, killer, wep, bonus)
 	end
 	killer.LastKill = CurTime()
 end
+
+function DeleteModel(ply, cmd, args)
+	local model = args[1]
+	if !model then return end
+	if PHASE == "BATTLE" && !MODELS[model].ALLOWBATTLE then
+		ply:Message("You can't delete props in battle!", Color(255,100,100,255))
+		return
+	end
+	local entz = ents.FindByModel(model)
+	local monadd = 0
+	if #entz > 0 then
+		for k,v in pairs(entz) do
+			if v.Owner == ply then if v.SMH then monadd = monadd + v.SMH end v:Dissolve() end
+		end
+		if monadd > 0 then
+			ply:Message("+"..math.Round(monadd).." [Sold Props]", Color(100,255,100,255))
+			ply:SetNWInt("money", ply:GetNWInt("money") + monadd)
+		end
+	end
+end
+
+concommand.Add("deletemodel", DeleteModel)
 
 function OSE_Spawn(ply,cmd,args)
 	if !args[1] then return end
