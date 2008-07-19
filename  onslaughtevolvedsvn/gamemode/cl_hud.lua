@@ -1,4 +1,3 @@
-//Conman
 
 Weaponclass = "weapon_none"
 Maxammo = 0
@@ -10,6 +9,7 @@ Maxmoney = 0
 
 function GM:DrawHUD()
 	if GetConVarNumber( "ose_hud" ) == 1 then
+		//Alias Modern HUD
 		local W,H = ScrW(), ScrH()
 		local ply = LocalPlayer()
 		local crnd = H/256
@@ -221,6 +221,20 @@ function GM:DrawHUD()
 			else
 				draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
 			end
+		else
+			surface.SetDrawColor(50, 50, 50, 150)
+			surface.DrawRect( W * 0.7,0, W * 0.3, H * 0.04)
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
+			local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
+			local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
+			local killneeded = nextrank.KILLS or 0
+			local rank = LocalPlayer():GetNWInt("rank") or 1
+			if kills > killneeded || rank >= #RANKS then
+				draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
+			else
+				draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
+			end
 		end
 		
 		if !ply:Alive() then return end
@@ -339,7 +353,6 @@ end
 
 function GM:HUDDrawTargetID( )
 	if !LocalPlayer():Alive() then return end
-	if GetConVarNumber( "ose_hidetips" ) == 1 then return end
 	local tr = LocalPlayer( ):GetEyeTrace( )
 	if not tr.Hit or not ValidEntity( tr.Entity ) then
 		return
