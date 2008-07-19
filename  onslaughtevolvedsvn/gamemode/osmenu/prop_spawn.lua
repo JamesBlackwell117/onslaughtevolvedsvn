@@ -44,7 +44,10 @@ function PANEL:Init( )
 			
 			local ico = vgui.Create( "DModelPanel", self )
 			ico:SetModel(k)
-			ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, 0) end
+			ico.Skin = math.random(0,util.GetModelInfo(k).SkinCount-1)
+			ico.Entity:SetSkin(ico.Skin)
+			ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, ico.Skin) end
+			ico.DoRightClick = function( ico ) ico.Skin = ico.Skin + 1 if ico.Skin == util.GetModelInfo(k).SkinCount then ico.Skin = 0 end ico.Entity:SetSkin(ico.Skin) ico:InvalidateLayout( true ) end
 			ico:SetSize(64,64)
 			ico:SetLookAt( center )
 			ico:SetCamPos( center+Vector(dist,dist,dist) )
