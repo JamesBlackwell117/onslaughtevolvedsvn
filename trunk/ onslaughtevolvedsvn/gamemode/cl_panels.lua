@@ -6,6 +6,7 @@ if SERVER then
 	AddCSLuaFile( "osmenu/Ammo_buy.lua")
 	AddCSLuaFile( "osmenu/commands.lua" )
 	AddCSLuaFile( "osmenu/mapload.lua" )
+	AddCSLuaFile( "osmenu/player_stats.lua" )
 	AddCSLuaFile( "osmenu/Message.lua" )
 	return
 end
@@ -18,6 +19,7 @@ include( "osmenu/Ammo_buy.lua" )
 include( "osmenu/commands.lua" )
 include( "osmenu/mapload.lua")
 include( "osmenu/Message.lua")
+include( "osmenu/player_stats.lua")
 
 local W, H = ScrW(), ScrH()
 
@@ -44,7 +46,7 @@ local PANEL = { }
 function PANEL:Init( )
 
 	MENU = self
-	self:SetSize( 360, 350 )
+	self:SetSize( 400, 350 )
 	self:SetPos(0,W * 0.024)
 	--self:SetDraggable(false)
 	self:SetTitle( "Onslaught Menu" )
@@ -65,6 +67,7 @@ function PANEL:Init( )
 	self.ContentPanel:AddSheet( "Class", vgui.Create( "onslaught_classselect", self ), "gui/silkicons/group", true, true )
 	self.ContentPanel:AddSheet( "Build", vgui.Create( "onslaught_PropSpawn", self ), "onslaught/bricks", true, true )
 	self.ContentPanel:AddSheet( "Commands", vgui.Create("onslaught_commands", self), "onslaught/help", true, true )
+	self.ContentPanel:AddSheet( "Settings and Stats", vgui.Create("onslaught_stats", self), "onslaught/help", true, true )
 	
 	if LocalPlayer( ):IsAdmin( ) then
 		self.ContentPanel:AddSheet( "Admin", vgui.Create( "onslaught_admin", self ), "onslaught/bricks", true, true )
