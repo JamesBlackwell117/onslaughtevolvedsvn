@@ -978,6 +978,9 @@ function GM:PlayerDisconnected( ply )
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
 			if v.Owner == ply then v:Remove() end
 	end
+	if ValidEntity(ply.CusSpawn) then
+		ply.CusSpawn:Remove()
+	end
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
