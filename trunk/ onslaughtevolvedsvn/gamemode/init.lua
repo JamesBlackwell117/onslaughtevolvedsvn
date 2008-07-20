@@ -167,7 +167,7 @@ function GM:PlayerSpawn(ply)
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
 	ply:SetModel( modelname )
 	if ply.CusSpawn then
-		ply:SetPos(ply.CusSpawn)
+		ply:SetPos(ply.CusSpawn:GetPos())
 		ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		timer.Simple(2, ply.SetCollisionGroup,ply,COLLISION_GROUP_PLAYER)
 	end
@@ -524,9 +524,17 @@ function SpawnPoint(ply,cmd,args)
 				ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
 				return
 			end
-			ply.CusSpawn = ply:GetPos()
 			ply:Message("Set custom spawn!")
 			ply:Message("Say !resetspawn to reset your spawnpoint")
+			if ValidEntity(ply.CusSpawn) then
+				ply.CusSpawn:Remove()
+			end
+			local spn = ents.Create("sent_spawpoint")
+			spn:SetPos(ply:GetPos())
+			spn:Spawn()
+			spn:Activate()
+			spn.Owner = ply
+			ply.CusSpawn = spn
 		end
 	else
 		ply:Message("Can't set spawn in battle phase", Color(255,100,100,255))
