@@ -13,7 +13,6 @@ function ENT:Initialize( )
 	if phys:IsValid( ) then  		
 		phys:Wake( )
 		phys:EnableMotion( false )
-		phys:EnableCollisions( false )
 	end
 	local ED = EffectData( )
 	ED:SetEntity(self)
