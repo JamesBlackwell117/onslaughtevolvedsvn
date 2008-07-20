@@ -52,7 +52,6 @@ function EFFECT:Think()
 			p:SetEndAlpha( 0 )
 		end
 	end
-	WorldSound( "k_lab.teleport_rings_high", self.Pos , 0.5, 100)
 	return true
 end
 
