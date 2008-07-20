@@ -10,5 +10,10 @@ function ENT:Initialize()
 	ED:SetEntity(self)
 	ED:SetOrigin(self:GetPos())
 	util.Effect( "spawnpoint", ED )
+	self.snd = CreateSound( self, "k_lab.teleport_rings_high")
+	self.snd:Play()
 end
- 
+
+function ENT:Remove()
+	self.snd:Stop()
+end

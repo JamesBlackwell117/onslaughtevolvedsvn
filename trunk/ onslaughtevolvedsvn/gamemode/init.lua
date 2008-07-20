@@ -545,7 +545,7 @@ end
 concommand.Add("spawnpoint", SpawnPoint)
 
 function ResetSpawn(ply,cmd,args)
-	ply.CusSpawn = nil
+	ply.CusSpawn:Remove()
 	ply:Message("Reset spawnpoint!")
 end
 
@@ -774,6 +774,7 @@ function GM:Initialize()
 end
 
 function CheckDead()
+	if PHASE == "BUILD" then return end
 	for k,v in pairs(player.GetAll()) do
 		if v:Alive() then return end
 	end
