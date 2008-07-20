@@ -534,6 +534,7 @@ function SpawnPoint(ply,cmd,args)
 			spn:Spawn()
 			spn:Activate()
 			spn.Owner = ply
+			spn:SetNWEntity("owner", ply)
 			ply.CusSpawn = spn
 		end
 	else
