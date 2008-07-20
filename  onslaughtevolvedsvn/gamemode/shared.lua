@@ -12,10 +12,11 @@ PHASE = "BUILD"
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
 Classes[1] = {NAME = "Scout", SPEED = 650, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl", DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
-Classes[2] = {NAME = "Soldier", SPEED = 350, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
+Classes[2] = {NAME = "Soldier", SPEED = 280, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
 Classes[3] = {NAME = "Engineer", SPEED = 300, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", DSCR = "A must have for any onslaught team. With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
 Classes[4] = {NAME = "Sniper", SPEED = 270, WEAPON_SET = 4, HEALTH = 80,AMMO = {8,7,5}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
 Classes[5] = {NAME = "Pyro", SPEED = 450, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", DSCR = "A must have for those who enjoy setting fire to things. The pyro has the ability to set fire traps and explosions to send those enemies fliying!"  }
+--Classes[6] = {NAME = "Support", SPEED = 370, WEAPON_SET = 6, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", DSCR = "A must have for those who enjoy setting fire to things. The pyro has the ability to set fire traps and explosions to send those enemies fliying!"  }
 
 TAUNTS = {}
 TAUNTS[1] = {"vo/episode_1/npc/female01/cit_kill02.wav","vo/npc/female01/gotone01.wav","vo/episode_1/npc/female01/cit_kill04.wav", "vo/episode_1/npc/female01/cit_kill09.wav", "vo/episode_1/npc/female01/cit_kill06.wav","vo/episode_1/npc/female01/cit_kill11.wav","vo/episode_1/npc/female01/cit_kill16.wav"}
@@ -228,10 +229,10 @@ end
 	DEATH_PENALTY = -1500
 
 	--PROP VARS--
-	FLAMABLE_PROPS = false
+	FLAMABLE_PROPS = true
 	BATTLE_PHYS = false
 	PROP_CLEANUP = false
-	PROP_LIMIT = 25
+	PROP_LIMIT = 35
 
 	--NETWORK VARS--
 	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)

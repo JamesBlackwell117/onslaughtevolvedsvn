@@ -6,38 +6,38 @@ include('shared.lua')
 function ENT:Initialize()   
 	self.Entity:SetModel( "models/props_combine/combine_mine01.mdl")
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )  
+	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 	self.Entity:SetSolid( SOLID_VPHYSICS ) 
 	self.Entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
 	local phys = self.Entity:GetPhysicsObject()  	
-	if (phys:IsValid()) then  		
+	if (phys:IsValid()) then 	
 		phys:Wake()
-		phys:EnableGravity( false )
+		--phys:EnableGravity( false )
 	end
-
-end
-
-
-function ENT:SpawnFunction( ply, tr)
-
-	if ( !tr.Hit ) then return end
-	
-	local SpawnPos = tr.HitPos + tr.HitNormal * 16
-	
-	local ent = ents.Create( "sent_prop" )
-	
-	ent:SetPos( SpawnPos )
-	ent:Spawn()
-	ent:Activate()
-	
-	return ent
-	
+	self:SetPoseParameter("blendstates", 1)
 end
 
 function ENT:Touch(ent)
 end
 
 function ENT:Think()
+	if !self.Primed then
+		local trc = {}
+		trc.start = self:GetPos()
+		trc.endpos = self:GetPos() + self:GetUp() * -2
+		trc.filter = self
+		trc = util.TraceLine( trc )
+		if trc.HitWorld then
+			self:SetNWBool("Closed", true)
+			self.Primed = true
+			self.Entity:GetPhysicsObject():EnableMotion(false)
+			self:SetPoseParameter("blendstates", 1)
+		else
+			return
+		end
+		self:SetPoseParameter("blendstates", 1)
+	end
 	local ents = ents.FindInSphere(self.Entity:GetPos(), 75)
 	for k,v in pairs(ents) do
 		if v:IsNPC() && v:GetClass() != "npc_bullseye" && v:GetClass() != "npc_turret_floor" then

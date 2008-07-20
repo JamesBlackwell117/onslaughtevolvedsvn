@@ -44,25 +44,18 @@ function SWEP:PrimaryAttack()
 			self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return 
 	end 
-	local trace = {}
-	trace.start = self.Owner:GetShootPos()
-	trace.endpos = trace.start + (self.Owner:GetAimVector() * 150)
-	trace.filter = self.Owner
-	local trc = util.TraceLine(trace)
-	if !trc.Hit then return end
-	if !trc.Entity then return end
-	local class = trc.Entity:GetClass()
-	if class != "sent_prop" && trc.HitNonWorld then return end
 	self:TakePrimaryAmmo(1)
 	local mine = ents.Create("ose_mines")
-	mine:SetPos(trc.HitPos)
-	local ang = trc.HitNormal:Angle()
-	local ang2 = Angle(ang.p + 90, ang.y, ang.r)
+	local pos = self.Owner:GetShootPos()
+	local ang = self.Owner:GetAimVector()
+	mine:SetPos(pos + ang * 10)
+	local ang2 = self.Owner:GetAimVector():Angle()
+	ang2 = Angle(ang2.p, ang2.y, ang2.r)
 	mine:SetAngles(ang2)
 	mine:SetOwner(self.Owner)
 	mine:Spawn()
 	mine:Activate()
-	
+	mine:GetPhysicsObject():SetVelocity(ang * 200)
 	self.Owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	self.Owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
