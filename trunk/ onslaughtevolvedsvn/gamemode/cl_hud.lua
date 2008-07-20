@@ -8,9 +8,9 @@ Maxmoney = 0
 
 
 function GM:DrawHUD()
+	local W,H = ScrW(), ScrH()
 	if GetConVarNumber( "ose_hud" ) == 1 then
 		//Alias Modern HUD
-		local W,H = ScrW(), ScrH()
 		local ply = LocalPlayer()
 		local crnd = H/256
 		local bkdrop = Color(31, 31, 31, 127)
@@ -168,7 +168,6 @@ function GM:DrawHUD()
 		end
 
 	else
-		local W,H = ScrW(), ScrH()
 		local ply = LocalPlayer()
 		
 		-- messages
@@ -337,7 +336,7 @@ function GM:HUDDrawTargetID( )
 	if not tr.Hit or not ValidEntity( tr.Entity ) then
 		return
 	end
-	
+	local W,H = ScrW(), ScrH()
 	local ent = tr.Entity
 	
 	local sw,sh = ScrW( ), ScrH( )
@@ -391,6 +390,10 @@ function GM:HUDDrawTargetID( )
 			xalign = TEXT_ALIGN_CENTER,
 			yalign = TEXT_ALIGN_CENTER
 		} )
+	elseif (ent.Base == "sent_prop" || ent:GetClass() == "sent_prop") && PHASE == "BUILD" then
+		if ent.Owner then
+			draw.SimpleTextOutlined( "Owner: "..ent.Owner:Nick(), "HUD2", W * 0.02, H * 0.98, Color(255,255,255,255), 0, 1, 1, Color(0,0,0,255) )
+		end
 	elseif ent:IsNPC( ) then
 		local name = ""
 		local name2 = ""

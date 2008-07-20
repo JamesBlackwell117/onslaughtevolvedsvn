@@ -516,11 +516,11 @@ function SpawnPoint(ply,cmd,args)
 			return
 		else
 			local trc = {}
-			trc.start = ply:GetPos()
-			trc.endpos = ply:GetPos() + ply:GetUp() * -200
+			trc.start = ply:GetPos() + Vector(0,0,5)
+			trc.endpos = ply:GetPos() + ply:GetUp() * -500
 			trc.filter = ply
 			trc = util.TraceLine( trc ) --check if the player is standing above skybox (under the map) or a nodraw
-			if trc.HitSky || trc.HitNoDraw then
+			if trc.HitSky || trc.HitNoDraw || trc.Entity.Base == "sent_prop" || trc.Entity:GetClass() == "sent_prop" || ply:Crouching( ) then
 				ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
 				return
 			end

@@ -7,7 +7,9 @@ end
 function Owner(um)
 	local owner = um:ReadEntity()
 	local ent = um:ReadEntity()
-	ent.Owner = owner
+	if ValidEntity(ent) then
+		ent.Owner = owner
+	end
 end
 
 usermessage.Hook("owner", Owner)
