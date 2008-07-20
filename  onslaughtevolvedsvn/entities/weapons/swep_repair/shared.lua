@@ -76,10 +76,10 @@ function SWEP:PrimaryAttack( )
 		if tr.Entity:GetClass() == "sent_prop" || tr.Entity:GetClass() == "sent_ladder" || tr.Entity:GetClass() == "sent_ammo_dispenser" then
 			if tr.Entity.Shealth >= tr.Entity.Mhealth then return end
 			if !tr.Entity:IsOnFire() then 
-				tr.Entity.Shealth = tr.Entity.Shealth + 15
+				tr.Entity.Shealth = tr.Entity.Shealth + 25
 				if tr.Entity.Shealth > tr.Entity.Mhealth then tr.Entity.Shealth = tr.Entity.Mhealth end
 			end
-			if math.random(1,4) == 1 then
+			if math.random(1,3) == 1 then
 				tr.Entity:Extinguish()
 			end
 			tr.Entity:GetPhysicsObject( ):EnableMotion( false )
