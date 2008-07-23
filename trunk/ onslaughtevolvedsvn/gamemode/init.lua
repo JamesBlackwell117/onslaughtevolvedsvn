@@ -324,10 +324,13 @@ function GM:PlayerDeath( ply, wep, killer )
 		end
 	end
 	
+	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin.InUse = false self.AmmoBin = nil end
+
+	
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
-	timer.Simple(2,CheckDead)
+	CheckDead()
 	ply:AddDeaths(1)	
 	return true
 end
@@ -483,7 +486,7 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
-	timer.Simple(2,CheckDead)
+	CheckDead()
 end
 
 function GM:DeleteProps(ply, ID, nick)
