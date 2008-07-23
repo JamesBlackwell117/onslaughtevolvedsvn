@@ -38,7 +38,7 @@ function ENT:Think()
 		end
 		self:SetPoseParameter("blendstates", 1)
 	end
-	local ents = ents.FindInSphere(self.Entity:GetPos(), 75)
+	local ents = ents.FindInSphere(self.Entity:GetPos(), 250)
 	for k,v in pairs(ents) do
 		if v:IsNPC() && v:GetClass() != "npc_bullseye" && v:GetClass() != "npc_turret_floor" then
 			self:Explode(v)
@@ -59,7 +59,7 @@ function ENT:Explode(ent)
 		effectdata:SetOrigin( pos )
 		effectdata:SetScale( 10 )
 		util.Effect( "Explosion", effectdata )
-		util.BlastDamage( self.Entity, self.Entity, pos, 500, 180 )
+		util.BlastDamage( self.Entity, self.Entity, pos, 300, 100 )
 		self.Entity:Remove()
 	end
 end
