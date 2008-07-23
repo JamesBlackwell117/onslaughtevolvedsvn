@@ -17,8 +17,7 @@ function ENT:StartTouch(ent)
 			if ValidEntity(ent.Owner) then
 				ent.Owner:Message("You can't spawn props there!", Color(255,100,100,255))
 				if ent.Shealth then
-					ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + (ent.Shealth))
-					ent.Shealth = 0
+					ent.Owner:SetNetworkedInt("money", ent.Owner:GetNetworkedInt("money") + (ent.SMH))
 					ent.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 				end
 			end
