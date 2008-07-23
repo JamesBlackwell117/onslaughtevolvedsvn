@@ -385,6 +385,7 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 		if attacker:GetClass() == "worldspawn" then
 			if ply:GetClass().NAME == "Scout" then
 				ply:SetHealth(ply:Health() - 10)
+				if ply:Health() <= 0 then ply:Kill() end
 				return false
 			end
 		end
