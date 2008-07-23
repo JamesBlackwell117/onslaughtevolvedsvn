@@ -28,10 +28,6 @@ local Emeta = FindMetaTable( "Entity" )
 
 function Emeta:Dissolve()
 	if ( ValidEntity( self) && !self.Dissolving ) then
-		if self:GetClass() == "sent_prop" || self:GetClass() == "sent_ladder" || self:GetClass() == "sent_ammo_dispenser" || self:GetClass() == "sent_dispenser" then      
-			self.SMH = 0
-		end
-		
 		local dissolve = ents.Create( "env_entity_dissolver" )
 		dissolve:SetPos( self:GetPos() )
 
@@ -47,6 +43,68 @@ function Emeta:Dissolve()
 		self:Fire( "sethealth", "0", 0 )
 		self.Dissolving = true
 	end
+end
+
+function Emeta:GetRealOwner()
+	local owner
+	if ValidEntity(self.Owner) then owner = self.Owner elseif ValidEntity(self:GetOwner()) then owner = self:GetOwner() end
+	return owner
+end
+
+function Emeta:PropRemove(ply,checkowner,ifnotclass,silent)
+	if self.Dissolving then return 0 end
+	ply = ply or nil
+	checkowner = checkowner or false
+	ifnotclass = ifnotclass or false
+	silent = silent or false
+	local cost
+	if checkowner then
+		local owner = self:GetRealOwner()
+		local model = self:GetModel()
+	
+		if owner then
+			if ifnotclass and MODELS[model] && MODELS[model].PLYCLASS && owner:GetNWInt("class") == MODELS[model].PLYCLASS then
+			elseif ply and owner != ply and !ply:IsAdmin() then
+				if !silent then
+					ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. owner:Nick( ))
+					ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+				end
+				return 0
+			elseif MODELS[model] && MODELS[model].COST then
+				cost = MODELS[model].COST
+			elseif self.SMH && self.SMH > 0 then
+				cost = self.SMH
+			end
+		end
+		if cost then
+			if !silent then
+				owner:Money(self.SMH,"+"..math.Round(self.SMH).." [Deleted Item]")
+			end
+		end
+	end
+	if self:IsNPC() then self:Remove() elseif cost then self:Dissolve() end
+	return cost or 0
+end
+
+function Pmeta:Money(amt,msg,col)
+	local suffix = " "
+	local money = self:GetNWInt("money")
+	if amt < 0 then 
+		if money - amt < 0 then 
+			self:Message("Insufficient Funds!", Color(255,100,100,255))
+			self:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+			return false
+		end
+		if !col then col = Color(255,100,100,255) end
+	else
+		suffix = "+"
+		if !col then col = Color(100,255,100,255) end
+	end
+
+	self:SetNetworkedInt("money",money + amt)
+	if msg then	self:Message(msg,col) end
+	
+	return true
 end
 
 function Pmeta:IsStuck()
@@ -192,9 +250,8 @@ function GM:StartBattle()
 		if v:IsWeapon( ) then
 			v:Remove( )
 		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
-			if ValidEntity(v:GetOwner()) && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
-			else v:Remove() end
-		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
+			v:PropRemove(nil,true, true)
+		elseif v.Prepare then
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
@@ -203,7 +260,6 @@ function GM:StartBattle()
 			v.FullRound = true
 		end
 	end
-
 
 	umsg.Start("StartBattle")
 	umsg.End() 
@@ -217,8 +273,7 @@ function GM:CalculateLiveBonus()
 		for k,v in pairs(player.GetAll()) do
 			local bonus = (LIVE_BONUS + (DEATH_PENALTY * v.Died)) / 2
 			if bonus > 0 && v.FullRound == true then
-				v:SetNetworkedInt( "money",v:GetNetworkedInt( "money") + bonus) -- if the player doesn"t die in that battle round give him some money
-				v:Message("+"..bonus.." [Round Live Bonus]", Color(100,255,100,255))
+				v:Money(bonus,"+"..bonus.." [Round Live Bonus]") -- if the player doesn"t die in that battle round give him some money
 			end
 			v.Died = 0
 		end
@@ -226,9 +281,8 @@ function GM:CalculateLiveBonus()
 		for k,v in pairs(player.GetAll()) do
 			local bonus = LIVE_BONUS + (DEATH_PENALTY * v.Died)
 			if bonus > 0 && v.FullRound == true then
-				v:SetNetworkedInt( "money",v:GetNetworkedInt( "money") + bonus) -- if the player doesn"t die in that battle round give him some money
- 				v:SetNWInt("kills", v:GetNWInt("kills") + math.Round(math.Clamp(bonus / 100, 1, 10)))
-				v:Message("+"..bonus.." [Round Live Bonus]", Color(100,255,100,255))
+				v:Money(bonus,"+"..bonus.." [Round Live Bonus]")
+				v:SetNWInt("kills", v:GetNWInt("kills") + math.Round(math.Clamp(bonus / 100, 1, 10)))
 			end
 			v.Died = 0
 		end
@@ -270,14 +324,9 @@ function GM:StartBuild()
 		if v:IsWeapon( ) then
 			v:Remove( )
 		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
-			if ValidEntity(v:GetOwner()) && MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
-			else v:Remove() end
-		elseif v:GetClass() == "sent_prop" || v:GetClass() == "sent_ladder" || v:GetClass() == "sent_ammo_dispenser" || v:GetClass() == "sent_dispenser" then
-			v.Shealth = v.Mhealth
-			v:UpdateColour()
-			v:Extinguish()
-			v:GetPhysicsObject():EnableMotion(false)
-			v:SetMoveType(MOVETYPE_VPHYSICS)
+			v:PropRemove(nil,true, true)
+		elseif v.PropReset then
+			v:PropReset()
 		elseif v:IsPlayer() then
 			v:Kill()
 			v.NextSpawn = CurTime() + 5
@@ -306,22 +355,7 @@ function Class(ply,com,args)
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
 		for k,v in pairs( ents.GetAll( ) ) do
 			if v:IsNPC() || v:GetClass() == "ose_mines" then
-				local owner
-	
-				if ValidEntity(v.Owner) then owner = v.Owner elseif ValidEntity(v:GetOwner()) then owner = v:GetOwner() end
-	
-				if owner && owner == ply then
-					if MODELS[v:GetModel()] && MODELS[v:GetModel()].PLYCLASS && v:GetOwner():GetNWInt("class") == MODELS[v:GetModel()].PLYCLASS then
-					elseif MODELS[v:GetModel()] && MODELS[v:GetModel()].COST && !v.Dissolving then
-						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[v:GetModel()].COST)
-						owner:Message("+"..math.Round(MODELS[v:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
-						v:Remove()
-					elseif v.SMH && v.SMH > 0 then
-						owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + v.SMH)
-						owner:Message("+"..math.Round(v.SMH).." [Deleted Item]", Color(100,255,100,255))
-						v:Remove()
-					end
-				end
+				v:PropRemove(nil,true, true)
 			end
 		end
 	end
@@ -451,10 +485,8 @@ function GM:PlayerSay( ply, txt, pub )
 		end
 		for k,v in pairs(player.GetAll()) do
 			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-				ply:SetNetworkedInt("money", ply:GetNetworkedInt("money") - tonumber(args[3]))
-				v:ChatPrint(ply:Nick().." gave you "..args[3].." money!")
-				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+				v:Money(tonumber(args[3]),ply:Nick().." gave you "..args[3].." money!")
+				ply:Money(- tonumber(args[3]),"You succesfully gave "..v:Nick().." "..args[3].." money.")
 				return txt
 			end
 		end
@@ -470,9 +502,7 @@ function GM:PlayerSay( ply, txt, pub )
 		end
 		for k,v in pairs(player.GetAll()) do
 			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-				v:SetNetworkedInt("money", v:GetNetworkedInt("money") + tonumber(args[3]))
-				v:ChatPrint("Admin: "..ply:Nick().." gave you "..args[3].." money!")
-				ply:ChatPrint("You succesfully gave "..v:Nick().." "..args[3].." money.")
+				v:Money(tonumber(args[3]),"Admin: "..ply:Nick().." gave you "..args[3].." money!")
 				return txt
 			end
 		end
@@ -558,22 +588,10 @@ function SellAll(ply,cmd,args)
 	end
 	local mon = 0
 	for k,v in pairs(ents.GetAll()) do
-		local owner
-		if ValidEntity(v.Owner) then owner = v.Owner elseif ValidEntity(v:GetOwner()) then owner = v:GetOwner() end
-		
-		if owner && owner == ply then
-			if MODELS[v:GetModel()] && MODELS[v:GetModel()].COST && !v.Dissolving then
-				mon = mon + MODELS[v:GetModel()].COST
-				v:Dissolve()
-			elseif v.SMH && v.SMH > 0 then
-				mon = mon + v.SMH
-				v:Dissolve()
-			end
-		end
+		mon = mon + v:PropRemove(ply,true,false,true)
 	end
 	if(mon > 0) then
-	ply:SetNWInt("money", ply:GetNWInt("money") + mon)
-	ply:Message("+"..math.Round(mon).." [Sold all props]", Color(100,255,100,255))
+	ply:Money(mon,"+"..math.Round(mon).." [Sold all props]")
 	end
 end
 
@@ -813,10 +831,10 @@ function GM:PlayerDeath( ply, wep, killer )
 	local name = npcs[killer:GetClass()] or killer:GetClass()
 	
 	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-		if v:GetOwner() == ply then v:Remove() end
+		if v:GetRealOwner() == ply then v:PropRemove() end
 	end
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		if v.Owner == ply && v.Type == "BATTLE" then v:Remove() end
+		if v:GetRealOwner() == ply && v.Type == "BATTLE" then v:PropRemove() end
 	end
 	
 	if PHASE == "BUILD" then
@@ -973,10 +991,10 @@ end
 
 function GM:PlayerDisconnected( ply )
 	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-		if v:GetOwner() == ply then v:Remove() end
+		if v:GetRealOwner() == ply then v:Remove() end
 	end
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-			if v.Owner == ply then v:Remove() end
+		if v:GetRealOwner() == ply then v:Remove() end
 	end
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
@@ -1008,10 +1026,8 @@ function GM:DeleteProps(ply, ID, nick)
 	print("[ONSLAUGHT] Deleting props")
 	for k,v in pairs(ents.FindByClass("sent_*")) do
 		if v:GetClass() != "sent_spawner" then
-			if v.Owner == ply then
-				v:Remove()
-			elseif !ValidEntity(v.Owner) then
-				v:Remove()
+			if v:GetRealOwner() == ply || !ValidEntity(v:GetRealOwner()) then
+				v:PropRemove()
 			end
 		end
 	end
@@ -1078,8 +1094,8 @@ end
 function GM:PhysgunPickup(ply, ent)
 	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
 		return false
-	elseif ValidEntity( ent.Owner ) and ent.Owner != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick() )
+	elseif ValidEntity( ent:GetRealOwner() ) and ent:GetRealOwner() != ply && !ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent:GetRealOwner():Nick() )
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return false
 	else
@@ -1094,8 +1110,8 @@ end
 function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
 	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
 		return false
-	elseif ValidEntity( ent.Owner ) and ent.Owner != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent.Owner:Nick() )
+	elseif ValidEntity( ent:GetRealOwner() ) and ent:GetRealOwner() != ply && !ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent:GetRealOwner():Nick() )
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 	return false
 	elseif ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
@@ -1124,26 +1140,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if ent.Turret then ent = ent.Turret end 
 	
-	local owner
-	
-	if ValidEntity(ent.Owner) then owner = ent.Owner elseif ValidEntity(ent:GetOwner()) then owner = ent:GetOwner() end
-	
-
-	if owner then
-		if owner != ply and !ply:IsAdmin() then
-			ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. owner:Nick( ))
-			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-			return false
-		elseif MODELS[ent:GetModel()] && MODELS[ent:GetModel()].COST && !ent.Dissolving then
-			owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + MODELS[ent:GetModel()].COST)
-			owner:Message("+"..math.Round(MODELS[ent:GetModel()].COST).." [Deleted Item]", Color(100,255,100,255))
-		elseif ent.SMH && ent.SMH > 0 then
-			owner:SetNetworkedInt("money", owner:GetNetworkedInt("money") + ent.SMH)
-			owner:Message("+"..math.Round(ent.SMH).." [Deleted Item]", Color(100,255,100,255))
-		end
-	end
-	
-	ent:Dissolve()
+	ent:PropRemove(ply,true)
 	return false
 end
 
@@ -1174,12 +1171,6 @@ end
 
 function GM:RestockPlayer(ply)
 	if !ply then return end
-	--for k,v in pairs(AMMOS) do
-	--	local class = ply:GetNWInt("class")
-	--	if table.HasValue(Classes[class].AMMO, k) then
-	--		ply:GiveAmmo(v.QT, v.AMMO)
-	--	end
-	--end
 	local class = ply:GetNWInt("class")
 	for k,v in pairs(Classes[class].AMMO) do
 		local mult = AMMOS[v].SMULT or 1
@@ -1190,18 +1181,12 @@ end
 function BuyAmmo(ply, com, args)
 	if !ply.AmmoBin then return end
 	if !args[1] then return end
-	local mon = ply:GetNWInt("money")
 	local ammotogive = AMMOS[tonumber(args[1])]
 	if !ammotogive then return false end
 	local amt = tonumber(args[2])
-	if mon - ammotogive.PRICE*amt <= 0 then
-		ply:Message("Insufficient Funds!", Color(255,100,100,255))
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-	else
-		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
-		ply:SetNWInt("money",mon - ammotogive.PRICE*amt)
+	if ply:Money(- ammotogive.PRICE*amt,-ammotogive.PRICE*amt.." [Bought "..ammotogive.QT*amt.." "..ammotogive.NAME.."]") then
 		ply:GiveAmmo(ammotogive.QT*amt, ammotogive.AMMO)
-		ply:Message("Bought "..ammotogive.QT*amt.." of "..ammotogive.NAME,Color(255,100,100,255), true)
+		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
 	end
 end
 
@@ -1306,8 +1291,7 @@ function GM:AddNPCKillMoney(class,ply,bonus)
 	local mdl = npc.MODEL or "models/headcrab.mdl"
 	givemoney = givemoney + bonus
 
-	ply:SetNetworkedInt("money",ply:GetNetworkedInt( "money") + givemoney)
-	ply:Message("+"..tonumber(givemoney).." ["..name.."]", Color(100,255,100,255))
+	ply:Money(givemoney,"+"..tonumber(givemoney).." ["..name.."]")
 	timer.Simple(0.2,ply.Taunt,ply)
 	ply:SetNWInt("kills", ply:GetNWInt("kills") + math.Round(math.Clamp(givemoney / 100, 1, 10)))
 	ply:SetFrags(ply:GetNWInt("kills"))
@@ -1333,11 +1317,10 @@ function DeleteModel(ply, cmd, args)
 	local monadd = 0
 	if #entz > 0 then
 		for k,v in pairs(entz) do
-			if v.Owner == ply then if v.SMH then monadd = monadd + v.SMH end v:Dissolve() end
+			monadd = monadd + v:PropRemove(ply,true,false,true)
 		end
 		if monadd > 0 then
-			ply:Message("+"..math.Round(monadd).." [Sold Props]", Color(100,255,100,255))
-			ply:SetNWInt("money", ply:GetNWInt("money") + monadd)
+			ply:Money(monadd,"+"..math.Round(monadd).." [Sold Props]")
 		end
 	end
 end
@@ -1370,7 +1353,7 @@ function OSE_Spawn(ply,cmd,args)
 	
 	local propcount = 0
 	for k,v in pairs(ents.FindByClass(class)) do
-		if v.Owner == ply || v:GetOwner() == ply then
+		if v:GetRealOwner() == ply then
 			propcount = propcount + 1
 		end
 	end
@@ -1431,22 +1414,20 @@ function OSE_Spawn(ply,cmd,args)
 			end
 		end
 		
+		local msg
+		if MODELS[model].NAME then
+			msg = math.Round(cost * -1).." [Spawned "..MODELS[model].NAME.."]"
+		else
+			msg = math.Round(cost * -1).." [Spawned Item]"
+		end
+		
 		if not ent:IsInWorld( ) then
 			ent:Remove()
 			ply:ChatPrint( "Prop was outside of the world!" )
 			return
-		elseif cost > ply:GetNetworkedInt( "money") then
-			ply:Message("Insufficient Funds!", Color(255,100,100,255))
-			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		elseif !ply:Money(-cost,msg) then
 			ent:Remove()
 			return
-		else
-			ply:SetNetworkedInt( "money",ply:GetNetworkedInt( "money") - cost)
-			if MODELS[model].NAME then
-			ply:Message((math.Round(cost * -1)).." [Spawned "..MODELS[model].NAME.."]", Color(255,100,100,255))
-			else
-			ply:Message((math.Round(cost * -1)).." [Spawned Item]", Color(255,100,100,255))
-			end
 		end
 	end
 	if MODELS[model].EXTBUILD then 
