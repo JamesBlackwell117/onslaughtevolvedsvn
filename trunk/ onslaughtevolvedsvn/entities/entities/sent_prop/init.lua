@@ -144,6 +144,14 @@ function ENT:Prepare()
 	self.Entity:SetMoveType( MOVETYPE_NONE )
 end
 
+function ENT:PropReset()
+	self:Extinguish()
+	self.Mhealth = self.SMH
+	self.Shealth = self.SMH
+	self:UpdateColour()
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+end
+
 function ENT:UpdateColour()
 	local col = (self.Shealth / self.Mhealth) * 255
 	self.Entity:SetColor(col, col, col, 255)
