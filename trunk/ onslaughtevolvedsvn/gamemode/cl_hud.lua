@@ -342,16 +342,30 @@ function GM:HUDDrawTargetID( )
 	local sw,sh = ScrW( ), ScrH( )
 	local midx, midy = sw / 2, sh / 2
 	local y, bh = midy - 20, 42
-
+	
+if GetConVarNumber( "ose_hud" ) == 1 then
+	if ent:IsPlayer( ) then
+		draw.SimpleTextOutlined(ent:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+	elseif (ent.Base == "sent_prop" || ent:GetClass() == "sent_prop") && PHASE == "BUILD" then
+		if ValidEntity(ent.Owner) then
+			draw.SimpleTextOutlined( "Owner: "..ent.Owner:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+		end
+	elseif ent:GetClass() == "sent_spawpoint" then
+		local own = ent:GetNWEntity("owner")
+		if ValidEntity(own) then
+			draw.SimpleTextOutlined( ent:GetNWEntity("owner"):Nick().."'s spawnpoint.", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+		end
+	end
+else
 	if ent:IsPlayer( ) then
 		surface.SetFont( "ScoreboardText" )
 		local w, h = surface.GetTextSize( ent:GetName( ) )
 		
 		if w > 100 then
 			surface.SetDrawColor(50, 50, 50, 200)
-			surface.DrawRect(  midx - ( w / 2 ) - 2, y + 26, w + 5, bh )
+			surface.DrawRect(  midx - ( w / 2 ) - 2, y + 46, w + 5, bh )
 			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect(  midx - ( w / 2 ) - 2, y + 26, w + 5, bh )
+			surface.DrawOutlinedRect(  midx - ( w / 2 ) - 2, y + 46, w + 5, bh )
 
 			--surface.SetDrawColor(255, 255, 255, 255)
 			--surface.DrawOutlinedRect( W * x, H * y, W * w, H * h ) -- left outline
@@ -440,4 +454,5 @@ function GM:HUDDrawTargetID( )
 		} )
 		
 	end
+end
 end
