@@ -73,14 +73,20 @@ function SWEP:PrimaryAttack( )
  	effectdata:SetEntity( self.Owner )
  	util.Effect( "flamer", effectdata )
 	if SERVER then
-		if self.LastBall + 0.18 <= CurTime() then
+		if self.LastBall + 0.25 <= CurTime() then
 			self:TakePrimaryAmmo(1)
-			local Ptrace = ents.Create("ose_flameballs")
-			Ptrace:SetOwner(self.Owner)
-			Ptrace:SetVelocity((self.Owner:GetAimVector() * 450) + self.Owner:GetVelocity())
-			Ptrace:SetPos(self.Owner:GetShootPos() + (self.Owner:GetAimVector() * 50))
-			Ptrace:Spawn()
-			Ptrace:Activate()
+			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetShootPos()+self.Owner:GetForward(), 400, 10 )) do
+				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
+					v.Igniter = self:GetOwner()
+					v:Ignite(7,50)
+				end
+			end
+			--local Ptrace = ents.Create("ose_flameballs")
+			--Ptrace:SetOwner(self.Owner)
+			--Ptrace:SetVelocity((self.Owner:GetAimVector() * 450) + self.Owner:GetVelocity())
+			--Ptrace:SetPos(self.Owner:GetShootPos() + (self.Owner:GetAimVector() * 50))
+			--Ptrace:Spawn()
+			--Ptrace:Activate()
 			self.LastBall = CurTime()
 		end
 	end
