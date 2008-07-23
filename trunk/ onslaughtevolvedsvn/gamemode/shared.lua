@@ -26,11 +26,29 @@ TAUNTS[4] = {"vo/episode_1/npc/male01/cit_kill15.wav","vo/npc/male01/gotone01.wa
 TAUNTS[5] = {"vo/ravenholm/monk_kill01.wav","vo/ravenholm/monk_kill03.wav","vo/ravenholm/madlaugh01.wav","vo/ravenholm/monk_kill08.wav","vo/ravenholm/monk_kill05.wav","vo/ravenholm/madlaugh02.wav", "vo/ravenholm/madlaugh04.wav"}
 
 WEAPON_SET = {}
-WEAPON_SET[1] = {"weapon_crowbar","weapon_pistol","swep_scatter"}
-WEAPON_SET[2] = {"weapon_crowbar","weapon_pistol", "weapon_frag", "weapon_ar2"}
-WEAPON_SET[3] = {"weapon_physcannon", "weapon_shotgun", "swep_repair", "swep_dispensermaker", "swep_turretmaker", "weapon_pistol"}
-WEAPON_SET[4] = {"weapon_crowbar","swep_xbow", "weapon_frag","weapon_357"}
-WEAPON_SET[5] = {"weapon_crowbar", "weapon_pistol", "weapon_frag", "swep_flamethrower", "swep_minemaker"}
+WEAPON_SET[1] = {"weapon_crowbar",	"weapon_pistol",	"swep_scatter"}
+WEAPON_SET[2] = {"weapon_crowbar",	"weapon_pistol", 	"weapon_ar2", 		"weapon_frag"}
+WEAPON_SET[3] = {"swep_repair",		"weapon_pistol", 	"weapon_shotgun", 	"weapon_physcannon",  		"swep_dispensermaker", "swep_turretmaker" }
+WEAPON_SET[4] = {"weapon_crowbar",	"weapon_357",		"swep_xbow", 		"weapon_frag"}
+WEAPON_SET[5] = {"weapon_crowbar", 	"weapon_pistol", 	"swep_flamethrower","weapon_frag", 		 		"swep_minemaker"}
+
+WEAPON_MDL = {}
+WEAPON_MDL["weapon_crowbar"] = "models/weapons/w_crowbar.mdl"
+WEAPON_MDL["swep_repair"] = "models/weapons/w_crowbar.mdl"
+WEAPON_MDL["weapon_pistol"] = "models/weapons/W_pistol.mdl"
+WEAPON_MDL["swep_scatter"] = "models/weapons/w_shotgun.mdl"
+WEAPON_MDL["weapon_shotgun"] = "models/weapons/w_shotgun.mdl"
+WEAPON_MDL["weapon_frag"] = "models/weapons/W_grenade.mdl"
+WEAPON_MDL["weapon_ar2"] = "models/weapons/w_IRifle.mdl"
+WEAPON_MDL["weapon_physcannon"] = "models/weapons/w_physics.mdl"
+WEAPON_MDL["swep_dispensermaker"] = "models/props_combine/health_charger001.mdl"
+WEAPON_MDL["swep_turretmaker"] = "models/Combine_turrets/Floor_turret.mdl"
+WEAPON_MDL["swep_flamethrower"] = "models/weapons/w_smg1.mdl"
+WEAPON_MDL["swep_minemaker"] = "models/props_combine/combine_mine01.mdl"
+WEAPON_MDL["weapon_357"] = "models/weapons/W_357.mdl"
+WEAPON_MDL["swep_xbow"] = "models/weapons/W_crossbow.mdl"
+
+
 
 AMMOS = {}
 AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 90, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
