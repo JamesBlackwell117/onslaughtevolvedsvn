@@ -1,0 +1,545 @@
+function Class(ply,com,args)
+	local newclass = tonumber(args[1])
+	if !Classes[newclass] then return end
+	ply:SetNetworkedInt("class", newclass )
+	if PHASE == "BATTLE" && ply:Alive() then
+		ply:Kill()
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
+		timer.Simple(2,CheckDead)
+	else
+		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
+		for k,v in pairs( ents.GetAll( ) ) do
+			if v:IsNPC() || v:GetClass() == "ose_mines" then
+				v:PropRemove(nil,true, true)
+			end
+		end
+	end
+end
+
+concommand.Add("join_class", Class)
+
+function AdminMenu(ply,com,args)
+	if not ply:IsAdmin( ) then return false end
+	
+	local plys = player.GetAll()
+	
+	if args[ 1 ] == "1" then
+		GAMEMODE:StartBattle()
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " skipped to battle mode!")
+		end
+	elseif args[ 1 ] == "2" then
+		GAMEMODE:StartBuild()
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " skipped to build mode!")
+		end
+	elseif args[ 1 ] == "3" then
+		if not isnumber( args[ 2 ] ) then
+			ply:ChatPrint( "Must enter a number." )
+			return
+		end
+		MAX_NPCS = tonumber( args[ 2 ] )
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " changed the maximum NPCs to " .. tonumber( args[ 2 ] ))
+		end
+	elseif args[ 1 ] == "4" then
+		if not isnumber( args[ 2 ] ) then
+			ply:ChatPrint( "Must enter a number." )
+			return
+		end
+		BUILDTIME = tonumber( args[ 2 ] )
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " changed build time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
+		end
+		UpdateTime()
+		umsg.Start("updatebuildtime")
+			umsg.Long(BUILDTIME)
+		umsg.End()
+	elseif args[ 1 ] == "5" then
+		if not isnumber( args[ 2 ] ) then
+			ply:ChatPrint( "Must enter a number." )
+			return
+		end
+		BATTLETIME = tonumber( args[ 2 ] )
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " changed battle time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
+		end
+		UpdateTime()
+		umsg.Start("updatebattletime")
+			umsg.Long(BATTLETIME)
+		umsg.End()
+		elseif args[ 1 ] == "6" then
+		if not isnumber( args[ 2 ] ) then
+			ply:ChatPrint( "Must enter a number." )
+			return
+		end
+		SPAWN_TIME = tonumber( args[ 2 ] )
+		for k,v in pairs(plys) do
+			v:ChatPrint("Admin: " .. ply:Nick() .. " changed spawn time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
+		end
+		
+	elseif args[ 1 ] == "select" then
+		ply:Give( "swep_select" )
+	elseif args[ 1 ] == "owner" then
+		if isnumber( args[ 2 ] ) then
+			for k,v in pairs( GAMEMODE.SaveProps ) do
+				v.Owner = player.GetByID( tonumber( args[ 2 ] ) )
+			end
+		else
+			ply:ChatPrint( "Must enter a number." )
+		end
+		GAMEMODE:DeselectAll( )
+	elseif args[ 1 ] == "getfiles" then
+		if not file.Exists( "onslaught_saves" ) then
+			file.CreateDir( "onslaught_saves" )
+		end
+		local read = file.Find( "onslaught_saves/*.txt" )
+		umsg.Start( "RecvLoadfiles", ply )
+			umsg.Short( #read )
+			for k,v in pairs( read ) do
+				umsg.String( v )
+			end
+		umsg.End( )
+	elseif args[1] == "map" then
+		for k,v in pairs(player.GetAll()) do
+			v:ChatPrint("Admin: "..ply:Nick().." changed map to ".. args[2])
+			GAMEMODE:SaveAllProfiles()
+			GAMEMODE:ChangeMap(args[2])
+		end
+	end
+	
+end
+
+concommand.Add( "admin", AdminMenu )
+
+function GM:PlayerSay( ply, txt, pub )
+	if string.sub(txt,1,5) == "!help" then
+		ply:ChatPrint("Available chat commands are: !give !agive !voteskip !spawn !resetspawn, !stuck")
+	end
+	if string.sub(txt,1,5) == "!give" then
+		local args = string.Explode(" ", txt)
+		if #args != 3 || tonumber(args[3]) <= 0 then
+			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+			return ""
+		end
+		if ply:GetNetworkedInt("money") <= tonumber(args[3]) then
+			ply:ChatPrint("You do not have enough money to give that amount!")
+			return ""
+		end
+		for k,v in pairs(player.GetAll()) do
+			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+				v:Money(tonumber(args[3]),ply:Nick().." gave you "..args[3].." money!")
+				ply:Money(- tonumber(args[3]),"You succesfully gave "..v:Nick().." "..args[3].." money.")
+				return txt
+			end
+		end
+		ply:ChatPrint("Could not find the requested player!")
+		return ""
+	end
+	if string.sub(txt,1,6) == "!agive" then
+		if !ply:IsAdmin() then ply:ChatPrint("You need to be an admin to use this command!") return "" end
+		local args = string.Explode(" ", txt)
+		if #args != 3 || tonumber(args[3]) <= 0 then
+			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
+			return ""
+		end
+		for k,v in pairs(player.GetAll()) do
+			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
+				v:Money(tonumber(args[3]),"Admin: "..ply:Nick().." gave you "..args[3].." money!")
+				return txt
+			end
+		end
+		ply:ChatPrint("Could not find the requested player!")
+		return ""
+	end
+	if string.sub(txt,1,6) == "!stuck" then
+		Stuck(ply)
+	end
+	if string.sub(txt,1,6) == "!spawn" then
+		SpawnPoint(ply)
+	end
+	if string.sub(txt,1,11) == "!resetspawn" then
+		ResetSpawn(ply)
+	end
+	if string.sub(txt,1,8) == "!sellall" then
+		SellAll(ply)
+	end
+	if string.sub(txt,1,9) == "!voteskip" then
+		VoteSkip(ply)
+	end
+	return txt
+end
+
+function Stuck(ply,cmd,args)
+	if !ply:IsStuck() then
+		ply:Message("You are not stuck!")
+	end
+end
+
+concommand.Add("stuck", Stuck)
+
+function SpawnPoint(ply,cmd,args)
+	if ply:GetRank() < 3 then
+		ply:ChatPrint("You must be a corporal or above to use this command!")
+		return
+	end
+	if PHASE == "BUILD" then
+		if not ply:IsInWorld( ) || ply:GetMoveType() == MOVETYPE_NOCLIP then
+			ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
+			return
+		else
+			local trc = {}
+			trc.start = ply:GetPos() + Vector(0,0,5)
+			trc.endpos = ply:GetPos() + ply:GetUp() * -500
+			trc.filter = ply
+			trc = util.TraceLine( trc ) --check if the player is standing above skybox (under the map) or a nodraw
+			if trc.HitSky || trc.HitNoDraw || trc.Entity.Base == "sent_prop" || trc.Entity:GetClass() == "sent_prop" || ply:Crouching( ) then
+				ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
+				return
+			end
+			ply:Message("Set custom spawn!")
+			ply:Message("Say !resetspawn to reset your spawnpoint")
+			if ValidEntity(ply.CusSpawn) then
+				ply.CusSpawn:Remove()
+			end
+			local spn = ents.Create("sent_spawpoint")
+			spn:SetPos(ply:GetPos())
+			spn:Spawn()
+			spn:Activate()
+			spn.Owner = ply
+			spn:SetNWEntity("owner", ply)
+			ply.CusSpawn = spn
+		end
+	else
+		ply:Message("Can't set spawn in battle phase", Color(255,100,100,255))
+	end
+end
+
+concommand.Add("spawnpoint", SpawnPoint)
+
+function ResetSpawn(ply,cmd,args)
+	ply.CusSpawn:Remove()
+	ply:Message("Reset spawnpoint!")
+end
+
+concommand.Add("resetspawn", ResetSpawn)
+
+function SellAll(ply,cmd,args)
+	if PHASE == "BATTLE" then
+		ply:Message("Can't sell all in battle mode!", Color(255,100,100,255))
+		return
+	end
+	local mon = 0
+	for k,v in pairs(ents.GetAll()) do
+		mon = mon + v:PropRemove(ply,true,false,true)
+	end
+	if(mon > 0) then
+	ply:Money(mon,"+"..math.Round(mon).." [Sold all props]")
+	end
+end
+
+concommand.Add("sellall", SellAll)
+
+function VoteSkip(ply,cmd,args)
+	if PHASE == "BATTLE" then
+		ply:ChatPrint("You cannot skip battle phase")
+		return ""
+	else
+		if ply.Voted == true then
+			ply:ChatPrint("You have already voted!")
+			return ""
+		end
+		ply.Voted = true
+		voted = voted + 1
+		local numplayer = #player.GetAll()
+		local req = math.ceil(numplayer / 1.5)
+		for k,v in pairs(player.GetAll()) do
+			v:ChatPrint(ply:Nick().." voted to skip build mode!"..voted.."/"..req.." votes.")
+		end
+		if voted >= req then
+			for k,v in pairs(player.GetAll()) do
+				v:ChatPrint("Starting Build Phase in 5 seconds!")
+			end
+			timer.Simple(5,GAMEMODE.StartBattle,GAMEMODE)
+			return txt
+		end
+	end
+end
+
+concommand.Add("voteskip", VoteSkip)
+
+function GM:PlayerLoadout(ply)
+	if PHASE == "BATTLE" then
+		for k,v in pairs(WEAPON_SET[ply:GetNetworkedInt("class")]) do
+			ply:Give(v)
+		end
+	elseif PHASE == "BUILD" then
+		ply:Give("weapon_physgun")
+		ply:Give( "swep_nocollide" )
+		--ply:Give("swep_dispensermaker")
+	end
+end
+
+local read = file.Find("../maps/ose_*.bsp")
+
+local mapvotes = {}
+
+function SendMaps(ply,cmd,args)
+	umsg.Start( "sendmaps", ply )
+		umsg.Short( #read )
+		for k,v in pairs( read ) do
+			umsg.String( v )
+		end
+	umsg.End( )
+end
+
+concommand.Add("getmaps", SendMaps)
+
+local voting = false
+local votingenabled = false
+
+function Votemap(ply,cmd,args)
+	if ply.mapvoted then
+		ply:ChatPrint("You have already voted!")
+		return
+	end
+	if !args[1] then return end
+	if !votingenabled then
+		ply:ChatPrint("You must wait "..string.ToMinutesSeconds(tostring(VOTE_ENABLE_TIME - CurTime())).." until you can vote.")
+		return
+	end
+	if string.sub(args[1],1, -5 ) != game.GetMap() && !voting && PHASE != "BATTLE" then
+		GAMEMODE:StartMapVote(ply)
+	elseif string.sub(args[1],1, -5 ) == game.GetMap() && voting == false then
+		ply:ChatPrint("You can't start a vote for the current map!")
+		return
+	elseif PHASE == "BATTLE" then
+		ply:ChatPrint("You can't start a vote in battle phase!")
+		return
+	end
+	ply.mapvoted = true
+	mapvotes[args[1]] = mapvotes[args[1]] + 1
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint(ply:Nick().." voted for map "..args[1]..". "..mapvotes[args[1]].." votes!")
+	end
+end
+
+concommand.Add("votemap", Votemap)
+
+function SaveProfile(ply,cmd,args)
+	ply:ChatPrint("Your kill profile has been saved!")
+	local name = string.Replace( ply:SteamID(), ":", "." )
+	local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
+	file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
+end
+
+concommand.Add("saveprof", SaveProfile)
+
+function GM:StartMapVote(ply)
+	for k,v in pairs(read) do
+		mapvotes[v] = 0
+	end
+	voting = true
+	for k,v in pairs(player.GetAll()) do
+			if v != ply then
+				v:ChatPrint(ply:Nick().." has started a map vote! You have "..VOTE_TIME.." to cast your vote!")
+				v:ConCommand("openmap")
+				v:ChatPrint("Don't want to change? Vote for the current map: "..game.GetMap())
+			end
+	end
+	timer.Simple(VOTE_TIME, GAMEMODE.EndVote,GAMEMODE)
+end
+
+function GM:EndVote()
+	local map = ""
+	local lastgreat = 0
+	for k,v in pairs(mapvotes) do
+		if v > lastgreat || (v >= lastgreat && string.sub(k,1, -5 ) == game.GetMap()) then
+			map = k
+			lastgreat = v
+		end
+	end
+	if game.GetMap() == string.sub(map,1, -5 ) then
+		for k,v in pairs(player.GetAll()) do
+			v:ChatPrint("The current map has won the vote!")
+			voting = false
+			v.mapvoted = false
+			v:ChatPrint("Map voting is now disabled!")
+		end
+		VOTE_ENABLE_TIME = CurTime() + VOTE_ENABLE_TIME
+		return
+	end
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint("The map: "..string.sub(map,1, -5 ).." has won the vote!")
+		v:ChatPrint("Starting the winning map in 5 seconds!")
+	end
+	GAMEMODE:SaveAllProfiles()
+	timer.Simple(5, GAMEMODE.ChangeMap, GAMEMODE, string.sub(map,1, -5 ))
+end
+
+function GM:ChangeMap(map)
+	game.ConsoleCommand("changelevel "..map.."\n")
+end
+
+function BuyAmmo(ply, com, args)
+	if !ply.AmmoBin then return end
+	if !args[1] then return end
+	local ammotogive = AMMOS[tonumber(args[1])]
+	if !ammotogive then return false end
+	local amt = tonumber(args[2])
+	if ply:Money(- ammotogive.PRICE*amt,-ammotogive.PRICE*amt.." [Bought "..ammotogive.QT*amt.." "..ammotogive.NAME.."]") then
+		ply:GiveAmmo(ammotogive.QT*amt, ammotogive.AMMO)
+		ply:SendLua([[surface.PlaySound("items/ammo_pickup.wav")]])
+	end
+end
+
+concommand.Add( "buy_ammo", BuyAmmo )
+
+function Pmeta:Ammo(bin)
+	self.AmmoBin = bin
+	self:Freeze(true)
+	bin.InUse = true
+	umsg.Start("openammo", self)
+	umsg.End()
+end
+
+function CloseAmmo(ply)
+	if !ply.AmmoBin then return end
+	ply.AmmoBin:Close()
+	ply.AmmoBin.InUse = false
+	ply.AmmoBin = nil
+	ply:Freeze(false)
+end
+
+concommand.Add("ammo_closed", CloseAmmo)
+
+function DeleteModel(ply, cmd, args)
+	local model = args[1]
+	if !model then return end
+	if PHASE == "BATTLE" && !MODELS[model].ALLOWBATTLE then
+		ply:Message("You can't delete props in battle!", Color(255,100,100,255))
+		return
+	end
+	local entz = ents.FindByModel(model)
+	local monadd = 0
+	if #entz > 0 then
+		for k,v in pairs(entz) do
+			monadd = monadd + v:PropRemove(ply,true,false,true)
+		end
+		if monadd > 0 then
+			ply:Money(monadd,"+"..math.Round(monadd).." [Sold Props]")
+		end
+	end
+end
+
+concommand.Add("deletemodel", DeleteModel)
+
+function OSE_Spawn(ply,cmd,args)
+	if !args[1] then return end
+	local model = tostring(args[1])
+	if MODELS[model].ALLOWBATTLE then
+	elseif PHASE == "BATTLE"  then
+		ply:Message("You can't spawn props in battle mode!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return
+	end
+	if !MODELS[model] then
+		ply:Message("That model is disallowed!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return
+	elseif MODELS[model].PLYCLASS && MODELS[model].PLYCLASS != ply:GetNWInt("class") then
+		ply:Message("Your Class cannot use that!", Color(255,100,100,255))
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return
+	end
+	
+	local class = "sent_prop"
+	local name = "Prop"
+	if MODELS[model].CLASS then class = MODELS[model].CLASS end
+	if MODELS[model].NAME then name = MODELS[model].NAME end
+	
+	local propcount = 0
+	for k,v in pairs(ents.FindByClass(class)) do
+		if v:GetRealOwner() == ply then
+			propcount = propcount + 1
+		end
+	end
+	if MODELS[model].LIMIT then 
+		if propcount >= MODELS[model].LIMIT then 
+			ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+			return 
+		end 
+	elseif propcount >= PROP_LIMIT then 
+		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return 
+	end
+	
+	local tracelen = 1000
+	if MODELS[model].RANGE then tracelen = MODELS[model].RANGE end
+ 
+	local trace = {} 
+ 	trace.start = ply:GetShootPos()
+ 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * tracelen) 
+ 	trace.filter = ply
+ 
+ 	local tr = util.TraceLine( trace ) 
+ 
+	if !tr.Hit then return end
+	
+	local ent
+	
+	if !MODELS[model].DONTSPAWN then 
+		local ang = ply:EyeAngles()
+		ang.yaw = ang.yaw + 180
+		if MODELS[model].ANG then ang.yaw = ang.yaw + MODELS[model].ANG.yaw end
+ 		ang.roll = 0 
+ 		ang.pitch = 0 
+		ent = ents.Create(class)
+		ent:SetAngles(ang)
+		ent:SetPos(tr.HitPos)
+		ent:SetModel(model)
+		ent.Owner = ply
+		ent:Spawn()
+		ent:Activate()
+		//garry
+		local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )	// Find a point that is definitely out of the object in the direction of the floor 
+		vFlushPoint = ent:NearestPoint( vFlushPoint )			// Find the nearest point inside the object to that point 
+		vFlushPoint = ent:GetPos() - vFlushPoint				// Get the difference 
+		vFlushPoint = tr.HitPos + vFlushPoint					// Add it to our target pos 
+	 
+		ent:SetPos( vFlushPoint )
+		//endgarry
+		
+		local cost = MODELS[model].COST or ent.SMH or 1000
+		cost = cost * 1.05
+		
+		if args[2] then 
+			if tonumber(args[2]) < util.GetModelInfo(ent:GetModel()).SkinCount then
+				ent:SetSkin(tonumber(args[2]))
+			end
+		end
+		
+		local msg
+		if MODELS[model].NAME then
+			msg = math.Round(cost * -1).." [Spawned "..MODELS[model].NAME.."]"
+		else
+			msg = math.Round(cost * -1).." [Spawned Item]"
+		end
+		
+		if not ent:IsInWorld( ) then
+			ent:Remove()
+			ply:ChatPrint( "Prop was outside of the world!" )
+			return
+		elseif !ply:Money(-cost,msg) then
+			ent:Remove()
+			return
+		end
+	end
+	if MODELS[model].EXTBUILD then 
+		MODELS[model].EXTBUILD(ent, ply, tr)
+	end
+end
+ 
+concommand.Add("gm_spawn", OSE_Spawn)
