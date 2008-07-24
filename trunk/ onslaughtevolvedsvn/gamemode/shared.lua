@@ -33,20 +33,20 @@ WEAPON_SET[4] = {"weapon_crowbar",	"weapon_357",		"swep_xbow", 		"weapon_frag"}
 WEAPON_SET[5] = {"weapon_crowbar", 	"weapon_pistol", 	"swep_flamethrower","weapon_frag", 		 		"swep_minemaker"}
 
 WEAPON_MDL = {}
-WEAPON_MDL["weapon_crowbar"] = "models/weapons/w_crowbar.mdl"
-WEAPON_MDL["swep_repair"] = "models/weapons/w_crowbar.mdl"
-WEAPON_MDL["weapon_pistol"] = "models/weapons/W_pistol.mdl"
-WEAPON_MDL["swep_scatter"] = "models/weapons/w_shotgun.mdl"
-WEAPON_MDL["weapon_shotgun"] = "models/weapons/w_shotgun.mdl"
-WEAPON_MDL["weapon_frag"] = "models/weapons/W_grenade.mdl"
-WEAPON_MDL["weapon_ar2"] = "models/weapons/w_IRifle.mdl"
-WEAPON_MDL["weapon_physcannon"] = "models/weapons/w_physics.mdl"
-WEAPON_MDL["swep_dispensermaker"] = "models/props_combine/health_charger001.mdl"
-WEAPON_MDL["swep_turretmaker"] = "models/Combine_turrets/Floor_turret.mdl"
-WEAPON_MDL["swep_flamethrower"] = "models/weapons/w_smg1.mdl"
-WEAPON_MDL["swep_minemaker"] = "models/props_combine/combine_mine01.mdl"
-WEAPON_MDL["weapon_357"] = "models/weapons/W_357.mdl"
-WEAPON_MDL["swep_xbow"] = "models/weapons/W_crossbow.mdl"
+WEAPON_MDL["weapon_crowbar"] = {MODEL = "models/weapons/w_crowbar.mdl"}
+WEAPON_MDL["swep_repair"] = {MODEL = "models/weapons/w_crowbar.mdl"}
+WEAPON_MDL["weapon_pistol"] = {MODEL = "models/weapons/W_pistol.mdl"}
+WEAPON_MDL["swep_scatter"] = {MODEL = "models/weapons/w_shotgun.mdl", HT = ACT_HL2MP_IDLE_SHOTGUN}
+WEAPON_MDL["weapon_shotgun"] = {MODEL = "models/weapons/w_shotgun.mdl", HT = ACT_HL2MP_IDLE_SHOTGUN}
+WEAPON_MDL["weapon_frag"] = {MODEL = "models/weapons/W_grenade.mdl"}
+WEAPON_MDL["weapon_ar2"] = {MODEL = "models/weapons/w_IRifle.mdl", HT = ACT_HL2MP_IDLE_AR2}
+WEAPON_MDL["weapon_physcannon"] = {MODEL = "models/weapons/w_physics.mdl"}
+WEAPON_MDL["swep_dispensermaker"] = {MODEL = "models/props_combine/health_charger001.mdl"}
+WEAPON_MDL["swep_turretmaker"] = {MODEL = "models/Combine_turrets/Floor_turret.mdl"}
+WEAPON_MDL["swep_flamethrower"] = {MODEL = "models/weapons/w_smg1.mdl", HT = ACT_HL2MP_IDLE_SMG1}
+WEAPON_MDL["swep_minemaker"] = {MODEL = "models/props_combine/combine_mine01.mdl"}
+WEAPON_MDL["weapon_357"] = {MODEL = "models/weapons/W_357.mdl"}
+WEAPON_MDL["swep_xbow"] = {MODEL = "models/weapons/W_crossbow.mdl", HT = ACT_HL2MP_IDLE_CROSSBOW}
 
 
 

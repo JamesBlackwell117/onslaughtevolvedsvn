@@ -176,10 +176,10 @@ function UpdateTime()
 	umsg.End()
 end
 
-function CheckDead()
+function Pmeta:CheckDead()
 	if PHASE == "BUILD" then return end
 	for k,v in pairs(player.GetAll()) do
-		if v:Alive() then return end
+		if self != v and v:Alive() then return end
 	end
 	GAMEMODE:StartBuild()
 	for k,v in pairs(player.GetAll()) do
