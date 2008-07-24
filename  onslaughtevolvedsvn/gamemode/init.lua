@@ -122,11 +122,10 @@ function GM:KillWeapons()
 end
 
 function GM:StartBattle()
-	GAMEMODE:KillWeapons()
 	print("[ONSLAUGHT] Battle phase started!")
 	NextRound = CurTime() + BATTLETIME
+	UpdateTime()
 	PHASE = "BATTLE"
-
 
 	for k,v in pairs( ents.GetAll( ) ) do
 		if v:IsWeapon( ) then
@@ -137,8 +136,8 @@ function GM:StartBattle()
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
+			v.NextSpawn = CurTime()
 			v:KillSilent()
-			v.NextSpawn = CurTime() + 1
 			v.FullRound = true
 		end
 	end
@@ -172,35 +171,38 @@ function GM:CalculateLiveBonus()
 end
 
 function GM:StartBuild()
-	print("[ONSLAUGHT] Build phase started!")
-	if TimeLeft > 1 then
-		for k,v in pairs(ents.FindByName("ose_lose")) do
-			if ValidEntity(v) then
-				v:Fire("trigger")
+	if PHASE != "BUILD" then
+		print("[ONSLAUGHT] Build phase started!")
+		if TimeLeft > 1 then
+			for k,v in pairs(ents.FindByName("ose_lose")) do
+				if ValidEntity(v) then
+					v:Fire("trigger")
+				end
+			end
+			ROUND_ID = ROUND_ID - 0.5
+			BATTLETIME = BATTLETIME - 60
+			if BATTLETIME < MINBATTLETIME then BATTLETIME = MINBATTLETIME end
+			for k,v in pairs(player.GetAll()) do
+				v:Message("Took 60 seconds from battle time!")
+			end
+		else
+			ROUND_ID = ROUND_ID + 1
+			BATTLETIME = BATTLETIME + 120
+			for k,v in pairs(player.GetAll()) do
+				v:Message("Added 2 minutes to battle time!")
+			end
+			for k,v in pairs(ents.FindByName("ose_win")) do
+				if ValidEntity(v) then
+					v:Fire("trigger")
+				end
 			end
 		end
-		ROUND_ID = ROUND_ID - 0.5
-		BATTLETIME = BATTLETIME - 60
-		if BATTLETIME < MINBATTLETIME then BATTLETIME = MINBATTLETIME end
-		for k,v in pairs(player.GetAll()) do
-			v:Message("Took 60 seconds from battle time!")
-		end
-	else
-		ROUND_ID = ROUND_ID + 1
-		BATTLETIME = BATTLETIME + 120
-		for k,v in pairs(player.GetAll()) do
-			v:Message("Added 2 minutes to battle time!")
-		end
-		for k,v in pairs(ents.FindByName("ose_win")) do
-			if ValidEntity(v) then
-				v:Fire("trigger")
-			end
-		end
-	end
-	UpdateTime()
 	GAMEMODE:CalculateLiveBonus()
 	PHASE = "BUILD"
+	end
+	
 	NextRound = CurTime() + BUILDTIME
+	UpdateTime()
 	voted = 0
 	for k,v in pairs( ents.GetAll( ) ) do
 		if v:IsWeapon( ) then
@@ -210,8 +212,8 @@ function GM:StartBuild()
 		elseif v.PropReset then
 			v:PropReset()
 		elseif v:IsPlayer() then
-			v:Kill()
-			v.NextSpawn = CurTime() + 5
+			v.NextSpawn = CurTime()
+			v:KillSilent()
 		end
 	end
 	for k,v in pairs(ents.FindByName("ose_build")) do
@@ -219,8 +221,6 @@ function GM:StartBuild()
 			v:Fire("trigger",0,5)
 		end
 	end
-	
-	GAMEMODE:KillWeapons()
 	umsg.Start("StartBuild")
 	umsg.End()
 end
@@ -330,7 +330,6 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
-	CheckDead()
 	ply:AddDeaths(1)	
 	return true
 end
@@ -474,6 +473,7 @@ function GM:PlayerDisconnected( ply )
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
 	end
+	ply:CheckDead()
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
@@ -487,7 +487,6 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
-	CheckDead()
 end
 
 function GM:DeleteProps(ply, ID, nick)
@@ -708,7 +707,7 @@ function GM:ShutDown( )
 end
 
 function GM:DoPlayerDeath( ply, attacker, dmginfo )
-
+ply:CheckDead()
 end
 
 function GM:CreateEntityRagdoll( entity, ragdoll )
