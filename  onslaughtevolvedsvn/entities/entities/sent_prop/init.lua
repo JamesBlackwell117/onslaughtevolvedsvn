@@ -26,14 +26,6 @@ function ENT:Initialize()
 		self.Mhealth = self.SMH
 		self.Shealth = self.SMH
 	end
-	timer.Simple(1,self.SendOwner,self)
-end
-
-function ENT:SendOwner()
-	umsg.Start("owner")
-		umsg.Entity(self.Owner)
-		umsg.Entity(self)
-	umsg.End()
 end
 
 function ENT:CalculateHealth()

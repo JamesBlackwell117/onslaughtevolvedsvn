@@ -404,10 +404,6 @@ else
 			xalign = TEXT_ALIGN_CENTER,
 			yalign = TEXT_ALIGN_CENTER
 		} )
-	elseif (ent.Base == "sent_prop" || ent:GetClass() == "sent_prop") && PHASE == "BUILD" then
-		if ValidEntity(ent.Owner) then
-			draw.SimpleTextOutlined( "Owner: "..ent.Owner:Nick(), "HUD2", W * 0.02, H * 0.98, Color(255,255,255,255), 0, 1, 1, Color(0,0,0,255) )
-		end
 	elseif ent:GetClass() == "sent_spawpoint" then
 		local own = ent:GetNWEntity("owner")
 		if ValidEntity(own) then

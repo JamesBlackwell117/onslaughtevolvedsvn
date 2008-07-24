@@ -29,7 +29,6 @@ function ENT:Think()
 		trc.filter = self
 		trc = util.TraceLine( trc )
 		if trc.HitWorld then
-			self:SetNWBool("Closed", true)
 			self.Primed = true
 			self.Entity:GetPhysicsObject():EnableMotion(false)
 			self:SetPoseParameter("blendstates", 1)
