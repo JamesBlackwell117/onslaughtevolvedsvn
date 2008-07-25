@@ -35,6 +35,21 @@ function ENT:CalculateHealth()
 		self.SMH = math.Clamp(self.Entity:GetPhysicsObject():GetMass() * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100,200,800)
 end
 
+function ENT:Touch(ent) -- Zombies need all the help they can get :-(
+	if table.HasValue(Zombies, ent:GetClass()) && self.LastTouch + 2 < CurTime() then
+		ent:SetSchedule(SCHED_MELEE_ATTACK1)
+		ent:SetNPCState(3)
+		self.Shealth = self.Shealth - 70
+		self.Entity:UpdateColour()
+		self.LastTouch = CurTime()
+		if self.Shealth <= 0 then
+			self:Dissolve()
+		elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
+			self.Entity:Ignite(8,150)
+		end
+	end
+end
+
 function ENT:Think()
 end
 
@@ -119,24 +134,7 @@ end
 function ENT:UpdateColour()
 	local col = (self.Shealth / self.Mhealth) * 255
 	self.Entity:SetColor(col, col, col, 255)
-end
-
-function ENT:Touch(ent) -- Zombies need all the help they can get :-(
-	if table.HasValue(Zombies, ent:GetClass()) && self.LastTouch + 2 < CurTime() then
-		/*
-		ent:SetSchedule(SCHED_MELEE_ATTACK1)
-		ent:SetNPCState(3)
-		self.Shealth = self.Shealth - 70
-		self.Entity:UpdateColour()
-		self.LastTouch = CurTime()
-		if self.Shealth <= 0 then
-			self:Dissolve()
-		elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
-			self.Entity:Ignite(8,150)
-		end
-		*/
-		self:TakeDamage(70, ent)
-	end
+	self.LastUpdate = CurTime()
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -152,24 +150,21 @@ function ENT:OnTakeDamage(dmg)
 	
 	local damage = dmg:GetDamage()
 	local pos = self:LocalToWorld(self:OBBCenter())
+	local base = 0
 
-	if self.count == 0 then
-		damage = damage * math.sqrt(#player.GetAll())
-	else
-		damage = damage * math.sqrt(#player.GetAll()) / self.count
-	end
+	if self.count == 0 then damage = damage * math.sqrt(#player.GetAll())
+	else damage = damage * math.sqrt(#player.GetAll()) / count end
 	
 	if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
 
 	self.Shealth = self.Shealth - damage 
 	
-	if self.LastUpdate + 1.5 < CurTime() then
+	if self.LastUpdate + 1 < CurTime() then
 		self:UpdateColour()
 		self.count = 0
-		--for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do -- for now
-			--if v:IsPlayer() then self.count = self.count + 1 end
-		--end
-		self.LastUpdate = CurTime()
+		for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
+			if v:IsPlayer() then self.count = self.count + 1 end
+		end
 	end
 	if self.Shealth <= 0 then
 		self:Remove()
