@@ -78,7 +78,7 @@ function SWEP:PrimaryAttack( )
 			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetShootPos()+self.Owner:GetForward(), 400, 10 )) do
 				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
 					v.Igniter = self:GetOwner()
-					v:Ignite(7,50)
+					v:Ignite(3,40)
 				end
 			end
 			--local Ptrace = ents.Create("ose_flameballs")
