@@ -9,7 +9,9 @@ ENT.SMH = 100
 ENT.Model = ""
 ENT.Owner = nil
 ENT.LastTouch = CurTime()
-ENT.LastUpdate = CurTime()
+ENT.LastUpdate = CurTime()		
+ENT.count = 0
+
 
 function ENT:Initialize()
 	self.Entity:SetModel( self.Model ) 	//Model path
@@ -148,21 +150,21 @@ function ENT:OnTakeDamage(dmg)
 	
 	local damage = dmg:GetDamage()
 	local pos = self:LocalToWorld(self:OBBCenter())
-	local count = 0
 	local base = 0
 
-	for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
-		if v:IsPlayer() then count = count + 1 end
-	end
-	
-	if count == 0 then damage = damage * math.sqrt(#player.GetAll())
+	if self.count == 0 then damage = damage * math.sqrt(#player.GetAll())
 	else damage = damage * math.sqrt(#player.GetAll()) / count end
 	
 	if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
 
 	self.Shealth = self.Shealth - damage 
+	
 	if self.LastUpdate + 1 < CurTime() then
 		self:UpdateColour()
+		self.count = 0
+		for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
+			if v:IsPlayer() then self.count = self.count + 1 end
+		end
 	end
 	if self.Shealth <= 0 then
 		self:Remove()
