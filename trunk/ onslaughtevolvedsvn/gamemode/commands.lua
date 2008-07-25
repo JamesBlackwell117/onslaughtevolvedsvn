@@ -217,7 +217,7 @@ function SellAll(ply,cmd,args)
 	end
 	local mon = 0
 	for k,v in pairs(ents.GetAll()) do
-		if v:PropOp(ply) then
+		if v:PropOp(ply,true) then
 			mon = mon + v:PropRemove(true,true)
 		end
 	end
@@ -402,7 +402,7 @@ function DeleteModel(ply, cmd, args)
 	local monadd = 0
 	if #entz > 0 then
 		for k,v in pairs(entz) do
-			if v:PropOp(ply) then
+			if v:PropOp(ply,true) then
 				monadd = monadd + v:PropRemove(true,true)
 			end
 		end
