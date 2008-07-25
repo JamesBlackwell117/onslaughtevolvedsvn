@@ -555,7 +555,7 @@ function GM:GravGunPunt( ply, ent )
 end
 
 function GM:PhysgunPickup(ply, ent)
-	if ent:PropOp(ply) then
+	if ent:PropOp(ply) || ply:IsAdmin() then
 		return true
 	end
 	return false
