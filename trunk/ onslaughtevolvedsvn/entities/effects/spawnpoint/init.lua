@@ -14,10 +14,10 @@ function EFFECT:Think()
 		return false
 	end
 	local p = self.emitter:Add( parts[math.random(1,#parts)], self.Pos)
-	for i = 0, 7 do
+	for i = 0, 6 do
 		local vel = (Vector(math.Rand(-15,15), math.Rand(-15,15),math.Rand(50,120) + i))
 		p:SetVelocity( vel )
-		p:SetDieTime( math.Rand( .5, .8 ) )
+		p:SetDieTime( math.Rand( .3, .5 ) )
 		p:SetGravity( Vector( 0, 0, -1 ) )
 		p:SetStartSize( math.Rand( 1, 4 ) )
 		p:SetEndSize( 15 )

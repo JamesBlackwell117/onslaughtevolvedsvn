@@ -56,7 +56,7 @@ function SWEP:Initialize( )
 end
 
 function SWEP:PrimaryAttack( )
-	self.Weapon:SetNextPrimaryFire( CurTime( ) + .4 )
+	self.Weapon:SetNextPrimaryFire( CurTime( ) + .3 )
 	self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
 	self.Owner:SetAnimation(ACT_MELEE_ATTACK_SWING_GESTURE)
 	local trace = { }

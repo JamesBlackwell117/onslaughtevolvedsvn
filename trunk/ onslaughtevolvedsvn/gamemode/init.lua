@@ -26,8 +26,6 @@ TimeLeft = NextRound - CurTime( )
 local discplayers = {}
 local ROUND_ID = 0
 
-local voted = 0
-
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
 	ply.Buddies = {} --I'll get round to this I swear
@@ -111,6 +109,18 @@ function GM:PlayerSpawn(ply)
 	end
 end
 
+function GM:PlayerLoadout(ply)
+	if PHASE == "BATTLE" then
+		for k,v in pairs(WEAPON_SET[ply:GetNetworkedInt("class")]) do
+			ply:Give(v)
+		end
+	elseif PHASE == "BUILD" then
+		ply:Give("weapon_physgun")
+		ply:Give( "swep_nocollide" )
+		--ply:Give("swep_dispensermaker")
+	end
+end
+
 function GM:StartBattle()
 	print("[ONSLAUGHT] Battle phase started!")
 	NextRound = CurTime() + BATTLETIME
@@ -126,7 +136,7 @@ function GM:StartBattle()
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
-			v.NextSpawn = CurTime()
+			v.NextSpawn = (CurTime() + 5) + math.Rand(0.5,1.5)
 			v:KillSilent()
 			v.FullRound = true
 		end
@@ -202,7 +212,7 @@ function GM:StartBuild()
 		elseif v.PropReset then
 			v:PropReset()
 		elseif v:IsPlayer() then
-			v.NextSpawn = CurTime()
+			v.NextSpawn = CurTime() + 5
 			v:KillSilent()
 		end
 	end
@@ -305,7 +315,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin = nil end
 	
 	if PHASE == "BUILD" then
-		ply.NextSpawn = CurTime()
+		ply.NextSpawn = CurTime() + 5
 	else
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 		ply:CreateRagdoll( )
@@ -318,10 +328,23 @@ function GM:PlayerDeath( ply, wep, killer )
 	end
 	
 	ply.Died = ply.Died + 1
-	timer.Simple(0.05,CheckDead)
+	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE)
 	ply:AddDeaths(1)	
 	return true
 end
+
+function GM:CheckDead(ply)
+	if PHASE == "BUILD" then return end
+	for k,v in pairs(player.GetAll()) do
+		if ply != v and v:Alive() then return end
+	end
+	GAMEMODE:StartBuild()
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint("All players have perished loading build mode!")
+	end
+end
+
+
 
 function GM:PlayerDeathThink( ply )
 	if ply.NextSpawn == nil then
@@ -462,7 +485,7 @@ function GM:PlayerDisconnected( ply )
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
 	end
-	ply:CheckDead()
+	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE)
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
@@ -476,7 +499,7 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
-	timer.Simple(0.05,CheckDead)
+
 end
 
 function GM:DeleteProps(ply, ID, nick)
