@@ -137,6 +137,7 @@ function GM:StartBattle()
 	for k,v in pairs(ents.FindByName("ose_battle")) do
 		v:Fire("trigger",0,3)
 	end
+	Dieofaids()
 end
 
 function GM:CalculateLiveBonus()
@@ -318,8 +319,8 @@ function GM:PlayerDeath( ply, wep, killer )
 	end
 	
 	ply.Died = ply.Died + 1
-	ply:AddDeaths(1)
-	ply:CheckDead()	
+	timer.Simple(0.05,CheckDead)
+	ply:AddDeaths(1)	
 	return true
 end
 
@@ -476,6 +477,7 @@ function GM:PlayerDisconnected( ply )
 		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
 		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
 	end
+	timer.Simple(0.05,CheckDead)
 end
 
 function GM:DeleteProps(ply, ID, nick)

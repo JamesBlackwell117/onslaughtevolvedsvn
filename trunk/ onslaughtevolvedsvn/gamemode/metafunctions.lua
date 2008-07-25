@@ -208,7 +208,9 @@ function UpdateTime()
 end
 
 function Pmeta:CheckDead()
+
 	if PHASE == "BUILD" then return end
+
 	for k,v in pairs(player.GetAll()) do
 		if self != v and v:Alive() then return end
 	end
