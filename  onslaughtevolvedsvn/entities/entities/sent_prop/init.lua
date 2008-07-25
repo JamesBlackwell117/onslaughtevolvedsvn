@@ -152,7 +152,6 @@ function ENT:OnTakeDamage(dmg)
 	
 	local damage = dmg:GetDamage()
 	local pos = self:LocalToWorld(self:OBBCenter())
-	local base = 0
 
 	if self.count == 0 then
 		damage = damage * math.sqrt(#player.GetAll())
@@ -166,12 +165,10 @@ function ENT:OnTakeDamage(dmg)
 	
 	if self.LastUpdate + 1.5 < CurTime() then
 		self:UpdateColour()
-		print("DAMAGE: "..CurTime())
 		self.count = 0
 		--for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do -- for now
 			--if v:IsPlayer() then self.count = self.count + 1 end
 		--end
-		print("COUNT: "..self.count)
 		self.LastUpdate = CurTime()
 	end
 	if self.Shealth <= 0 then
