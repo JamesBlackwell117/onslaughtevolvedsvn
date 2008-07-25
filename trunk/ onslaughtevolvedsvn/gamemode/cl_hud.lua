@@ -24,7 +24,9 @@ function GM:DrawHUD()
 			TTimeleft = 0
 			lastphase = PHASE
 		end
-		if TTimeleft < TimeLeft then TTimeleft = TimeLeft end
+		if TTimeleft < TimeLeft then
+			TTimeleft = NextRound
+		end
 		
 		local moncolor = Color(100,255,100,95)
 		local money = ply:GetNetworkedInt( "money")
@@ -346,14 +348,15 @@ function GM:HUDDrawTargetID( )
 if GetConVarNumber( "ose_hud" ) == 1 then
 	if ent:IsPlayer( ) then
 		draw.SimpleTextOutlined(ent:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-	elseif (ent.Base == "sent_prop" || ent:GetClass() == "sent_prop") && PHASE == "BUILD" then
-		if ValidEntity(ent.Owner) then
-			draw.SimpleTextOutlined( "Owner: "..ent.Owner:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+	elseif ent:GetClass( ) == "npc_turret_floor" then
+		local own = ent:GetNWEntity( "Owner")
+		if ValidEntity(own) then
+			draw.SimpleTextOutlined(own:GetName( ) .. "'s turret", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
 		end
 	elseif ent:GetClass() == "sent_spawpoint" then
 		local own = ent:GetNWEntity("owner")
 		if ValidEntity(own) then
-			draw.SimpleTextOutlined( ent:GetNWEntity("owner"):Nick().."'s spawnpoint.", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+			draw.SimpleTextOutlined(own:Nick().."'s spawnpoint.", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
 		end
 	end
 else
