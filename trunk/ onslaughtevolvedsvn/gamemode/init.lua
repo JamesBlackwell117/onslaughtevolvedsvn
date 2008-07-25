@@ -37,9 +37,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNetworkedInt( "class", 1 )
 	ply:SetNetworkedInt( "rank", 1 )
 	timer.Simple(2,ply.GetDefaultClass, ply)
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint(ply:Nick().." has finished joining the server!")
-	end
+	AllChat(ply:Nick().." has finished joining the server!")
 	timer.Simple(1,UpdateTime,ply)
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
@@ -113,14 +111,6 @@ function GM:PlayerSpawn(ply)
 	end
 end
 
-function GM:KillWeapons()
-	for k,v in pairs( ents.GetAll( ) ) do
-		if v:IsWeapon( ) then
-			v:Remove( )
-		end
-	end
-end
-
 function GM:StartBattle()
 	print("[ONSLAUGHT] Battle phase started!")
 	NextRound = CurTime() + BATTLETIME
@@ -131,7 +121,7 @@ function GM:StartBattle()
 		if v:IsWeapon( ) then
 			v:Remove( )
 		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
-			v:PropRemove(nil,true, true)
+			v:CheckValidOwnership()
 		elseif v.Prepare then
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
@@ -163,7 +153,7 @@ function GM:CalculateLiveBonus()
 			local bonus = LIVE_BONUS + (DEATH_PENALTY * v.Died)
 			if bonus > 0 && v.FullRound == true then
 				v:Money(bonus,"+"..bonus.." [Round Live Bonus]")
-				v:SetNWInt("kills", v:GetNWInt("kills") + math.Round(math.Clamp(bonus / 100, 1, 10)))
+				v:SetNWInt("kills", v:GetNWInt("kills") + math.Round(bonus / 100))
 			end
 			v.Died = 0
 		end
@@ -208,7 +198,7 @@ function GM:StartBuild()
 		if v:IsWeapon( ) then
 			v:Remove( )
 		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
-			v:PropRemove(nil,true, true)
+			v:CheckValidOwnership(true)
 		elseif v.PropReset then
 			v:PropReset()
 		elseif v:IsPlayer() then
@@ -305,32 +295,31 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply.specid = 1
 	ply.Specatemode = OBS_MODE_CHASE
 	local name = npcs[killer:GetClass()] or killer:GetClass()
-	
-	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-		if v:GetRealOwner() == ply then v:PropRemove() end
-	end
-	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		if v:GetRealOwner() == ply && v.Type == "BATTLE" then v:PropRemove() end
-	end
-	
-	if PHASE == "BUILD" then
-		ply.NextSpawn = CurTime() + 1
-		return true
-	end
- 
+		
 	if ply != killer then
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
 		end
 	end
 	
-	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin.InUse = false self.AmmoBin = nil end
-
+	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin = nil end
 	
-	ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
-	ply:CreateRagdoll( )
+	if PHASE == "BUILD" then
+		ply.NextSpawn = CurTime()
+	else
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
+		ply:CreateRagdoll( )
+		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+			if v:GetRealOwner() == ply then v:PropRemove() end
+			end
+		for k,v in pairs(ents.FindByClass("sent_dispenser")) do
+			if v:GetRealOwner() == ply && v.Type == "BATTLE" then v:PropRemove() end
+		end
+	end
+	
 	ply.Died = ply.Died + 1
-	ply:AddDeaths(1)	
+	ply:AddDeaths(1)
+	ply:CheckDead()	
 	return true
 end
 
@@ -465,10 +454,10 @@ end
 
 function GM:PlayerDisconnected( ply )
 	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-		if v:GetRealOwner() == ply then v:Remove() end
+		if v:GetRealOwner() == ply then v:PropRemove() end
 	end
 	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
-		if v:GetRealOwner() == ply then v:Remove() end
+		if v:GetRealOwner() == ply then v:PropRemove() end
 	end
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
@@ -566,15 +555,10 @@ function GM:GravGunPunt( ply, ent )
 end
 
 function GM:PhysgunPickup(ply, ent)
-	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
-		return false
-	elseif ValidEntity( ent:GetRealOwner() ) and ent:GetRealOwner() != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent:GetRealOwner():Nick() )
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-		return false
-	else
+	if ent:PropOp(ply) then
 		return true
 	end
+	return false
 end
 
 function GM:PhysgunDrop(ply, ent)
@@ -582,18 +566,14 @@ function GM:PhysgunDrop(ply, ent)
 end
 
 function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
-	if ent:GetClass() != "sent_prop" && ent:GetClass() != "sent_ladder" && ent:GetClass() != "sent_ammo_dispenser" then
-		return false
-	elseif ValidEntity( ent:GetRealOwner() ) and ent:GetRealOwner() != ply && !ply:IsAdmin() then
-		ply:PrintMessage( HUD_PRINTCENTER, "This item is owned by " .. ent:GetRealOwner():Nick() )
-		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-	return false
-	elseif ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
-		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
-		ent:SetColor(255,255,255,128)
-	else
-	ent:SetCollisionGroup(COLLISION_GROUP_NONE)
-	ent:SetColor(255,255,255,255)
+	if ent:PropOp(ply) then
+		if ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
+			ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+			ent:SetColor(255,255,255,128)
+		else
+		ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+		ent:SetColor(255,255,255,255)
+		end
 	end
 	return false
 end
@@ -608,13 +588,14 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if !trc.Entity then return false end
 	if !trc.Entity:IsValid( ) then return false end
-	if trc.Entity:GetClass() != "sent_prop" && trc.Entity:GetClass() != "sent_ladder" && trc.Entity:GetClass() != "sent_ammo_dispenser" && trc.Entity:GetClass() != "sent_dispenser" && trc.Entity:GetClass() != "ose_mines" && trc.Entity:GetClass() != "npc_floor_turret" && trc.Entity:GetClass() != "sent_turretcontroller"  then return false end
 	
 	local ent = trc.Entity
 	
 	if ent.Turret then ent = ent.Turret end 
 	
-	ent:PropRemove(ply,true)
+	if ent:PropOp(ply) then
+		ent:PropRemove(true)
+	end
 	return false
 end
 
@@ -707,7 +688,7 @@ function GM:ShutDown( )
 end
 
 function GM:DoPlayerDeath( ply, attacker, dmginfo )
-ply:CheckDead()
+
 end
 
 function GM:CreateEntityRagdoll( entity, ragdoll )
