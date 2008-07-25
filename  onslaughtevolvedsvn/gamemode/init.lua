@@ -137,7 +137,6 @@ function GM:StartBattle()
 	for k,v in pairs(ents.FindByName("ose_battle")) do
 		v:Fire("trigger",0,3)
 	end
-	Dieofaids()
 end
 
 function GM:CalculateLiveBonus()
