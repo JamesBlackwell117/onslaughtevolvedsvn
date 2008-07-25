@@ -155,6 +155,7 @@ function GM:PlayerSay( ply, txt, pub )
 	return txt
 end
 
+
 function Stuck(ply,cmd,args)
 	if !ply:IsStuck() then
 		ply:Message("You are not stuck!")
@@ -228,6 +229,8 @@ end
 
 concommand.Add("sellall", SellAll)
 
+voted = 0
+
 function VoteSkip(ply,cmd,args)
 	if PHASE == "BATTLE" then
 		ply:ChatPrint("You cannot skip battle phase")
@@ -251,18 +254,6 @@ function VoteSkip(ply,cmd,args)
 end
 
 concommand.Add("voteskip", VoteSkip)
-
-function GM:PlayerLoadout(ply)
-	if PHASE == "BATTLE" then
-		for k,v in pairs(WEAPON_SET[ply:GetNetworkedInt("class")]) do
-			ply:Give(v)
-		end
-	elseif PHASE == "BUILD" then
-		ply:Give("weapon_physgun")
-		ply:Give( "swep_nocollide" )
-		--ply:Give("swep_dispensermaker")
-	end
-end
 
 local read = file.Find("../maps/ose_*.bsp")
 

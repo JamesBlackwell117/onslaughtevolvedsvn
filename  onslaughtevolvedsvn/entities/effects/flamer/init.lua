@@ -23,9 +23,9 @@ function EFFECT:Think()
 		return false
 	end
 	if ValidEntity( self.WeaponEnt ) and self.WeaponEnt:GetClass( ) == "swep_flamethrower" and self.WeaponEnt:GetNWBool( "On", false ) then
-		for i = 0,10 do
+		for i = 0,20 do
 			local p = self.emitter:Add( "particles/flamelet"..math.random( 1, 5 ), (self.StartPos + self.Player:GetAimVector() * 5))
-			local vel = (self.Player:GetAimVector() * (math.random(440,460) + i) + self.Player:GetVelocity( )) + Vector(math.Rand(-15,15), math.Rand(-15,15),math.Rand(-15,15)) --spread it out a bit
+			local vel = (self.Player:GetAimVector() * (math.random(500,600) + i) + self.Player:GetVelocity( )) + Vector(math.Rand(-25,25), math.Rand(-25,25),math.Rand(-25,25)) --spread it out a bit
 			p:SetVelocity( vel )
 			p:SetDieTime( math.Rand( .5, .8 ) )
 			p:SetGravity( Vector( 0, 0, -1 ) )
@@ -52,7 +52,7 @@ function EFFECT:Think()
 	end
 	if math.random(1,5) >= 4 then
 		local p = self.emitter:Add( "sprites/heatwave", (self.StartPos + self.Player:GetAimVector() * 5))
-		local vel = (self.Player:GetAimVector() * math.random(440,460) + self.Player:GetVelocity( )) + Vector(math.Rand(-15,15), math.Rand(-15,15),math.Rand(-15,15)) --spread it out a bit
+		local vel = (self.Player:GetAimVector() * math.random(440,460) + self.Player:GetVelocity( )) + Vector(math.Rand(-25,25), math.Rand(-25,25),math.Rand(-25,25)) --spread it out a bit
 		p:SetVelocity( vel )
 		p:SetDieTime( math.Rand( .5, .8 ) )
 		p:SetGravity( Vector( 0, 0, -1 ) )
