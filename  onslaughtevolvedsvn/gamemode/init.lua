@@ -555,7 +555,7 @@ function GM:GravGunPunt( ply, ent )
 end
 
 function GM:PhysgunPickup(ply, ent)
-	if ent:PropOp(ply) || (ply:IsAdmin() && ent:IsProp()) then
+	if ent:PropOp(ply) then
 		return true
 	end
 	return false
@@ -566,7 +566,7 @@ function GM:PhysgunDrop(ply, ent)
 end
 
 function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
-	if ent:PropOp(ply) || (ply:IsAdmin() && ent:IsProp()) then
+	if ent:PropOp(ply) then
 		if ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
 			ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 			ent:SetColor(255,255,255,128)
@@ -593,7 +593,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	
 	if ent.Turret then ent = ent.Turret end 
 	
-	if ent:PropOp(ply) || (ply:IsAdmin() && ent:IsProp()) then
+	if ent:PropOp(ply) then
 		ent:PropRemove(true)
 	end
 	return false
