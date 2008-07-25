@@ -328,7 +328,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	end
 	
 	ply.Died = ply.Died + 1
-	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE)
+	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE, ply)
 	ply:AddDeaths(1)	
 	return true
 end
@@ -485,7 +485,7 @@ function GM:PlayerDisconnected( ply )
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
 	end
-	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE)
+	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE, ply)
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
