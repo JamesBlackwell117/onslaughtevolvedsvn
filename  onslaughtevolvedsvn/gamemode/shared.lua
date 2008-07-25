@@ -213,7 +213,9 @@ end
 	
 	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}	
 	
+	if SERVER then
 	include("extbuild.lua")
+	end
 	
 		
 	MODELGROUPS = {}
