@@ -248,7 +248,6 @@ end
 
 	--PROP VARS--
 	FLAMABLE_PROPS = true
-	BATTLE_PHYS = false
 	PROP_CLEANUP = true
 	PROP_LIMIT = 35
 

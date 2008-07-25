@@ -46,6 +46,11 @@ function AllChat(msg)
 	end
 end
 
+-------------------------------------------------------------------------------
+--PropOp
+--Check to see if a player can do an operation on a prop)
+-------------------------------------------------------------------------------
+
 function Emeta:PropOp(ply,noadmin)
 	if !self:IsProp() then return false end
 	local owner = self:GetRealOwner()
