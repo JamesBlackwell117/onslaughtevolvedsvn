@@ -9,6 +9,7 @@ ENT.SMH = 100
 ENT.Model = ""
 ENT.Owner = nil
 ENT.LastTouch = CurTime()
+ENT.LastUpdate = CurTime()
 
 function ENT:Initialize()
 	self.Entity:SetModel( self.Model ) 	//Model path
@@ -131,6 +132,7 @@ end
 function ENT:UpdateColour()
 	local col = (self.Shealth / self.Mhealth) * 255
 	self.Entity:SetColor(col, col, col, 255)
+	self.LastUpdate = CurTime()
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -159,7 +161,9 @@ function ENT:OnTakeDamage(dmg)
 	if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
 
 	self.Shealth = self.Shealth - damage 
-	self:UpdateColour()
+	if self.LastUpdate + 1 < CurTime() then
+		self:UpdateColour()
+	end
 	if self.Shealth <= 0 then
 		self:Remove()
 	elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
