@@ -136,7 +136,7 @@ function GM:StartBattle()
 			timer.Simple(k*0.05, v.Prepare, v)
 		elseif v:IsPlayer() then
 			v.Voted = false
-			v.NextSpawn = (CurTime() + 5) + math.Rand(0.5,1.5)
+			v.NextSpawn = (CurTime() + 3) + math.Rand(0.5,1.5)
 			v:KillSilent()
 			v.FullRound = true
 		end
@@ -274,6 +274,7 @@ function GM:Initialize()
 	GAMEMODE:StartBuild()
 	
 	if SinglePlayer() then
+		PROP_LIMIT = 10000
 		MAX_NPCS = S_MAX_NPCS -- If it isnt a server raise the NPC limit since you shouldn't have to worry about lag :)
 	end
 end
@@ -328,7 +329,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	end
 	
 	ply.Died = ply.Died + 1
-	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE, ply)
+	self:CheckDead(ply)
 	ply:AddDeaths(1)	
 	return true
 end
@@ -485,7 +486,7 @@ function GM:PlayerDisconnected( ply )
 	if ValidEntity(ply.CusSpawn) then
 		ply.CusSpawn:Remove()
 	end
-	timer.Simple(0.05,GAMEMODE.CheckDead, GAMEMODE, ply)
+	self:CheckDead(ply)
 	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
@@ -513,7 +514,7 @@ function GM:DeleteProps(ply, ID, nick)
 	print("[ONSLAUGHT] Deleting props")
 	for k,v in pairs(ents.FindByClass("sent_*")) do
 		if v:GetClass() != "sent_spawner" then
-			if v:GetRealOwner() == ply || !ValidEntity(v:GetRealOwner()) then
+			if v:GetRealOwner() == ply then
 				v:PropRemove()
 			end
 		end

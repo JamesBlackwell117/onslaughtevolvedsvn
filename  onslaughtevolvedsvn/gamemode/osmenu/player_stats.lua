@@ -36,22 +36,6 @@ function PANEL:Init( )
 	chk:SetValue( GetConVarNumber( "ose_hidetips" ) )
 	chk:SizeToContents()
 	table.insert(self.Checks, chk)
-	
-	local classlab = vgui.Create( "DLabel", self )
-	classlab:SetText("Default Class:")
-	classlab:SetTextColor(Color(255,255,255,255))
-	classlab:SizeToContents()
-	
-	table.insert(self.Checks, classlab)
-	
-	self.ClassList = vgui.Create("DMultiChoice", self)
-	self.ClassList:SetText("Default Class")
-	self.ClassList:SetConVar("ose_defaultclass")
-	for k,v in pairs(Classes) do
-		self.ClassList:AddChoice(v.NAME)
-	end
-	self.ClassList:SizeToContents()
-	table.insert(self.Checks, self.ClassList)
 	self:InvalidateLayout() 
 end
 

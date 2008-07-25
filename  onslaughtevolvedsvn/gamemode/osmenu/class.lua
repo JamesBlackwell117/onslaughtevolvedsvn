@@ -28,7 +28,9 @@ function PANEL:Init( )
 		
 		function b.DoClick( b )
 			for k,v in pairs( self.Buttons ) do
-				v:SetDisabled( false )
+				if v.SetDisabled then
+					v:SetDisabled( false )
+				end
 			end
 			b:SetDisabled( true )
 			RunConsoleCommand( "Join_Class", tostring( b.ClassIndex ) )
@@ -36,6 +38,22 @@ function PANEL:Init( )
 		b:SetTooltip( v.DSCR )
 		table.insert( self.Buttons, b )
 	end
+	
+	local classlab = vgui.Create( "DLabel", self )
+	classlab:SetText("Default Class:")
+	classlab:SetTextColor(Color(255,255,255,255))
+	classlab:SizeToContents()
+	table.insert( self.Buttons, classlab )
+	
+	self.ClassList = vgui.Create("DMultiChoice", self)
+	self.ClassList:SetText("Default Class")
+	self.ClassList:SetConVar("ose_defaultclass")
+	for k,v in pairs(Classes) do
+		self.ClassList:AddChoice(v.NAME)
+	end
+	self.ClassList:SizeToContents()
+	
+	table.insert(self.Buttons, self.ClassList)
 end
 
 function PANEL:PerformLayout( )

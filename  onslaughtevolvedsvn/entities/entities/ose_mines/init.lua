@@ -15,28 +15,13 @@ function ENT:Initialize()
 		phys:Wake()
 		--phys:EnableGravity( false )
 	end
-	self:SetPoseParameter("blendstates", 1)
+	constraint.Keepupright( self, Angle(0,0,0),0, 100000 )
 end
 
 function ENT:Touch(ent)
 end
 
 function ENT:Think()
-	if !self.Primed then
-		local trc = {}
-		trc.start = self:GetPos()
-		trc.endpos = self:GetPos() + self:GetUp() * -2
-		trc.filter = self
-		trc = util.TraceLine( trc )
-		if trc.HitWorld then
-			self.Primed = true
-			self.Entity:GetPhysicsObject():EnableMotion(false)
-			self:SetPoseParameter("blendstates", 1)
-		else
-			return
-		end
-		self:SetPoseParameter("blendstates", 1)
-	end
 	local ents = ents.FindInSphere(self.Entity:GetPos(), 250)
 	for k,v in pairs(ents) do
 		if v:IsNPC() && v:GetClass() != "npc_bullseye" && v:GetClass() != "npc_turret_floor" then
