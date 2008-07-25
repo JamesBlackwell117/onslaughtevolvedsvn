@@ -33,22 +33,4 @@ function ENT:Initialize()
 	pos:SetParent(self)
 	pos:Spawn()
 	pos:Activate()
-	timer.Simple(1,self.SendOwner,self)
 end
-
-function ENT:SpawnFunction( ply, tr)
-
-	if ( !tr.Hit ) then return end
-	
-	local SpawnPos = tr.HitPos + tr.HitNormal * 16
-	
-	local ent = ents.Create( "sent_ladder" )
-	
-	ent:SetPos( SpawnPos )
-	ent:Spawn()
-	ent:Activate()
-	
-	return ent
-	
-end
-
