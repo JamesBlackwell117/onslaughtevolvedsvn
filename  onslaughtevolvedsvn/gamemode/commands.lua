@@ -3,14 +3,13 @@ function Class(ply,com,args)
 	if !Classes[newclass] then return end
 	ply:SetNetworkedInt("class", newclass )
 	if PHASE == "BATTLE" && ply:Alive() then
-		ply:Kill()
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
-		timer.Simple(2,CheckDead)
+		ply:Kill()
 	else
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
 		for k,v in pairs( ents.GetAll( ) ) do
 			if v:IsNPC() || v:GetClass() == "ose_mines" then
-				v:PropRemove(nil,true, true)
+				v:CheckValidOwnership()
 			end
 		end
 	end
@@ -21,36 +20,26 @@ concommand.Add("join_class", Class)
 function AdminMenu(ply,com,args)
 	if not ply:IsAdmin( ) then return false end
 	
-	local plys = player.GetAll()
-	
 	if args[ 1 ] == "1" then
 		GAMEMODE:StartBattle()
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " skipped to battle mode!")
-		end
+		AllChat("Admin: " .. ply:Nick() .. " skipped to battle mode!")
 	elseif args[ 1 ] == "2" then
 		GAMEMODE:StartBuild()
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " skipped to build mode!")
-		end
+		AllChat("Admin: " .. ply:Nick() .. " skipped to build mode!")
 	elseif args[ 1 ] == "3" then
 		if not isnumber( args[ 2 ] ) then
 			ply:ChatPrint( "Must enter a number." )
 			return
 		end
 		MAX_NPCS = tonumber( args[ 2 ] )
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " changed the maximum NPCs to " .. tonumber( args[ 2 ] ))
-		end
+		AllChat("Admin: " .. ply:Nick() .. " changed the maximum NPCs to " .. tonumber( args[ 2 ] ))
 	elseif args[ 1 ] == "4" then
 		if not isnumber( args[ 2 ] ) then
 			ply:ChatPrint( "Must enter a number." )
 			return
 		end
 		BUILDTIME = tonumber( args[ 2 ] )
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " changed build time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
-		end
+		AllChat("Admin: " .. ply:Nick() .. " changed build time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
 		UpdateTime()
 		umsg.Start("updatebuildtime")
 			umsg.Long(BUILDTIME)
@@ -61,9 +50,7 @@ function AdminMenu(ply,com,args)
 			return
 		end
 		BATTLETIME = tonumber( args[ 2 ] )
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " changed battle time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
-		end
+		AllChat("Admin: " .. ply:Nick() .. " changed battle time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
 		UpdateTime()
 		umsg.Start("updatebattletime")
 			umsg.Long(BATTLETIME)
@@ -74,9 +61,7 @@ function AdminMenu(ply,com,args)
 			return
 		end
 		SPAWN_TIME = tonumber( args[ 2 ] )
-		for k,v in pairs(plys) do
-			v:ChatPrint("Admin: " .. ply:Nick() .. " changed spawn time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
-		end
+		AllChat("Admin: " .. ply:Nick() .. " changed spawn time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
 		
 	elseif args[ 1 ] == "select" then
 		ply:Give( "swep_select" )
@@ -102,10 +87,10 @@ function AdminMenu(ply,com,args)
 		umsg.End( )
 	elseif args[1] == "map" then
 		for k,v in pairs(player.GetAll()) do
-			v:ChatPrint("Admin: "..ply:Nick().." changed map to ".. args[2])
-			GAMEMODE:SaveAllProfiles()
-			GAMEMODE:ChangeMap(args[2])
+			AllChat("Admin: "..ply:Nick().." changed map to ".. args[2])
 		end
+		GAMEMODE:SaveAllProfiles()
+		GAMEMODE:ChangeMap(args[2])
 	end
 	
 end
@@ -193,7 +178,7 @@ function SpawnPoint(ply,cmd,args)
 			trc.endpos = ply:GetPos() + ply:GetUp() * -500
 			trc.filter = ply
 			trc = util.TraceLine( trc ) --check if the player is standing above skybox (under the map) or a nodraw
-			if trc.HitSky || trc.HitNoDraw || trc.Entity.Base == "sent_prop" || trc.Entity:GetClass() == "sent_prop" || ply:Crouching( ) then
+			if trc.HitSky || trc.HitNoDraw || trc.Entity:IsProp() || ply:Crouching( ) then
 				ply:Message("You can't make your spawnpoint here!", Color(255,100,100,255))
 				return
 			end
@@ -219,6 +204,7 @@ concommand.Add("spawnpoint", SpawnPoint)
 
 function ResetSpawn(ply,cmd,args)
 	ply.CusSpawn:Remove()
+	ply.CusSpawn = nil
 	ply:Message("Reset spawnpoint!")
 end
 
@@ -231,7 +217,9 @@ function SellAll(ply,cmd,args)
 	end
 	local mon = 0
 	for k,v in pairs(ents.GetAll()) do
-		mon = mon + v:PropRemove(ply,true,false,true)
+		if v:IsProp() then
+			mon = mon + v:PropRemove(true,true)
+		end
 	end
 	if(mon > 0) then
 	ply:Money(mon,"+"..math.Round(mon).." [Sold all props]")
@@ -253,13 +241,9 @@ function VoteSkip(ply,cmd,args)
 		voted = voted + 1
 		local numplayer = #player.GetAll()
 		local req = math.ceil(numplayer / 1.5)
-		for k,v in pairs(player.GetAll()) do
-			v:ChatPrint(ply:Nick().." voted to skip build mode!"..voted.."/"..req.." votes.")
-		end
+		AllChat(ply:Nick().." voted to skip build mode!"..voted.."/"..req.." votes.")
 		if voted >= req then
-			for k,v in pairs(player.GetAll()) do
-				v:ChatPrint("Starting Build Phase in 5 seconds!")
-			end
+			AllChat("Starting Build Phase in 5 seconds!")
 			timer.Simple(5,GAMEMODE.StartBattle,GAMEMODE)
 			return txt
 		end
@@ -319,9 +303,7 @@ function Votemap(ply,cmd,args)
 	end
 	ply.mapvoted = true
 	mapvotes[args[1]] = mapvotes[args[1]] + 1
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint(ply:Nick().." voted for map "..args[1]..". "..mapvotes[args[1]].." votes!")
-	end
+	AllChat(ply:Nick().." voted for map "..args[1]..". "..mapvotes[args[1]].." votes!")
 end
 
 concommand.Add("votemap", Votemap)
@@ -360,19 +342,17 @@ function GM:EndVote()
 		end
 	end
 	if game.GetMap() == string.sub(map,1, -5 ) then
+		AllChat("The current map has won the vote!")
+		AllChat("Map voting is now disabled!")
 		for k,v in pairs(player.GetAll()) do
-			v:ChatPrint("The current map has won the vote!")
 			voting = false
 			v.mapvoted = false
-			v:ChatPrint("Map voting is now disabled!")
 		end
 		VOTE_ENABLE_TIME = CurTime() + VOTE_ENABLE_TIME
 		return
 	end
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint("The map: "..string.sub(map,1, -5 ).." has won the vote!")
-		v:ChatPrint("Starting the winning map in 5 seconds!")
-	end
+	AllChat("The map: "..string.sub(map,1, -5 ).." has won the vote!")
+	AllChat("Starting the winning map in 5 seconds!")
 	GAMEMODE:SaveAllProfiles()
 	timer.Simple(5, GAMEMODE.ChangeMap, GAMEMODE, string.sub(map,1, -5 ))
 end
@@ -398,7 +378,6 @@ concommand.Add( "buy_ammo", BuyAmmo )
 function Pmeta:Ammo(bin)
 	self.AmmoBin = bin
 	self:Freeze(true)
-	bin.InUse = true
 	umsg.Start("openammo", self)
 	umsg.End()
 end
@@ -406,7 +385,6 @@ end
 function CloseAmmo(ply)
 	if !ply.AmmoBin then return end
 	ply.AmmoBin:Close()
-	ply.AmmoBin.InUse = false
 	ply.AmmoBin = nil
 	ply:Freeze(false)
 end
@@ -424,7 +402,9 @@ function DeleteModel(ply, cmd, args)
 	local monadd = 0
 	if #entz > 0 then
 		for k,v in pairs(entz) do
-			monadd = monadd + v:PropRemove(ply,true,false,true)
+			if v:IsProp() then
+				monadd = monadd + v:PropRemove(true,true)
+			end
 		end
 		if monadd > 0 then
 			ply:Money(monadd,"+"..math.Round(monadd).." [Sold Props]")

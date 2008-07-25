@@ -23,26 +23,51 @@ function Emeta:GetRealOwner()
 	return owner
 end
 
-function Emeta:PropRemove(ply,checkowner,ifnotclass,silent)
+function Emeta:CheckValidOwnership(removenpcs)
+	removenpcs = removenpcs or false
+	local owner = self:GetRealOwner()
+	if owner then
+		if MODELS[model] && MODELS[model].PLYCLASS && owner:GetNWInt("class") != MODELS[model].PLYCLASS then
+			self:PropRemove(true)
+		end
+		return
+	elseif removenpcs == true then
+	self:PropRemove()
+	end
+end
+
+function Emeta:IsProp()
+	if self.Spawnable == true || self:GetClass() == "npc_turret_floor" then return true end return false
+end
+
+function AllChat(msg)
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint(msg)
+	end
+end
+
+function Emeta:PropOp(ply)
+	if !self:IsProp() then return false end
+	local owner = self:GetRealOwner()
+	if ValidEntity(owner) and owner != ply && !ply:IsAdmin() then
+		ply:PrintMessage( HUD_PRINTCENTER, "This is owned by " .. ent:GetRealOwner():Nick() )
+		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
+		return false
+	end
+	return true
+end
+
+function Emeta:PropRemove(sell,silent)
 	if self.Dissolving then return 0 end
-	ply = ply or nil
-	checkowner = checkowner or false
-	ifnotclass = ifnotclass or false
+	sell = sell or false
 	silent = silent or false
 	local cost
-	if checkowner then
+	if sell then
 		local owner = self:GetRealOwner()
 		local model = self:GetModel()
 	
 		if owner then
-			if ifnotclass and MODELS[model] && MODELS[model].PLYCLASS && owner:GetNWInt("class") == MODELS[model].PLYCLASS then
-			elseif ply and owner != ply and !ply:IsAdmin() then
-				if !silent then
-					ply:PrintMessage(HUD_PRINTCENTER, "This item is owned by " .. owner:Nick( ))
-					ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-				end
-				return 0
-			elseif MODELS[model] && MODELS[model].COST then
+			if MODELS[model] && MODELS[model].COST then
 				cost = MODELS[model].COST
 			elseif self.SMH && self.SMH > 0 then
 				cost = self.SMH
@@ -50,11 +75,15 @@ function Emeta:PropRemove(ply,checkowner,ifnotclass,silent)
 		end
 		if cost then
 			if !silent then
-				owner:Money(self.SMH,"+"..math.Round(self.SMH).." [Deleted Item]")
+				if MODELS[model] && MODELS[model].NAME then
+					owner:Money(cost,"+"..math.Round(cost).." [Deleted "..MODELS[model].NAME.."]")
+				else
+					owner:Money(cost,"+"..math.Round(cost).." [Deleted Item]")
+				end
 			end
 		end
 	end
-	if self:IsNPC() then self:Remove() elseif cost then self:Dissolve() end
+	if self:IsNPC() then self:Remove() else self:Dissolve() end
 	return cost or 0
 end
 
