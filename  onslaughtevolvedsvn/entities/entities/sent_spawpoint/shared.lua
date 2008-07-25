@@ -5,7 +5,5 @@
  ENT.Contact			= ""  //Email
  ENT.Purpose			= "base"  //Purpose
  ENT.Instructions	= "spawn it"  //instructions
- 
-ENT.Spawnable			= true //Seen from entities menu?
-ENT.AdminSpawnable		= false //Only admins allowed to spawn?
+
 

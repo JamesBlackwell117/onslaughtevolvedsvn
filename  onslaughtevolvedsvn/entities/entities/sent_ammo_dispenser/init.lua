@@ -34,3 +34,6 @@ function ENT:Use(act, cal)
 	self.LastUse = CurTime()
 end
 
+function ENT:Think()
+if self.Open && (!ValidEntity(self.User) || self.User:Health() < 1) then self:Close() end
+end

@@ -12,7 +12,6 @@ ENT.LastTouch = CurTime()
 function ENT:Initialize()   
 	self.Entity:SetModel( "models/props_c17/oildrum001.mdl" )
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	self:SetNoDraw( true )
 	self:DrawShadow( false )	
 	

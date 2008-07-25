@@ -32,22 +32,6 @@ function ENT:CalculateHealth()
 		self.SMH = math.Clamp(self.Entity:GetPhysicsObject():GetMass() * (self.Entity:OBBMins():Distance(self.Entity:OBBMaxs())) / 100,200,800)
 end
 
-function ENT:SpawnFunction( ply, tr) //This func is used by gmods entity menu
-
-	if ( !tr.Hit ) then return end
-	
-	local SpawnPos = tr.HitPos + tr.HitNormal * 16
-	
-	local ent = ents.Create( "sent_prop" ) // This line must be EXACTLY the same as the sents folder name!
-	
-	ent:SetPos( SpawnPos )
-	ent:Spawn()
-	ent:Activate()
-	
-	return ent
-	
-end
-
 function ENT:Touch(ent) -- Zombies need all the help they can get :-(
 	if table.HasValue(Zombies, ent:GetClass()) && self.LastTouch + 2 < CurTime() then
 		ent:SetSchedule(SCHED_MELEE_ATTACK1)
