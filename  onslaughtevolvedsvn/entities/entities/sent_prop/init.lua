@@ -168,7 +168,7 @@ function ENT:OnTakeDamage(dmg)
 		self:UpdateColour()
 		print("DAMAGE: "..CurTime())
 		self.count = 0
-		--for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
+		--for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do -- for now
 			--if v:IsPlayer() then self.count = self.count + 1 end
 		--end
 		print("COUNT: "..self.count)
