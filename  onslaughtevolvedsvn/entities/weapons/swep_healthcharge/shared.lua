@@ -73,13 +73,13 @@ else
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
 	
-	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() then
+	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() && self:Clip1() < 25 then
 		ent:SetHealth(ent:Health() - 6)
 		if ent:Health() > 0 && self:Clip1() < 25 then
 			self:SetClip1(self:Clip1() + 1)
 		else
-			ent.Igniter = self.Owner
-			ent:TakeDamage(1,self.Owner)
+			--ent.Igniter = self.Owner
+			ent:TakeDamage(1,self.Owner, self.Owner)
 		end
 	end
 	
@@ -121,16 +121,20 @@ function SWEP:GetViewModelPosition(pos,ang)
 	for k,v in pairs(ents.FindByClass("viewmodel")) do
 			v:SetModel(self.mdl)
 	end
-return pos,ang
+	return pos,ang
 end
 
 function SWEP:Reload()
-if SERVER then
 	if self:Clip1() >= 25 then
-		for k,v in pairs(ents.FindInSphere(self.Owner:GetPos(),200)) do
-			if v:IsPlayer() then v:AddHealth(50) end
+		if SERVER then
+			for k,v in pairs(ents.FindInSphere(self.Owner:GetPos(),200)) do
+				if v:IsPlayer() then v:AddHealth(50) end
+			end
 		end
-		self:SetClip1(0)
+			local effectdata = EffectData()
+			effectdata:SetOrigin( self.Owner:GetPos() )
+			effectdata:SetEntity( self.Owner )
+			util.Effect( "support_healthexplode", effectdata )
+			self:SetClip1(0)
 	end
-end
 end
