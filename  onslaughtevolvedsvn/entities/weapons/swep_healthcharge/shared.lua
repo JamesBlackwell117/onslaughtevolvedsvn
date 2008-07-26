@@ -30,13 +30,13 @@ SWEP.Primary.Ammo = "none"
 --SWEP.StopSoond = Sound("vehicles/tank_turret_stop1.wav")
 
 SWEP.Secondary.ClipSize	= -1
-SWEP.Secondary.DefaultClip = 0
-SWEP.Secondary.Automatic = false
+SWEP.Secondary.DefaultClip = -1
+SWEP.Secondary.Automatic = true
 SWEP.Secondary.Ammo	= "none"
 
 function SWEP:Initialize( )
 	if SERVER then
-		self:SetWeaponHoldType( "smg" )
+		self:SetWeaponHoldType( "physgun" )
 	end
 end
 
@@ -74,9 +74,9 @@ else
 	local hitpos = trace.HitPos
 	
 	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() then
-		ent:SetHealth(ent:Health() - 10)
-		if ent:Health() > 0 && self:Clip1() < 50 then
-			self:SetClip1(self:Clip1() + 2)
+		ent:SetHealth(ent:Health() - 6)
+		if ent:Health() > 0 && self:Clip1() < 25 then
+			self:SetClip1(self:Clip1() + 1)
 		else
 			ent.Igniter = self.Owner
 			ent:TakeDamage(1,self.Owner)
@@ -108,9 +108,9 @@ else
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
 	
-	if ValidEntity(ent) && ent:IsPlayer() && ent:Health() < ent:MaxHealth() then
+	if ValidEntity(ent) && ent:IsPlayer() && ent:Health() < ent:GetMaxHealth() then
 		if self:Clip1() > 0 then
-			ent:AddHealth(2)
+			ent:AddHealth(4)
 			self:SetClip1(self:Clip1() - 1)
 		end
 	end
@@ -125,10 +125,12 @@ return pos,ang
 end
 
 function SWEP:Reload()
-	if self:Clip1() >= 50 then
+if SERVER then
+	if self:Clip1() >= 25 then
 		for k,v in pairs(ents.FindInSphere(self.Owner:GetPos(),200)) do
-			if v:IsPlayer() then v:AddHealth(100) end
+			if v:IsPlayer() then v:AddHealth(50) end
 		end
 		self:SetClip1(0)
 	end
+end
 end

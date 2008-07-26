@@ -102,7 +102,7 @@ function GM:PlayerSpawn(ply)
 	end
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
 	ply:SetModel( modelname )
-	if ply.CusSpawn then
+	if ply.CusSpawn && ValidEntity(ply.CusSpawn) then
 		ply:SetPos(ply.CusSpawn:GetPos())
 		ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 		timer.Simple(2, ply.SetCollisionGroup,ply,COLLISION_GROUP_PLAYER)
