@@ -14,6 +14,7 @@ end
 function ENT:StartTouch(ent)
 	if PHASE == "BUILD" then
 		if ent:IsProp() then ent:PropRemove(true) end
+		if ent:GetClass() == "sent_spawnpoint" then ent:Remove() end
 	end
 	if ent:IsPlayer() then
 		ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)

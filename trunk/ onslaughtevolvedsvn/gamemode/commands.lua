@@ -2,16 +2,16 @@ function Class(ply,com,args)
 	local newclass = tonumber(args[1])
 	if !Classes[newclass] then return end
 	ply:SetNetworkedInt("class", newclass )
+	for k,v in pairs( ents.GetAll( ) ) do
+		if v:IsNPC() || v:GetClass() == "ose_mines" then
+			v:CheckValidOwnership()
+		end
+	end
 	if PHASE == "BATTLE" && ply:Alive() then
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
 		ply:Kill()
 	else
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")
-		for k,v in pairs( ents.GetAll( ) ) do
-			if v:IsNPC() || v:GetClass() == "ose_mines" then
-				v:CheckValidOwnership()
-			end
-		end
 	end
 end
 
