@@ -73,12 +73,11 @@ else
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
 	
-	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() && self:Clip1() < 25 then
+	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() then
 		ent:SetHealth(ent:Health() - 6)
 		if ent:Health() > 0 && self:Clip1() < 25 then
 			self:SetClip1(self:Clip1() + 1)
 		else
-			--ent.Igniter = self.Owner
 			ent:TakeDamage(1,self.Owner, self.Owner)
 		end
 	end
