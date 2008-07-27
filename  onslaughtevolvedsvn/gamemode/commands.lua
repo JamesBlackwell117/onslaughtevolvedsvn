@@ -86,9 +86,7 @@ function AdminMenu(ply,com,args)
 			end
 		umsg.End( )
 	elseif args[1] == "map" then
-		for k,v in pairs(player.GetAll()) do
-			AllChat("Admin: "..ply:Nick().." changed map to ".. args[2])
-		end
+		AllChat("Admin: "..ply:Nick().." changed map to ".. args[2])
 		GAMEMODE:SaveAllProfiles()
 		GAMEMODE:ChangeMap(args[2])
 	end
