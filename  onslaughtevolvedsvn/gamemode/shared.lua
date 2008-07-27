@@ -162,7 +162,7 @@ end
 	ANTILAG = false --turn on with caution!
 	BUILD_NOCLIP = true -- whether or not noclip should be allowed in build
 	VOTE_TIME = 30 -- how long players have to vote for a map.
-	VOTE_ENABLE_TIME = 1800 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
+	VOTE_ENABLE_TIME = 660 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
 	
 	
