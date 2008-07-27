@@ -39,6 +39,7 @@ function GM:PlayerInitialSpawn(ply)
 	timer.Simple(1,UpdateTime,ply)
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
+		ply.Nextspawn = discplayers[ply:SteamID()].NEXTSPAWN
 		local oldobj = discplayers[ply:SteamID()].OBJECT
 		for k,v in pairs(ents.FindByClass("sent_prop")) do
 			if v.Owner == oldobj then
@@ -63,7 +64,9 @@ function GM:PlayerInitialSpawn(ply)
 	end
 	if PHASE == "BATTLE" then
 		timer.Simple(0.01, ply.KillSilent, ply)
-		ply.NextSpawn = CurTime() + 5
+		if !ply.NextSpawn then
+			ply.NextSpawn = CurTime() + 5
+		end
 	end
 end
 
@@ -487,7 +490,7 @@ function GM:PlayerDisconnected( ply )
 		ply.CusSpawn:Remove()
 	end
 	self:CheckDead(ply)
-	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply}
+	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply, NEXTSPAWN = ply.NextSpawn}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
 		for k,v in pairs(player.GetAll()) do
