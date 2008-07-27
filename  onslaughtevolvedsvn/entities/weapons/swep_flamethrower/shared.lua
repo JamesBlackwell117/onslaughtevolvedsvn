@@ -75,7 +75,7 @@ function SWEP:PrimaryAttack( )
 	if SERVER then
 		if self.LastBall + 0.25 <= CurTime() then
 			self:TakePrimaryAmmo(1)
-			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetShootPos()+self.Owner:GetForward(), 400, 10 )) do
+			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetAimVector(), 400, 10 )) do
 				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
 					v.Igniter = self:GetOwner()
 					v:Ignite(3,40)
