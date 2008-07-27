@@ -29,43 +29,56 @@ local ROUND_ID = 0
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
 	ply.Buddies = {} --I'll get round to this I swear
-	ply.Died = 0
-	ply:SetNetworkedInt( "kills", 0)
-	ply:SetNetworkedInt( "money", STARTING_MONEY )
-	ply:SetNetworkedInt( "class", 1 )
-	ply:SetNetworkedInt( "rank", 1 )
-	timer.Simple(2,ply.GetDefaultClass, ply)
 	AllChat(ply:Nick().." has finished joining the server!")
+	
 	timer.Simple(1,UpdateTime,ply)
-	if discplayers[ply:SteamID()] != nil then
-		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
-		ply.Nextspawn = discplayers[ply:SteamID()].NEXTSPAWN
-		local oldobj = discplayers[ply:SteamID()].OBJECT
-		for k,v in pairs(ents.FindByClass("sent_prop")) do
-			if v.Owner == oldobj then
-				v.Owner = ply
-			end
-		end
-		discplayers[ply:SteamID()] = nil
-	end
 	
 	local id = string.Replace( ply:SteamID(), ":", "." )
 	if !file.Exists("onslaught_profiles/"..string.lower(id)..".txt") then
 		local name = string.Replace( ply:SteamID(), ":", "." )
-		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
+		local t = {id = ply:SteamID(), kills = 0, rank = 1}
 		file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
+		ply:SetNetworkedInt("rank", 1)
+		ply:SetNetworkedInt("kills", 0)
 	else
 		print("[ONSLAUGHT EVOLVED] Found profile for "..ply:Nick())
 		local name = string.Replace( ply:SteamID(), ":", "." )
 		local read = util.KeyValuesToTable( file.Read( "onslaught_profiles/"..name..".txt") )
 		ply:SetNetworkedInt( "kills", read.kills)
 		ply:SetNetworkedInt( "rank", read.rank)
-		GAMEMODE:CheckRanks(ply)
 	end
+	
+	GAMEMODE:CheckRanks(ply)
+	
+	if discplayers[ply:SteamID()] != nil then
+		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
+		ply.NextSpawn = discplayers[ply:SteamID()].NEXTSPAWN
+		ply.Died = discplayers[ply:SteamID()].DIED
+		ply:SetHealth(discplayers[ply:SteamID()].HEALTH)
+		ply:SetNWInt("class", discplayers[ply:SteamID()].CLASS )
+		local oldobj = discplayers[ply:SteamID()].OBJECT
+		for k,v in pairs(ents.GetAll()) do
+			if v.Owner == oldobj then
+				v.Owner = ply
+			end
+			if v:GetOwner() == oldobj then
+				v:SetOwner(ply)
+			end
+		end
+		discplayers[ply:SteamID()] = nil
+	else
+		ply.Died = 0
+		ply:SetNetworkedInt( "money", STARTING_MONEY )
+		ply:SetNetworkedInt( "class", 1 )
+		timer.Simple(2,ply.GetDefaultClass, ply)
+	end
+	
 	if PHASE == "BATTLE" then
-		timer.Simple(0.01, ply.KillSilent, ply)
 		if !ply.NextSpawn then
 			ply.NextSpawn = CurTime() + 5
+		end
+		if ply.NextSpawn > CurTime() then
+			timer.Simple(0.01, ply.KillSilent, ply)
 		end
 	end
 end
@@ -490,7 +503,7 @@ function GM:PlayerDisconnected( ply )
 		ply.CusSpawn:Remove()
 	end
 	self:CheckDead(ply)
-	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply, NEXTSPAWN = ply.NextSpawn}
+	discplayers[ply:SteamID()] = {MONEY = ply:GetNWInt("money"), OBJECT = ply, NEXTSPAWN = ply.NextSpawn, DIED = ply.Died, CLASS = ply:GetNWInt("class"), HEALTH = ply:Health()}
 	if PROP_CLEANUP then
 		timer.Simple(PROP_DELETE_TIME, GAMEMODE.DeleteProps, GAMEMODE, ply, ply:SteamID(), ply:Nick())
 		for k,v in pairs(player.GetAll()) do

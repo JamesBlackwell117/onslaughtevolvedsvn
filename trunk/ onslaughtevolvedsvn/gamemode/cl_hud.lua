@@ -25,7 +25,7 @@ function GM:DrawHUD()
 			lastphase = PHASE
 		end
 		if TTimeleft < TimeLeft then
-			TTimeleft = NextRound
+			TTimeleft = TimeLeft
 		end
 		
 		local moncolor = Color(100,255,100,95)
