@@ -337,7 +337,7 @@ function GM:EndVote()
 			voting = false
 			v.mapvoted = false
 		end
-		VOTE_ENABLE_TIME = CurTime() + BUILDTIME
+		VOTE_ENABLE_TIME = CurTime() + 660
 		return
 	end
 	AllChat("The map: "..string.sub(map,1, -5 ).." has won the vote!")
