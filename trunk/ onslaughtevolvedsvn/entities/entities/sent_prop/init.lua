@@ -138,13 +138,15 @@ function ENT:UpdateColour()
 end
 
 function ENT:OnTakeDamage(dmg)
-	if dmg:GetInflictor():IsPlayer() then
-	 	dmg:SetDamage(0)
-		return dmg 
-	elseif ValidEntity(dmg:GetInflictor():GetOwner()) then
-		if dmg:GetInflictor():GetOwner():IsPlayer() then
-			dmg:SetDamage(0)
-			return dmg
+	if ValidEntity(dmg:GetInflictor()) then
+		if dmg:GetInflictor():IsPlayer() then
+		 	dmg:SetDamage(0)
+			return dmg 
+		elseif ValidEntity(dmg:GetInflictor():GetRealOwner()) then
+			if dmg:GetInflictor():GetRealOwner():IsPlayer() then
+				dmg:SetDamage(0)
+				return dmg
+			end
 		end
 	end
 	
