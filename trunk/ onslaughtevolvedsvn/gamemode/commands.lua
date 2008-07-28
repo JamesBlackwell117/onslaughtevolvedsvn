@@ -286,7 +286,7 @@ function Votemap(ply,cmd,args)
 	elseif string.sub(args[1],1, -5 ) == game.GetMap() then
 		ply:ChatPrint("You can't start a vote for the current map!")
 		return
-	else
+	elseif voting == false then
 		GAMEMODE:StartMapVote(ply)
 	end
 	ply.mapvoted = true
@@ -306,10 +306,8 @@ end
 concommand.Add("saveprof", SaveProfile)
 
 function GM:StartMapVote(ply)
-	if voting == false then
-		for k,v in pairs(read) do
-			mapvotes[v] = 0
-		end
+	for k,v in pairs(read) do
+		mapvotes[v] = 0
 	end
 	voting = true
 	for k,v in pairs(player.GetAll()) do
