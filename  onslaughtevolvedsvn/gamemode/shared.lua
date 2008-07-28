@@ -63,7 +63,7 @@ AMMOS[6] = {AMMO = "AR2AltFire", NAME = "Combine Ball", SMULT = 2, QT = 1, PRICE
 AMMOS[7] = {AMMO = "xbowbolt", NAME = "Crossbow Bolt", SMULT = 2, QT = 10, PRICE = 500, MODEL = "models/Items/CrossbowRounds.mdl"}
 AMMOS[8] = {AMMO = "grenade", NAME = "Grenade", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/Items/grenadeAmmo.mdl"}
 AMMOS[9] = {AMMO = "SMG1_Grenade", NAME = "Smg Grenade", QT = 1, PRICE = 250, MODEL = "models/Items/AR2_Grenade.mdl"}
-AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", SMULT = 2, QT = 100, PRICE = 500, MODEL = "models/props_junk/gascan001a.mdl"}
+AMMOS[10] = {AMMO = "AR2", NAME = "Fuel", QT = 100, PRICE = 500, MODEL = "models/props_junk/gascan001a.mdl"}
 AMMOS[11] = {AMMO = "BuckShot", NAME = "Heavy Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxFlares.mdl"}
 AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/props_combine/combine_mine01.mdl"}
 AMMOS[13] = {AMMO = "grenade", NAME = "Repair Grenade", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/weapons/w_magnade.mdl"}
