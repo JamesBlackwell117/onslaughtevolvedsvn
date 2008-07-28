@@ -26,6 +26,7 @@ end
 function Emeta:CheckValidOwnership(removenpcs)
 	removenpcs = removenpcs or false
 	local owner = self:GetRealOwner()
+	local model = self:GetModel()
 	if owner then
 		if MODELS[model] && MODELS[model].PLYCLASS && owner:GetNWInt("class") != MODELS[model].PLYCLASS then
 			self:PropRemove(true)
