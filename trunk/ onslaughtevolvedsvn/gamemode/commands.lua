@@ -268,8 +268,8 @@ end
 
 concommand.Add("getmaps", SendMaps)
 
-local voting = false
-local votingenabled = false
+voting = false
+votingenabled = false
 
 function Votemap(ply,cmd,args)
 	if ply.mapvoted then
@@ -277,18 +277,17 @@ function Votemap(ply,cmd,args)
 		return
 	end
 	if !args[1] then return end
-	if !votingenabled then
+	if votingenabled == false then
 		ply:ChatPrint("You must wait "..string.ToMinutesSeconds(tostring(VOTE_ENABLE_TIME - CurTime())).." until you can vote.")
-		return
-	end
-	if string.sub(args[1],1, -5 ) != game.GetMap() && !voting && PHASE != "BATTLE" then
-		GAMEMODE:StartMapVote(ply)
-	elseif string.sub(args[1],1, -5 ) == game.GetMap() && voting == false then
-		ply:ChatPrint("You can't start a vote for the current map!")
 		return
 	elseif PHASE == "BATTLE" then
 		ply:ChatPrint("You can't start a vote in battle phase!")
 		return
+	elseif string.sub(args[1],1, -5 ) == game.GetMap() then
+		ply:ChatPrint("You can't start a vote for the current map!")
+		return
+	else
+		GAMEMODE:StartMapVote(ply)
 	end
 	ply.mapvoted = true
 	mapvotes[args[1]] = mapvotes[args[1]] + 1

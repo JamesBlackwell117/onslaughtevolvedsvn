@@ -655,9 +655,7 @@ function GM:Think()
 	end
 	if CurTime() > VOTE_ENABLE_TIME && votingenabled == false then
 		 votingenabled = true
-		 for k,v in pairs(player.GetAll()) do
-			v:ChatPrint("Map voting is now enabled!")
-		 end
+		 AllChat("Map voting is now enabled!")
 	end
 end
 
