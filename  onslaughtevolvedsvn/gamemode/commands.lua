@@ -306,8 +306,10 @@ end
 concommand.Add("saveprof", SaveProfile)
 
 function GM:StartMapVote(ply)
-	for k,v in pairs(read) do
-		mapvotes[v] = 0
+	if voting == false then
+		for k,v in pairs(read) do
+			mapvotes[v] = 0
+		end
 	end
 	voting = true
 	for k,v in pairs(player.GetAll()) do
