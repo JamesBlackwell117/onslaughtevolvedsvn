@@ -57,7 +57,7 @@ function Emeta:PropOp(ply,noadmin)
 	local owner = self:GetRealOwner()
 	if ValidEntity(owner) and owner != ply && (!ply:IsAdmin() || noadmin) then
 		if !noadmin then
-			ply:PrintMessage( HUD_PRINTCENTER, "This is owned by " .. ent:GetRealOwner():Nick() )
+			ply:PrintMessage( HUD_PRINTCENTER, "This is owned by " .. self:GetRealOwner():Nick() )
 			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		end
 		return false
