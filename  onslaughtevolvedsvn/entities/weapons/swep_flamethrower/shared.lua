@@ -77,10 +77,11 @@ function SWEP:PrimaryAttack( )
 			self:TakePrimaryAmmo(1)
 			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetAimVector(), 400, 10 )) do
 				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
-					v:TakeDamage(7,self.Owner,self.Owner)
 					if v:Health() / v:GetMaxHealth() < .33 then
 						v.Igniter = self:GetOwner()
 						v:Ignite(3,40)
+					else
+						v:TakeDamage(5,self.Owner,self.Owner)
 					end
 				end
 			end
