@@ -79,18 +79,12 @@ function SWEP:PrimaryAttack( )
 				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
 					if v:Health() / v:GetMaxHealth() < .33 then
 						v.Igniter = self:GetOwner()
-						v:Ignite(3,40)
+						v:Ignite(10,40)
 					else
 						v:TakeDamage(5,self.Owner,self.Owner)
 					end
 				end
 			end
-			--local Ptrace = ents.Create("ose_flameballs")
-			--Ptrace:SetOwner(self.Owner)
-			--Ptrace:SetVelocity((self.Owner:GetAimVector() * 450) + self.Owner:GetVelocity())
-			--Ptrace:SetPos(self.Owner:GetShootPos() + (self.Owner:GetAimVector() * 50))
-			--Ptrace:Spawn()
-			--Ptrace:Activate()
 			self.LastBall = CurTime()
 		end
 	end
