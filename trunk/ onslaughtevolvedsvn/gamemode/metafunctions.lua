@@ -131,10 +131,13 @@ function Pmeta:IsStuck()
 end
 
 function Pmeta:GetDefaultClass()
-	for k,v in pairs(Classes) do
-		if v.NAME == self:GetInfo("ose_defaultclass") then
-			self:SetNetworkedInt( "class", k)
-			break
+	local dclass = self:GetInfo("ose_defaultclass")
+	if dclass then
+		for k,v in pairs(Classes) do
+			if v.NAME == dclass then
+				self:SetNetworkedInt( "class", k)
+				break
+			end
 		end
 	end
 end

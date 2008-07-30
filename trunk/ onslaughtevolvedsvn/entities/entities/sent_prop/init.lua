@@ -157,7 +157,9 @@ function ENT:OnTakeDamage(dmg)
 	if self.count == 0 then damage = damage * math.sqrt(#player.GetAll())
 	else damage = damage * math.sqrt(#player.GetAll()) / self.count end
 	
-	if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
+	if ValidEntity(dmg:GetInflictor()) then	
+		if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
+	end
 
 	self.Shealth = self.Shealth - damage 
 	
