@@ -168,6 +168,45 @@ function GM:DrawHUD()
 				turoff = turoff + 14
 			end
 		end
+		
+		-- player info
+		for k, v in pairs(player.GetAll()) do
+			local trace = {}
+			trace.start = LocalPlayer():GetPos() + Vector(0,0,40)
+			trace.endpos = v:GetPos() + Vector(0,0,40)
+			trace.filter = LocalPlayer()
+			local trace = util.TraceLine( trace )
+			
+			if !trace.HitWorld && !trace.Entity:IsProp() then
+				local spos = LocalPlayer():GetPos()
+				local tpos = v:GetPos()
+				local dist = spos:Distance(tpos)
+					
+				if dist <= 3000 then
+					local offset = -0.03333 * dist
+					local pos = v:GetPos() + Vector(0,0,offset)
+					pos = pos:ToScreen()
+					
+					local alphavalue = math.Clamp(1200 - (dist/1.5), 0, 255)					
+					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
+					local playercolour = team.GetColor(v:Team())
+					
+					if v != LocalPlayer() && v:Alive() then
+						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
+						if classid == 6 then
+							local maxhealth
+							if PHASE == "BUILD" then maxhealth = 100
+							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
+							local hpct = math.Clamp(v:Health()/maxhealth,0,1)
+								draw.RoundedBox(crnd,pos.x-W*.025,pos.y+6,W*0.05,10,Color(31, 31, 31, 127*outlinealpha/255))
+							if hpct > .05 then
+								draw.RoundedBox(crnd,pos.x-W*.025-1,pos.y+5,W*0.05*hpct,12,Color(191, 0, 0, 127*alphavalue/255))
+							end
+						end
+					end
+				end
+			end
+		end
 
 	else
 		local ply = LocalPlayer()
@@ -346,14 +385,15 @@ function GM:HUDDrawTargetID( )
 	local y, bh = midy - 20, 42
 	
 if GetConVarNumber( "ose_hud" ) == 1 then
-	if ent:IsPlayer( ) then
-		draw.SimpleTextOutlined(ent:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-	elseif ent:GetClass( ) == "npc_turret_floor" then
-		local own = ent:GetNWEntity( "Owner")
-		if ValidEntity(own) then
-			draw.SimpleTextOutlined(own:GetName( ) .. "'s turret", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-		end
-	elseif ent:GetClass() == "sent_spawpoint" then
+	--if ent:IsPlayer( ) then
+	--	draw.SimpleTextOutlined(ent:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+	--elseif ent:GetClass( ) == "npc_turret_floor" then
+	--	local own = ent:GetNWEntity( "Owner")
+	--	if ValidEntity(own) then
+	--		draw.SimpleTextOutlined(own:GetName( ) .. "'s turret", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+	--	end
+	--else
+	if ent:GetClass() == "sent_spawpoint" then
 		local own = ent:GetNWEntity("owner")
 		if ValidEntity(own) then
 			draw.SimpleTextOutlined(own:Nick().."'s spawnpoint.", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
