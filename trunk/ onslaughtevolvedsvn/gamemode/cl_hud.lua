@@ -176,7 +176,7 @@ function GM:DrawHUD()
 			trace.filter = LocalPlayer()
 			local trace = util.TraceLine( trace )
 			
-			if !trace.HitWorld && (!trace.Entity || ( trace.Entity.Spawnable && trace.Entity.Spawnable == true )) then
+			if !trace.HitWorld then
 				local spos = LocalPlayer():GetPos()
 				local tpos = v:GetPos()
 				local dist = spos:Distance(tpos)
