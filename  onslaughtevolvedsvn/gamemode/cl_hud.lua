@@ -6,7 +6,6 @@ lastphase = "none"
 TTimeleft = 0
 Maxmoney = 0
 
-
 function GM:DrawHUD()
 	local W,H = ScrW(), ScrH()
 	if GetConVarNumber( "ose_hud" ) == 1 then
@@ -177,7 +176,7 @@ function GM:DrawHUD()
 			trace.filter = LocalPlayer()
 			local trace = util.TraceLine( trace )
 			
-			if !trace.HitWorld && !trace.Entity:IsProp() then
+			if !trace.HitWorld && (!trace.Entity || ( trace.Entity.Spawnable && trace.Entity.Spawnable == true )) then
 				local spos = LocalPlayer():GetPos()
 				local tpos = v:GetPos()
 				local dist = spos:Distance(tpos)
