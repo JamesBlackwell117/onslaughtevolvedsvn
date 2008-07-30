@@ -370,6 +370,7 @@ function GM:PlayerDeathThink( ply )
 	if ply.NextSpawn > CurTime( ) then
 		local players = player.GetAll()
 		if ply:KeyReleased( IN_ATTACK ) then
+			if !ply.specid then ply.specid = 1 end
 			ply.specid = ply.specid + 1
 			if ply.specid > #players then
 				ply.specid = 1
