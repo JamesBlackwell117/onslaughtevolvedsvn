@@ -90,6 +90,48 @@ CreateClientConVar("ose_hidetips", "0", true, false)
 CreateClientConVar("ose_hud", "0", true, false)
 CreateClientConVar("ose_defaultclass", "Scout", true, true)
 
+function Pmeta:CleanNick()
+	local str = self:Nick()
+	local cleanup = {"[","(","%c"}
+	local cleanup2 = {"]",")","%c"}
+	local buffer = ""
+	local lc = 100
+	local rc = 100
+	local clean = false
+	--print(str)
+	while clean == false do
+		clean = true
+		lc = 100
+		rc = 100
+	--	print("test1")
+		for k,v in pairs(cleanup)do
+			local tmp = string.find(str,v,0,true)
+			if tmp && lc > tmp then lc = tmp clean = false end
+		end	
+	--	print("test2")
+		for k,v in pairs(cleanup2)do
+			local tmp = string.find(str,v,lc,true)
+			if tmp && rc > tmp && rc > lc then rc = tmp clean = false end
+		end
+	--	print(buffer)
+		lc = math.Clamp(lc-1,0,100)
+			
+		if lc && rc then
+	--	print("LC: "..lc.." RC: "..rc)
+		buffer = buffer..string.Left(str, lc)
+	--			print(buffer)
+		buffer = buffer..string.Right(str, string.len(str)-rc)
+	--			print(buffer)
+
+		end
+
+		str = buffer
+		buffer = ""
+	end
+	--print("break")
+	--print(str)
+	return str
+end
 
 tip = TIPS[1]
 
