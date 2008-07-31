@@ -191,8 +191,8 @@ function GM:DrawHUD()
 					local playercolour = team.GetColor(v:Team())
 					
 					if v != LocalPlayer() && v:Alive() then
-						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
-						if classid == 6 then
+						draw.SimpleTextOutlined(v:CleanNick(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
+						if classid == 6 || !LocalPlayer():Alive() then
 							local maxhealth
 							if PHASE == "BUILD" then maxhealth = 100
 							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
