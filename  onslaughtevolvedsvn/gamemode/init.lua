@@ -8,9 +8,12 @@ AddCSLuaFile( "cl_deathnotice.lua" )
 AddCSLuaFile( "cl_hud.lua")
 AddCSLuaFile( "ose.lua" )
 
-include( "shared.lua" )
+Pmeta = FindMetaTable( "Player" )
+Emeta = FindMetaTable( "Entity" )
+
 include( "metafunctions.lua" )
 include( "prop_save.lua" )
+include( "shared.lua" )
 include( "cl_panels.lua" )
 include( "commands.lua" )
 

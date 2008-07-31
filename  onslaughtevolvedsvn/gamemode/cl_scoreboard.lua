@@ -44,7 +44,7 @@ function GM:GetTeamScoreInfo()
 		end
 		PlayerInfo.Score = _frags - _deaths
 		PlayerInfo.Ping = _ping
-		PlayerInfo.Name = pl:CleanNick()
+		PlayerInfo.Name = pl:Nick()
 		PlayerInfo.PlayerObj = pl
 		
 		local insertPos = #TeamInfo[_team].Players + 1
