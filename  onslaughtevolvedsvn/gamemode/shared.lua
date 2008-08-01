@@ -8,7 +8,6 @@ GM.Website 	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 
 PHASE = "BUILD"
-NPC_COUNT = 0
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
@@ -26,7 +25,6 @@ TAUNTS[3] = {"vo/coast/odessa/male01/nlo_cheer01.wav", "vo/coast/odessa/male01/n
 TAUNTS[4] = {"vo/episode_1/npc/male01/cit_kill15.wav","vo/npc/male01/gotone01.wav","vo/npc/barney/ba_gotone.wav", "vo/npc/male01/gotone02.wav"}
 TAUNTS[5] = {"vo/ravenholm/monk_kill01.wav","vo/ravenholm/monk_kill03.wav","vo/ravenholm/madlaugh01.wav","vo/ravenholm/monk_kill08.wav","vo/ravenholm/monk_kill05.wav","vo/ravenholm/madlaugh02.wav", "vo/ravenholm/madlaugh04.wav"}
 TAUNTS[6] = {"vo/episode_1/npc/female01/cit_kill02.wav","vo/npc/female01/gotone01.wav","vo/episode_1/npc/female01/cit_kill04.wav", "vo/episode_1/npc/female01/cit_kill09.wav", "vo/episode_1/npc/female01/cit_kill06.wav","vo/episode_1/npc/female01/cit_kill11.wav","vo/episode_1/npc/female01/cit_kill16.wav"}
-
 
 WEAPON_SET = {}
 WEAPON_SET[1] = {"weapon_crowbar",	"weapon_pistol",	"swep_scatter"}
@@ -50,9 +48,6 @@ DMGO["swep_flamethrower"] = nil
 DMGO["swep_scatter"] = nil
 DMGO["swep_xbow"] = nil
 
-
-
-
 WEAPON_MDL = {}
 WEAPON_MDL["weapon_crowbar"] = {MODEL = "models/weapons/w_crowbar.mdl"}
 WEAPON_MDL["swep_repair"] = {MODEL = "models/weapons/w_crowbar.mdl"}
@@ -69,8 +64,6 @@ WEAPON_MDL["swep_minemaker"] = {MODEL = "models/props_combine/combine_mine01.mdl
 WEAPON_MDL["weapon_357"] = {MODEL = "models/weapons/W_357.mdl"}
 WEAPON_MDL["swep_xbow"] = {MODEL = "models/weapons/W_crossbow.mdl", HT = ACT_HL2MP_IDLE_CROSSBOW}
 
-
-
 AMMOS = {}
 AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 90, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
 AMMOS[2] = {AMMO = "Pistol", NAME = "Pistol ammo", QT = 72, PRICE = 100, MODEL = "models/Items/BoxSRounds.mdl"}
@@ -86,7 +79,6 @@ AMMOS[11] = {AMMO = "BuckShot", NAME = "Heavy Buckshot", QT = 32, PRICE = 200, M
 AMMOS[12] = {AMMO = "SMG1", NAME = "Mine", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/props_combine/combine_mine01.mdl"}
 AMMOS[13] = {AMMO = "grenade", NAME = "Repair Grenade", SMULT = 2, QT = 1, PRICE = 300, MODEL = "models/weapons/w_magnade.mdl"}
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 NPCS = {}
 NPCS["npc_combine_s"] = {}
@@ -108,7 +100,6 @@ NPCS["npc_poisonzombie"] = 		{FLAGS = 9988,   MONEY = 125, 	MODEL = "models/zomb
 NPCS["npc_headcrab_black"] =	{FLAGS = 9988,   MONEY = 120, 	MODEL = "models/headcrabblack.mdl"}
 NPCS["npc_zombie_torso"] = 		{FLAGS = 1796, 	 MONEY = 50,  	MODEL = "models/zombie/classic.mdl"}
 NPCS["npc_fastzombie_torso"] = 	{FLAGS = 1796,   MONEY = 75,	MODEL = "models/zombie/fast.mdl"}
-
 
 npcs = {
 	npc_combine_s = "Combine Soldier",
@@ -171,7 +162,6 @@ for k,v in pairs(RANKS) do
 	team.SetUp( k + 1, v.NAME, v.COLOR )  -- yay for awesome ranks
 end
 
-
 --VARIABLES---
 	--Core Gamemode Vars--
 	BUILDTIME = 600
@@ -183,7 +173,6 @@ end
 	VOTE_TIME = 30 -- how long players have to vote for a map.
 	VOTE_ENABLE_TIME = 660 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
-	
 	
 	MODELS =   {}
 	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4}
@@ -237,10 +226,9 @@ end
 	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}	
 	
 	if SERVER then
-	include("extbuild.lua")
+		include("extbuild.lua")
 	end
 	
-		
 	MODELGROUPS = {}
 	MODELGROUPS[1] = "Walls"
 	MODELGROUPS[2] = "Boxes"
@@ -248,7 +236,6 @@ end
 	MODELGROUPS[4] = "Other"
 	MODELGROUPS[5] = "Junk"
 	MODELGROUPS[6] = "Special"
-	
 				
 	for k,v in pairs(MODELS) do
 		util.PrecacheModel(k)
@@ -267,8 +254,6 @@ end
 			util.PrecacheModel(v.MODEL)
 		end
 	end
-	
-				
 	
 	--MONEY VARIABLES--
 	STARTING_MONEY = 20000
