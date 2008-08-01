@@ -72,27 +72,31 @@ function SWEP:PrimaryAttack( )
 	
 	self.Weapon:EmitSound("physics/flesh/flesh_impact_bullet3.wav")
 	
+	local ent = tr.Entity
+	if ent.Controller then ent = ent.Controller end
+	
 	if SERVER then
-		if tr.Entity:GetClass() == "sent_prop" || tr.Entity:GetClass() == "sent_ladder" || tr.Entity:GetClass() == "sent_ammo_dispenser" then
-			if tr.Entity.Shealth >= tr.Entity.Mhealth then return end
-			if !tr.Entity:IsOnFire() then 
-				tr.Entity.Shealth = tr.Entity.Shealth + 25
-				if tr.Entity.Shealth > tr.Entity.Mhealth then tr.Entity.Shealth = tr.Entity.Mhealth end
+		if ent:GetClass() == "sent_turretcontroller" then
+			if ent.Shealth >= TURRET_HEALTH then return end
+			ent.Shealth = ent.Controller.Shealth + 5
+			if ent.Shealth > TURRET_HEALTH then ent.Shealth = TURRET_HEALTH end
+			ent.Turret:SetNWInt("health", ent.Shealth)
+		elseif ent:IsProp() && ent.Shealth then
+			if ent.Shealth >= ent.Mhealth then return end
+			if !ent:IsOnFire() then 
+				ent.Shealth = ent.Shealth + 25
+				if ent.Shealth > ent.Mhealth then ent.Shealth = ent.Mhealth end
 			end
 			if math.random(1,3) == 1 then
-				tr.Entity:Extinguish()
+				ent:Extinguish()
 			end
-			tr.Entity:GetPhysicsObject( ):EnableMotion( false )
-			tr.Entity:UpdateColour( )
-		elseif tr.Entity:GetClass() == "npc_turret_floor" then
-			if tr.Entity.Controller.Shealth >= TURRET_HEALTH then return end
-			tr.Entity.Controller.Shealth = tr.Entity.Controller.Shealth + 5
-			if tr.Entity.Controller.Shealth > TURRET_HEALTH then tr.Entity.Controller.Shealth = TURRET_HEALTH end
-			tr.Entity:SetNWInt("health", tr.Entity.Controller.Shealth)
-		elseif tr.Entity:IsNPC() then
-			self.Owner:TraceHullAttack( self.owner:GetShootPos( ), self.owner:GetAimVector( ) * 120, Vector( -16, -16, -16 ), Vector( 36, 36, 36 ), 30, 2, true )
+			ent:GetPhysicsObject( ):EnableMotion( false )
+			ent:UpdateColour( )
+		elseif ent:IsNPC() then
+			ent:TakeDamage(25)
 		end
 	end
+	
 	if tr.MatType == MAT_FLESH || tr.HitType == MAT_BLOODYFLESH then
 		local effectdata = EffectData() 
  		effectdata:SetOrigin( tr.HitPos ) 

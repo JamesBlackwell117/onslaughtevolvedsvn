@@ -86,9 +86,11 @@ function ENT:Prepare()
 		local yz = yd*zd
  
 		if xy > xz && xy > yz then 
-		bullpos.z = self:OBBCenter().x
-		elseif xz > yz && xz > xy then
-		bullpos.x = self:OBBCenter().z
+		bullpos.z = self:OBBCenter().z
+		end
+		
+		if xz > yz && xz > xy then
+		bullpos.x = self:OBBCenter().x
 		else
 		bullpos.y = self:OBBCenter().y
 		end
@@ -103,6 +105,13 @@ function ENT:Prepare()
 		bull:SetNotSolid( true )
 		bull:Spawn()
 		bull:Activate()
+		
+		local debugprop = ents.Create("prop_physics")
+		debugprop:SetPos(bullpos)
+		debugprop:SetParent(self.Entity)
+		debugprop:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
+		debugprop:Spawn()
+		
 		self:SetAngles(ang)
 	
 	local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-1000), ents.FindByClass("sent_*"))
