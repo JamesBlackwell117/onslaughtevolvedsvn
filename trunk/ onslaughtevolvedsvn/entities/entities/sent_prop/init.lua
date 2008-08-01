@@ -106,11 +106,11 @@ function ENT:Prepare()
 		bull:Spawn()
 		bull:Activate()
 		
-		local debugprop = ents.Create("prop_physics")
-		debugprop:SetPos(bullpos)
-		debugprop:SetParent(self.Entity)
-		debugprop:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
-		debugprop:Spawn()
+		--local debugprop = ents.Create("prop_physics")
+		--debugprop:SetPos(bullpos)
+		--debugprop:SetParent(self.Entity)
+		--debugprop:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
+		--debugprop:Spawn()
 		
 		self:SetAngles(ang)
 	
