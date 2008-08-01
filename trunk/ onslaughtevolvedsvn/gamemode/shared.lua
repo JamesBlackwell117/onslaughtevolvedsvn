@@ -8,6 +8,7 @@ GM.Website 	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 
 PHASE = "BUILD"
+NPC_COUNT = 0
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
@@ -34,6 +35,23 @@ WEAPON_SET[3] = {"swep_repair",		"weapon_pistol", 	"weapon_shotgun", 	"weapon_ph
 WEAPON_SET[4] = {"weapon_crowbar",	"weapon_357",		"swep_xbow", 		"weapon_frag"}
 WEAPON_SET[5] = {"weapon_crowbar", 	"weapon_pistol", 	"swep_flamethrower","weapon_frag", 		 		"swep_minemaker"}
 WEAPON_SET[6] = {"weapon_crowbar", 	"swep_healthcharge"}
+
+DMGO = {}
+DMGO["weapon_crowbar"] = 25
+DMGO["swep_repair"] = 25
+DMGO["weapon_pistol"] = 12
+DMGO["weapon_shotgun"] = 9
+DMGO["weapon_ar2"] = 11 * 1.4
+DMGO["weapon_smg1"] = 12
+DMGO["weapon_357"] = 50
+DMGO["npc_turret_floor"] = 6
+
+DMGO["swep_flamethrower"] = nil
+DMGO["swep_scatter"] = nil
+DMGO["swep_xbow"] = nil
+
+
+
 
 WEAPON_MDL = {}
 WEAPON_MDL["weapon_crowbar"] = {MODEL = "models/weapons/w_crowbar.mdl"}
@@ -71,24 +89,25 @@ AMMOS[13] = {AMMO = "grenade", NAME = "Repair Grenade", SMULT = 2, QT = 1, PRICE
 
 
 NPCS = {}
-NPCS[1]	 = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier.mdl", 	  			KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[2]  = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 140, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
-NPCS[3]  = {CLASS = "npc_combine_s", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 120, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS[4]  = {CLASS = "npc_metropolice", 	 	SQUAD = "combine",	FLAGS = 403204, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
-NPCS[5]  = {CLASS = "npc_hunter", 		 	SQUAD = "hunter",	FLAGS = 9984, 	MONEY = 500, 	MODEL = "models/hunter.mdl"}
-NPCS[6]  = {CLASS = "npc_manhack", 		 	SQUAD = "hacks",	FLAGS = 263940, MONEY = 50,  	MODEL = "models/manhack.mdl"}
-NPCS[7]  = {CLASS = "npc_zombie", 		 	SQUAD = "zombies",	FLAGS = 1796, 	MONEY = 75,  	MODEL = "models/zombie/classic.mdl"}
-NPCS[8]  = {CLASS = "npc_fastzombie", 	 	SQUAD = "fzombies",	FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/fast.mdl"}
-NPCS[9]  = {CLASS = "npc_zombine", 		 	SQUAD = "zombies",	FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/zombie_soldier.mdl"}
-NPCS[10] = {CLASS = "npc_antlion", 		 	SQUAD = "ant",		FLAGS = 9984,   MONEY = 100, 	MODEL = "models/antlion.mdl", 	 		  			KEYS = "radius 512"}
-NPCS[11] = {CLASS = "npc_headcrab", 	 	SQUAD = "crab",		FLAGS = 1796,   MONEY = 33,  	MODEL = "models/headcrabclassic.mdl"}
-NPCS[12] = {CLASS = "npc_headcrab_fast", 	SQUAD = "crab",		FLAGS = 1796,   MONEY = 40,  	MODEL = "models/headcrab.mdl"}
-NPCS[13] = {CLASS = "npc_antlionguard",  	SQUAD = "ant",		FLAGS = 9988,   MONEY = 700, 	MODEL = "models/antlion_guard.mdl"}
-NPCS[14] = {CLASS = "npc_rollermine",	 	SQUAD = "roller",	FLAGS = 9988,   MONEY = 175, 	MODEL = "models/roller.mdl", 		 		  		KEYS = "uniformsightdist 1"}
-NPCS[15] = {CLASS = "npc_poisonzombie",	 	SQUAD = "zombies",	FLAGS = 9988,   MONEY = 125, 	MODEL = "models/zombie/poison.mdl",		  			KEYS = "crabcount 3"}
-NPCS[16] = {CLASS = "npc_headcrab_black",	SQUAD = "crab",		FLAGS = 9988,   MONEY = 120, 	MODEL = "models/headcrabblack.mdl"}
-NPCS[17] = {CLASS = "npc_zombie_torso", 	SQUAD = "zombies",	FLAGS = 1796, 	MONEY = 50,  	MODEL = "models/zombie/classic.mdl"}
-NPCS[18] = {CLASS = "npc_fastzombie_torso",	SQUAD = "fzombies",	FLAGS = 1796,   MONEY = 75,	 	MODEL = "models/zombie/fast.mdl"}
+NPCS["npc_combine_s"] = {}
+NPCS["npc_combine_s"][1] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier.mdl", 	  			KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
+NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS["npc_metropolice"]  = 		{FLAGS = 403204, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
+NPCS["npc_hunter"]  = 			{FLAGS = 9984, 	 MONEY = 500, 	MODEL = "models/hunter.mdl"}
+NPCS["npc_manhack"]  = 			{FLAGS = 263940, MONEY = 50,  	MODEL = "models/manhack.mdl"}
+NPCS["npc_zombie"]  = 			{FLAGS = 1796, 	 MONEY = 75,  	MODEL = "models/zombie/classic.mdl"}
+NPCS["npc_fastzombie"]  = 		{FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/fast.mdl"}
+NPCS["npc_zombine"]  = 			{FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/zombie_soldier.mdl"}
+NPCS["npc_antlion"] = 			{FLAGS = 9984,   MONEY = 100, 	MODEL = "models/antlion.mdl", 	 		  			KEYS = "radius 512"}
+NPCS["npc_headcrab"] = 			{FLAGS = 1796,   MONEY = 33,  	MODEL = "models/headcrabclassic.mdl"}
+NPCS["npc_headcrab_fast"] = 	{FLAGS = 1796,   MONEY = 40,  	MODEL = "models/headcrab.mdl"}
+NPCS["npc_antlionguard"] = 		{FLAGS = 9988,   MONEY = 700, 	MODEL = "models/antlion_guard.mdl"}
+NPCS["npc_rollermine"] = 		{FLAGS = 9988,   MONEY = 175, 	MODEL = "models/roller.mdl", 		 		  		KEYS = "uniformsightdist 1"}
+NPCS["npc_poisonzombie"] = 		{FLAGS = 9988,   MONEY = 125, 	MODEL = "models/zombie/poison.mdl",		  			KEYS = "crabcount 3"}
+NPCS["npc_headcrab_black"] =	{FLAGS = 9988,   MONEY = 120, 	MODEL = "models/headcrabblack.mdl"}
+NPCS["npc_zombie_torso"] = 		{FLAGS = 1796, 	 MONEY = 50,  	MODEL = "models/zombie/classic.mdl"}
+NPCS["npc_fastzombie_torso"] = 	{FLAGS = 1796,   MONEY = 75,	MODEL = "models/zombie/fast.mdl"}
 
 
 npcs = {
@@ -240,7 +259,13 @@ end
 	end
 	
 	for k,v in pairs(NPCS) do
-		util.PrecacheModel(v.MODEL)
+		if v[1] then 
+			for _,x in pairs(v) do
+				util.PrecacheModel(x.MODEL)
+			end
+		else
+			util.PrecacheModel(v.MODEL)
+		end
 	end
 	
 				
@@ -263,7 +288,7 @@ end
 	--NPC Spawner Vars--
 	MAXHUNTERS = 2
 	MAXHACKS = 7
-	SPAWN_DELAY = 1
+	SPAWN_DELAY = .1
 	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--

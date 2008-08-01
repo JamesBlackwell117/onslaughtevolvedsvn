@@ -297,10 +297,7 @@ end
 concommand.Add("votemap", Votemap)
 
 function SaveProfile(ply,cmd,args)
-	ply:ChatPrint("Your kill profile has been saved!")
-	local name = string.Replace( ply:SteamID(), ":", "." )
-	local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
-	file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
+	ply:SaveProfile()
 end
 
 concommand.Add("saveprof", SaveProfile)

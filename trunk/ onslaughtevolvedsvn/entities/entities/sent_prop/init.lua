@@ -154,8 +154,8 @@ function ENT:OnTakeDamage(dmg)
 	local pos = self:LocalToWorld(self:OBBCenter())
 	local base = 0
 
-	if self.count == 0 then damage = damage * math.sqrt(#player.GetAll())
-	else damage = damage * math.sqrt(#player.GetAll()) / self.count end
+	if self.count == 0 then damage = damage * DamageMod()
+	else damage = damage * DamageMod() / self.count end
 	
 	if ValidEntity(dmg:GetInflictor()) then	
 		if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
@@ -163,7 +163,7 @@ function ENT:OnTakeDamage(dmg)
 
 	self.Shealth = self.Shealth - damage 
 	
-	if self.LastUpdate + 1 < CurTime() then
+	if self.LastUpdate + 2 < CurTime() then
 		self:UpdateColour()
 		self.count = 0
 		for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
