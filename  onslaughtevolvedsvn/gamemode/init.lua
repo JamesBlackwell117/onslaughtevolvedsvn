@@ -217,6 +217,8 @@ function GM:StartBuild()
 	PHASE = "BUILD"
 	end
 	
+	NPC_COUNT = 0
+	
 	NextRound = CurTime() + BUILDTIME
 	UpdateTime()
 	voted = 0
@@ -243,40 +245,21 @@ end
 
 function GM:ScaleNPCDamage(npc,hit,dmg)
 	if npc:GetClass() == "npc_turret_floor" then return end
-	if dmg:GetInflictor():GetClass() == "crossbow_bolt" then
-		return dmg
-	elseif dmg:GetInflictor():GetClass() == "npc_turret_floor" then
-		dmg:SetDamage(6)
-	end
-		
+	
+	local wep
 	if dmg:GetInflictor():IsPlayer() then
-		local wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
-		if wep == "weapon_shotgun" then -- the shotgun was pretty pathetic otherwise
-			dmg:SetDamage(9)
-		elseif wep == "weapon_ar2" then
-			dmg:SetDamage(11 * 1.4)
-		elseif wep == "weapon_357" then
-			dmg:SetDamage(50)
-		elseif wep == "weapon_smg1" then
-			dmg:SetDamage(12)
-		elseif wep == "weapon_pistol" then
-			dmg:SetDamage(12)
-		elseif wep == "weapon_crowbar" then
-			dmg:SetDamage(25)
-		elseif wep == "swep_scatter" then
-			dmg:SetDamage(10)
-		end
+		wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
+	else 
+		wep = dmg:GetInflictor():GetClass() 
 	end
+	
+	if DMGO[wep] then dmg:SetDamage(DMGO[wep]) end
 	
 	if hit == 1 then
 		dmg:ScaleDamage(2)
 	end
 
-	local plycount = math.sqrt(#player.GetAll())
-	dmg:ScaleDamage(1 / plycount)
-	if dmg:GetDamage() < 1 then
-		dmg:SetDamage(1)
-	end
+	dmg:ScaleDamage(1 / DamageMod())
 	return dmg
 end
 
@@ -309,13 +292,12 @@ function GM:CheckRanks(ply,join)
 		ply:SetTeam(newrank+1)
 		if !join then
 			ply:ChatPrint("You are now a "..RANKS[ply:GetNWInt("rank")].NAME.." rank!")
-			GAMEMODE:SaveAllProfiles()
+			ply:SaveProfile()
 		end
 	end
 end
 
 function GM:PlayerDeath( ply, wep, killer )
-	--GAMEMODE:CheckRanks(ply,false)
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
@@ -356,12 +338,8 @@ function GM:CheckDead(ply)
 		if ply != v and v:Alive() then return end
 	end
 	GAMEMODE:StartBuild()
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint("All players have perished loading build mode!")
-	end
+	AllChat("All players have perished loading build mode!")
 end
-
-
 
 function GM:PlayerDeathThink( ply )
 	if ply.NextSpawn == nil then
@@ -436,7 +414,7 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 end
 
 function GM:ScalePlayerDamage(ply, hitgrp, dmg)
-	if dmg:IsExplosionDamage() || dmg:GetAttacker():GetClass() == "weapon_shotgun" then
+	if dmg:IsExplosionDamage() || (dmg:GetAttacker():GetActiveWeapon() && dmg:GetAttacker():GetActiveWeapon():GetClass() == "weapon_shotgun") then
 		dmg:ScaleDamage(0.4)
 	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
 		dmg:ScaleDamage(10)
@@ -479,13 +457,7 @@ hook.Add("Think", "NoClipThink", NoClipThink)
 
 function GM:SaveAllProfiles()
 	for k,ply in pairs(player.GetAll()) do
-		local id = string.Replace( ply:SteamID(), ":", "." )
-		if file.Exists("onslaught_profiles/"..string.lower(id)..".txt") then
-			print("[ONSLAUGHT] Writing player kill profile.")
-			local name = string.Replace( ply:SteamID(), ":", "." )
-			local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
-			file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
-		end
+		ply:SaveProfile()
 	end
 end
 
@@ -511,13 +483,7 @@ function GM:PlayerDisconnected( ply )
 			v:Message("Removing "..ply:Nick().."'s props in "..PROP_DELETE_TIME.." seconds!")
 		end
 	end
-	local id = string.Replace( ply:SteamID(), ":", "." )
-	if file.Exists("onslaught_profiles/"..string.lower(id)..".txt") then
-		print("[ONSLAUGHT] Writing player kill profile.")
-		local t = {id = ply:SteamID(), kills = ply:GetNWInt("kills"), rank = ply:GetNWInt("rank")}
-		file.Write( "onslaught_profiles/"..id..".txt", util.TableToKeyValues(t) )
-	end
-
+	ply:SaveProfile()
 end
 
 function GM:DeleteProps(ply, ID, nick)
@@ -558,7 +524,6 @@ end
 --NOTE: NOT A PING KICKER.
 
 function GM:AntiLag( )
-	if !ANTILAG then return end
 	if SinglePlayer( ) then
 		return
 	end
@@ -642,10 +607,6 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 end
 
 function GM:Think()
-	self.OldAntiLagTime = self.OldAntiLagTime or CurTime( )
-	if CurTime( ) - self.OldAntiLagTime >= 5 then
-		self:AntiLag( )
-	end
 	TimeLeft = NextRound - CurTime()
 	if TimeLeft <= 0 then
 		if PHASE == "BUILD" then
@@ -657,6 +618,11 @@ function GM:Think()
 	if CurTime() > VOTE_ENABLE_TIME && votingenabled == false then
 		 votingenabled = true
 		 AllChat("Map voting is now enabled!")
+	end
+	if !ANTILAG || ANTILAG == false then return end
+	self.OldAntiLagTime = self.OldAntiLagTime or CurTime( )
+	if CurTime( ) - self.OldAntiLagTime >= 5 then
+		self:AntiLag( )
 	end
 end
 
@@ -670,6 +636,7 @@ function GM:RestockPlayer(ply)
 end
 
 function GM:OnNPCKilled( npc, killer, wep)
+	NPC_COUNT = NPC_COUNT - 1
 	if !killer:IsValid() then return end
 	local class = npc:GetClass()
 	local name = npcs[class] or class
@@ -699,13 +666,8 @@ function GM:OnNPCKilled( npc, killer, wep)
 end
 
 function GM:AddNPCKillMoney(class,ply,bonus)
-	local npc = "npc_combine_s" --default to stop errors
-	for k,v in pairs(NPCS) do
-		if v.CLASS == class then npc = v break end
-	end
-	local givemoney = npc.MONEY or 50
+	local givemoney = NPCS[class].MONEY or NPCS[class][1].MONEY or 50
 	local name = npcs[class] or class
-	local mdl = npc.MODEL or "models/headcrab.mdl"
 	givemoney = givemoney + bonus
 
 	ply:Money(givemoney,"+"..tonumber(givemoney).." ["..name.."]")

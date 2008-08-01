@@ -42,30 +42,25 @@ end
 
 function ENT:Think( )
 	if PHASE == "BATTLE" then
-		local Spwnd = 0
-		for k,v in pairs(NPCS) do
-			Spwnd = Spwnd + #ents.FindByClass(v.CLASS)
-		end
-		if Spwnd < MAX_NPCS then
+		if NPC_COUNT < MAX_NPCS then
 			if #player.GetAll( ) == 0 then return end
 			local npc = self.Npcs[ math.random( 1, #self.Npcs) ]
+			local hacks = #ents.FindByClass("npc_manhack")
+			local hunters = #ents.FindByClass("npc_hunter")
 			if npc == "npc_hunter" then
-				 if #ents.FindByClass("npc_hunter") >= MAXHUNTERS + math.Round(#player.GetAll()/4) then
+				 if hunters >= MAXHUNTERS + math.Round(#player.GetAll()/4) then
 					self.Entity:NextThink( CurTime( ) + self.Delay )
 					return true
 				end
 			elseif npc == "npc_manhack" then
-				if #ents.FindByClass("npc_manhack") >= MAXHACKS then
+				if hacks >= MAXHACKS then
 					self.Entity:NextThink( CurTime( ) + self.Delay )
 					return true
 				end
 			end
 			
 			for k,v in pairs(self.Npcs) do
-				if v == "npc_hunter" && #ents.FindByClass("npc_hunter") < MAXHUNTERS + math.Round(#player.GetAll()/4) then
-					npc = v
-					break
-				elseif v == "npc_manhack" && #ents.FindByClass("npc_manhack") < MAXHACKS then
+				if v == "npc_hunter" && hunters < MAXHUNTERS + math.Round(#player.GetAll()/4) then
 					npc = v
 					break
 				end
@@ -75,31 +70,29 @@ function ENT:Think( )
 			if !ValidEntity(ent) then return end --stop non existant npcs spawning
 			local SpawnPos = Vector( (self.Entity:GetPos( ).x + math.random( -200, 200 )), (self.Entity:GetPos( ).y + math.random( -200, 200 )), self.Entity:GetPos( ).z + 10 )
 			ent:SetPos( SpawnPos )
-			for k,v in pairs(NPCS) do
-				if v.CLASS == npc then -- This code makes sense to me :D
-					local flags = v.FLAGS
-					if v.KEYS then
-						local keys = v.KEYS
-						if k == 1 || k == 2 || k == 3 then
-							local rand = math.random(3)
-							flags = NPCS[rand].FLAGS
-							keys = NPCS[rand].KEYS
-						end
-						keys = string.Explode(" ", keys)
-						for k,v in pairs(keys) do
-							if (k / 2) != math.Round(k / 2) then
-								ent:SetKeyValue(v, keys[k + 1])
-							end
+			ent:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
+			
+			local v = NPCS[npc]	
+			if v then -- This code makes sense to me :D
+				if v[1] then v = v[math.random(1,#v)] end
+				local flags = v.FLAGS
+				if v.KEYS then
+					local keys = v.KEYS
+					keys = string.Explode(" ", keys)
+					for k,v in pairs(keys) do
+						if (k / 2) != math.Round(k / 2) then
+							ent:SetKeyValue(v, keys[k + 1])
 						end
 					end
-					ent:SetKeyValue("spawnflags", flags)
-					ent:SetKeyValue("squadname", v.SQUAD)
-					ent:SetKeyValue("wakesquad", 1)
-					ent:SetKeyValue("wakeradius", 999999)
-					--ent:SetKeyValue("squadname","NMES")
-					break
 				end
+				ent:SetKeyValue("spawnflags", flags)
+				if v.SQUAD then
+					ent:SetKeyValue("squadname", v.SQUAD)
+				end
+				ent:SetKeyValue("wakesquad", 1)
+				ent:SetKeyValue("wakeradius", 999999)
 			end
+			
 			ent:SetKeyValue("target",self.pathname)
 			
 			local ED = EffectData( )
@@ -111,7 +104,7 @@ function ENT:Think( )
 			end
 			
 			for k,v in pairs(NPCS) do
-				ent:Fire( "setrelationship", v.CLASS .. " D_LI 99" ) -- make the npcs like eachother
+				ent:Fire( "setrelationship", k .. " D_LI 99" ) -- make the npcs like eachother
 			end
 			
 			if table.HasValue(Zombies, ent:GetClass()) then
@@ -127,6 +120,7 @@ function ENT:Think( )
 			
 			ent:Spawn( )
 			ent:Activate( )
+			NPC_COUNT = NPC_COUNT + 1
 		end
 	end
 	self.Entity:NextThink( CurTime( ) + self.Delay )

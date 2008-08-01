@@ -52,6 +52,13 @@ end
 --Check to see if a player can do an operation on a prop)
 -------------------------------------------------------------------------------
 
+function Pmeta:SaveProfile()
+	self:ChatPrint("Your kill data has been saved!")
+	local name = string.Replace( self:SteamID(), ":", "." )
+	local t = {id = self:SteamID(), kills = self:GetNWInt("kills"), rank = self:GetNWInt("rank")}
+	file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
+end
+
 function Emeta:PropOp(ply,noadmin)
 	if !self:IsProp() then return false end
 	local owner = self:GetRealOwner()
@@ -227,4 +234,13 @@ function Pmeta:CheckDead()
 	for k,v in pairs(player.GetAll()) do
 		v:ChatPrint("All players have perished loading build mode!")
 	end
+end
+
+DMGMOD = 1
+LDMGMOD = CurTime()
+function DamageMod()
+	if CurTime() > LDMGMOD + 5 then
+		DMGMOD = math.sqrt(#player.GetAll())+.01
+	end
+	return DMGMOD
 end
