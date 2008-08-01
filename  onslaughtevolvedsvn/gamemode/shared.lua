@@ -83,9 +83,9 @@ AMMOS[13] = {AMMO = "grenade", NAME = "Repair Grenade", SMULT = 2, QT = 1, PRICE
 NPCS = {}
 NPCS["npc_combine_s"] = {}
 NPCS["npc_combine_s"][1] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier.mdl", 	  			KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
-NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
-NPCS["npc_metropolice"]  = 		{FLAGS = 403204, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
+NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 140, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakesquad 5 wakeradius 999999"}
+NPCS["npc_combine_s"][3] =		{FLAGS = 402948, MONEY = 120, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 5 wakesquad 1 wakeradius 999999"}
+NPCS["npc_metropolice"]  = 		{FLAGS = 402948, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
 NPCS["npc_hunter"]  = 			{FLAGS = 9984, 	 MONEY = 500, 	MODEL = "models/hunter.mdl"}
 NPCS["npc_manhack"]  = 			{FLAGS = 263940, MONEY = 50,  	MODEL = "models/manhack.mdl"}
 NPCS["npc_zombie"]  = 			{FLAGS = 1796, 	 MONEY = 75,  	MODEL = "models/zombie/classic.mdl"}
@@ -274,7 +274,7 @@ end
 	MAXHUNTERS = 2
 	MAXHACKS = 7
 	SPAWN_DELAY = .1
-	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
+	S_MAX_NPCS, MAX_NPCS = 60,30 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--
 	TURRET_COST = 700
