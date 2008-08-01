@@ -25,6 +25,7 @@ NextRound = BUILDTIME + CurTime( )
 TimeLeft = NextRound - CurTime( )
 local discplayers = {}
 local ROUND_ID = 0
+NPC_COUNT = 0
 
 function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
@@ -414,7 +415,7 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 end
 
 function GM:ScalePlayerDamage(ply, hitgrp, dmg)
-	if dmg:IsExplosionDamage() || (dmg:GetAttacker():GetActiveWeapon() && dmg:GetAttacker():GetActiveWeapon():GetClass() == "weapon_shotgun") then
+	if dmg:IsExplosionDamage() || dmg:GetInflictor():GetClass() == "weapon_shotgun" then
 		dmg:ScaleDamage(0.4)
 	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
 		dmg:ScaleDamage(10)
