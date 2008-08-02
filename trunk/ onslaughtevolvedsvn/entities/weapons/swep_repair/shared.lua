@@ -78,7 +78,7 @@ function SWEP:PrimaryAttack( )
 	if SERVER then
 		if ent:GetClass() == "sent_turretcontroller" then
 			if ent.Shealth >= TURRET_HEALTH then return end
-			ent.Shealth = ent.Controller.Shealth + 5
+			ent.Shealth = ent.Shealth + 5
 			if ent.Shealth > TURRET_HEALTH then ent.Shealth = TURRET_HEALTH end
 			ent.Turret:SetNWInt("health", ent.Shealth)
 		elseif ent:IsProp() && ent.Shealth then
