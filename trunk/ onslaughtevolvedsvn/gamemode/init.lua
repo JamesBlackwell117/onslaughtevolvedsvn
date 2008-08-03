@@ -90,9 +90,7 @@ function GM:PlayerInitialSpawn(ply)
 		if !ply.NextSpawn then
 			ply.NextSpawn = CurTime() + 5
 		end
-		if ply.NextSpawn > CurTime() then
-			timer.Simple(0.01, ply.KillSilent, ply)
-		end
+		timer.Simple(0.01, ply.KillSilent, ply)
 	end
 end
 
@@ -128,6 +126,8 @@ function GM:PlayerSpawn(ply)
 		local hlth = Classes[ply:GetNetworkedInt("class")].HEALTH
 		ply:SetMaxHealth(hlth)
 		ply:SetHealth(hlth)
+		local jump = Classes[ply:GetNetworkedInt("class")].JUMP
+		if jump then ply:SetJumpPower(jump) end
 	end
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
 	ply:SetModel( modelname )
