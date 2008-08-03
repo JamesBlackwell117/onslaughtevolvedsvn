@@ -66,6 +66,7 @@ function SWEP:PrimaryAttack()
 	self:TakePrimaryAmmo( 1 )
 	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
 	self.Owner:ViewPunch(Vector(-10,0,0))
+	self:Reload()
 end
 
 function SWEP:SecondaryAttack( )
