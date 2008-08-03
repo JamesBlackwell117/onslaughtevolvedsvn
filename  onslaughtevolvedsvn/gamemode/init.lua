@@ -21,6 +21,18 @@ for k,v in pairs( file.Find( "../materials/onslaught/*" ) ) do
 	resource.AddFile( "materials/onslaught/" .. v )
 end
 
+for k,v in pairs( file.Find( "../materials/jaanus/*" ) ) do
+	resource.AddFile( "materials/jaanus/" .. v )
+end
+
+for k,v in pairs( file.Find( "../models/weapons/w_combinesniper_e2*" ) ) do
+	resource.AddFile( "models/weapons/" .. v )
+end
+
+for k,v in pairs( file.Find( "../models/weapons/v_combinesniper_e2*" ) ) do
+	resource.AddFile( "models/weapons/" .. v )
+end
+
 NextRound = BUILDTIME + CurTime( )
 TimeLeft = NextRound - CurTime( )
 local discplayers = {}

@@ -17,6 +17,26 @@ function Emeta:Dissolve()
 	end
 end
 
+function Emeta:NPCDiss()
+	if ( ValidEntity( self) && !self.Dissolving ) then
+		local dissolve = ents.Create( "env_entity_dissolver" )
+		dissolve:SetPos( self:GetPos() )
+
+		self:SetName( tostring( self ) )
+		dissolve:SetKeyValue( "target", self:GetName() )
+
+		dissolve:SetKeyValue( "dissolvetype", "0" )
+		dissolve:SetKeyValue( "magnitude", "3000" )
+		dissolve:Spawn()
+		dissolve:Fire( "Dissolve", "", 0 )
+		dissolve:Fire( "kill", "", 1 )
+
+		dissolve:EmitSound(Sound("weapons/physcannon/energy_sing_flyby1.wav"), 500,100)
+		self:Fire( "sethealth", "0", 0 )
+		self.Dissolving = true
+	end
+end
+
 function Emeta:GetRealOwner()
 	local owner
 	if ValidEntity(self.Owner) then owner = self.Owner elseif ValidEntity(self:GetOwner()) then owner = self:GetOwner() end
@@ -106,7 +126,7 @@ function Pmeta:Money(amt,msg,col)
 	local suffix = " "
 	local money = self:GetNWInt("money")
 	if amt < 0 then 
-		if money - amt < 0 then 
+		if money + amt < 0 then 
 			self:Message("Insufficient Funds!", Color(255,100,100,255))
 			self:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 			return false
