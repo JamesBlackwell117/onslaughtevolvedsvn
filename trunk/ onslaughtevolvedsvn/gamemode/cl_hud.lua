@@ -5,20 +5,124 @@ Maxclip = 0
 lastphase = "none"
 TTimeleft = 0
 Maxmoney = 0
+local ply = LocalPlayer()
+
+function UnifiedBar(r,x,y,w,h,c,d,p,b,t)
+	b = b or false
+	p = math.Clamp(p,0,1)
+	if GetConVarNumber( "ose_hud" ) == 1 then
+		if b == false then
+			draw.RoundedBox(r,x,y,w,h,d)
+			if p*w > 2 then
+				draw.RoundedBox(r,x+1,y+1,(w-2)*p,h-2,c)
+			end
+			if t && ply:KeyDown(IN_WALK) then
+				draw.SimpleTextOutlined(t, "HUD2", x+w/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+			end
+		else
+			draw.RoundedBox(r,x-w,y,w,h,d)
+			if p*w > 2 then
+				draw.RoundedBox(r,(x-1)-(w-2)*p,y+1,(w-2)*p,h-2,c)
+			end
+			if t && ply:KeyDown(IN_WALK) then
+				draw.SimpleTextOutlined(t, "HUD2", x-w/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+			end
+		end
+	else
+		surface.SetDrawColor(c.r,c.b,c.g,c.a)
+		surface.DrawRect(x,y,w*p,h)
+		surface.SetDrawColor(d.r,d.b,d.g,d.a)
+		surface.DrawOutlinedRect(x,y,w,h)
+	end
+end
+
+function UnifiedSplitBar(r,x,y,w,h,c,d,p,b,t,n,s)
+	p=p*n
+	s = s or 0
+	if GetConVarNumber( "ose_hud" ) == 1 then
+		if b == false then
+			for i=1,n do
+				UnifiedBar(r,x+(w+s)*(i-1),y,w,h,c,d,p-i+1,b)
+			end
+			if t && ply:KeyDown(IN_WALK) then
+				draw.SimpleTextOutlined(t, "HUD2", x+w*(n)/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+			end
+		else
+			for i=1,n do
+				UnifiedBar(r,x-(w+s)*(i-1),y,w,h,c,d,p-i+1,b)
+			end
+			if t && ply:KeyDown(IN_WALK) then
+				draw.SimpleTextOutlined(t, "HUD2", x-w*(n)/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+			end
+		end
+	end
+end
 
 function GM:DrawHUD()
 	local W,H = ScrW(), ScrH()
+	ply = LocalPlayer()
+	local crnd = H/256
+	local classid = ply:GetNetworkedInt("class") or 1
+
+	-- messages
+	for k,v in pairs(Messages) do
+		local col = v.colour
+		local y = (H - 200) - ((CurTime() - v.Time) * 100) + (k * 14)
+		draw.SimpleTextOutlined(v.text,"Message",W - 30,y,col,2,0,0.5,Color(50,50,50,255))
+		if v.Time - CurTime() <= -4 then
+			local newcol = Color(col.r,col.g,col.b,col.a - 10)
+			v.colour = newcol
+			if v.colour.a <= 0 then
+				Messages[k] = nil
+			end
+		end
+	end
+	
+	-- player info
+	for k, v in pairs(player.GetAll()) do
+		local trace = {}
+		trace.start = ply:GetPos() + Vector(0,0,40)
+		trace.endpos = v:GetPos() + Vector(0,0,40)
+		trace.filter = ply
+		local trace = util.TraceLine( trace )
+		
+		if !trace.HitWorld then
+			local spos = ply:GetPos()
+			local tpos = v:GetPos()
+			local dist = spos:Distance(tpos)
+				
+			if dist <= 1800 then
+				local offset = -0.03333 * dist
+				local pos = v:GetPos() + Vector(0,0,offset)
+				pos = pos:ToScreen()
+				if pos.visible == true then
+					local alphavalue = math.Clamp(1200 - (dist/1.5), 0, 255)					
+					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
+					local playercolour = team.GetColor(v:Team())
+					
+					if
+					-- v != ply && 
+					 v:Alive() then
+						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
+						if classid == 6 || ply:Alive() == false then
+							local maxhealth
+							if PHASE == "BUILD" then maxhealth = 100
+							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
+							UnifiedBar(crnd,pos.x-W*.03,pos.y+6,W*0.06*maxhealth/100,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:Health()/maxhealth)
+						end
+					end
+				end
+			end
+		end
+	end
+	
 	if GetConVarNumber( "ose_hud" ) == 1 then
 		//Alias Modern HUD
-		local ply = LocalPlayer()
-		local crnd = H/256
 		local bkdrop = Color(31, 31, 31, 127)
-		
-		local classid = ply:GetNetworkedInt("class") or 1
 		local maxhealth = 100
 		if PHASE == "BATTLE" then
 			maxhealth = Classes[classid].HEALTH
-			end
+		end
 		if PHASE != lastphase then 
 			TTimeleft = 0
 			lastphase = PHASE
@@ -29,59 +133,25 @@ function GM:DrawHUD()
 		
 		local moncolor = Color(100,255,100,95)
 		local money = ply:GetNetworkedInt( "money")
-		if money <= 0 then
+		if money <= 2500 then
 			moncolor = Color(255,100,100,95)
 		end		
 
-		local rank = LocalPlayer():GetNWInt("rank") or 1
+		local rank = ply:GetNWInt("rank") or 1
 		local prevrank = RANKS[rank - 1] or RANKS[rank]
 		local currank =	RANKS[rank]
 		local nextrank = RANKS[rank + 1] or RANKS[rank]
-		local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
-		
-		--messages
-		for k,v in pairs(Messages) do
-			local col = v.colour
-			local y = (H - 200) - ((CurTime() - v.Time) * 100) + (k * 14)
-			draw.SimpleTextOutlined(v.text,"Message",W - 30,y,col,2,0,0.5,Color(50,50,50,255))
-			if v.Time - CurTime() <= -4 then
-				local newcol = Color(col.r,col.g,col.b,col.a - 10)
-				v.colour = newcol
-				if v.colour.a <= 0 then
-					Messages[k] = nil
-				end
-			end
-		end
-	
+		local kills = math.Round(ply:GetNWInt("kills")) or 0
+			
 		-- timer calcs and draw
 		local timecolor = Color(190, 200, 220, 95)
-		if TimeLeft <= 30 && (math.Round(TimeLeft) / 2) == math.Round(TimeLeft / 2) then --is even
-		 	timecolor = Color(220, 100, 95, 95)
-		end
-		
-		draw.RoundedBox(crnd,W-19-W/6,H-42,W/6,22,bkdrop)
-		draw.RoundedBox(crnd,W-18-W/6*TimeLeft/TTimeleft,H-41,W/6*TimeLeft/TTimeleft-2,20,timecolor)
-		
-		if LocalPlayer():KeyDown(IN_WALK) then
-		--draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-		end
+		if TimeLeft <= 30 && (math.Round(TimeLeft) / 2) == math.Round(TimeLeft / 2) then timecolor = Color(220, 100, 95, 95) end
+		UnifiedBar(crnd,W-19,H-42,W/6,22,timecolor,bkdrop,TimeLeft/TTimeleft,true,"Time: "..string.FormattedTime( TimeLeft, "%2i:%02i"))
 		
 		-- money calcs and draw
 		if money > Maxmoney then Maxmoney = money end
 		local wads = math.ceil(Maxmoney/5000)
-		local curwads = math.ceil(money/5000)
-		local fracwad = (money - (curwads-1)*5000)/5000
-		
-		for i=1,wads do
-			draw.RoundedBox(crnd,W-19-i*W/6/wads,H-66,W/6/wads,22,bkdrop)
-		end
-		for i=1,curwads-1 do
-			draw.RoundedBox(crnd,W-18-i*W/6/wads,H-65,W/6/wads-2,20,moncolor)
-		end
-		
-		local drawwad = math.Clamp(W/6/wads*fracwad-2,0,W/6/wads-2)
-		if drawwad > crnd/2 then draw.RoundedBox(crnd,W-18-(curwads+fracwad-1)*W/6/wads,H-65,drawwad,20,moncolor) end
-		
+		UnifiedSplitBar(crnd,W-19,H-66,W/6/wads,22,moncolor,bkdrop,money/(wads*5000),true,"Money: "..money,wads)
 		
 		-- rank calcs and draw
 		if currank != nextrank then
@@ -121,109 +191,37 @@ function GM:DrawHUD()
 			local ammofraction = (mags)/(Maxammo)
 			local clipfraction = cur_mag/Maxclip
 		
-		
 			if Maxammo > 0 then
-				local maxclips = math.Clamp(math.ceil(Maxammo/math.Clamp(Maxclip,1,math.huge))-1,-1,math.Round(W/36))
-				local clips = math.Clamp(math.floor(mags/math.Clamp(Maxclip,1,math.huge))-1,-1,math.Round(W/36))
+				local maxclips = math.ceil(Maxammo/math.Clamp(Maxclip,1,math.huge))
+				local clips = math.floor(mags/math.Clamp(Maxclip,1,math.huge))
 				local alts = math.Clamp(alt_mags-1,-1,math.Round(W/36))
-				
-				for i=0,maxclips do
-					draw.RoundedBox(crnd,19+14*i,H-32,12, 12, bkdrop)
-				end
-				for i=0,clips do
-					draw.RoundedBox(crnd,20+14*i,H-31,10, 10, Color(190, 200, 220, 95))
-				end
+				UnifiedSplitBar(crnd,19,H-32,22,12,Color(190, 200, 220, 95),bkdrop,mags/(maxclips*Maxclip),false,"Clips: "..clips,maxclips,2)
 				for i=0,alts do
-					draw.RoundedBox(crnd,22+14*i,H-29,6, 6, Color(200, 200, 0, 200))
+					draw.RoundedBox(crnd,22+12*i,H-29,6, 6, Color(200, 200, 0, 200))
 				end
 				hbaroff = hbaroff + 14
 			end
 			
 			if Maxclip > 0 then
-				draw.RoundedBox(crnd,19,H-42-hbaroff,W/6*Maxclip/20, 22, bkdrop)
-				if cur_mag > 0 then
-					draw.RoundedBox(crnd,20,H-41-hbaroff,math.Clamp(W/6*clipfraction*Maxclip/20-2,0,W/6*Maxclip/20-2), 20, Color(190, 200, 220, 95))
-				end
+				UnifiedBar(crnd,19,H-42-hbaroff,W/6*Maxclip/20,22,Color(190, 200, 220, 95),bkdrop,clipfraction,false,"Clip: "..cur_mag.."/"..Maxclip)
 				hbaroff = hbaroff + 24
 			end
 		end
-	
-		local hpct = math.Clamp(W*ply:Health()/600-2,0,W*maxhealth/600-2)
-	
-		draw.RoundedBox(crnd,19,H-42-hbaroff,W*maxhealth/600,22,bkdrop)
-		if hpct > crnd/2 then
-			draw.RoundedBox(crnd,20,H-41-hbaroff,hpct,20,Color(191, 0, 0, 127))
-		end
+		
+		UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(191, 0, 0, 127),bkdrop,ply:Health()/maxhealth,false,"Health: "..ply:Health().."/"..maxhealth)
 		
 		-- turret health bars
 		local turoff = 14
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-			if v:GetNWEntity( "Owner" ) == LocalPlayer() then
-				draw.RoundedBox(crnd,19,H-42-hbaroff-turoff,W/6,12,bkdrop)
-				local turhpct = math.Clamp(W*v:GetNWInt("health")/600-2,0,W/6-2)
-				if turhpct > crnd/2 then
-					draw.RoundedBox(crnd,20,H-41-hbaroff-turoff,turhpct,10,Color(220, 220, 0, 95))
-				end
+			if v:GetNWEntity( "Owner" ) == ply then
+				UnifiedBar(crnd,19,H-42-hbaroff-turoff,W/6,12,Color(220, 220, 0, 95),bkdrop,v:GetNWInt("health")/TURRET_HEALTH,false,"Turret Health: "..v:GetNWInt("health").."/"..TURRET_HEALTH)
 				turoff = turoff + 14
 			end
 		end
-		
-		-- player info
-		for k, v in pairs(player.GetAll()) do
-			local trace = {}
-			trace.start = LocalPlayer():GetPos() + Vector(0,0,40)
-			trace.endpos = v:GetPos() + Vector(0,0,40)
-			trace.filter = LocalPlayer()
-			local trace = util.TraceLine( trace )
-			
-			if !trace.HitWorld then
-				local spos = LocalPlayer():GetPos()
-				local tpos = v:GetPos()
-				local dist = spos:Distance(tpos)
-					
-				if dist <= 3000 then
-					local offset = -0.03333 * dist
-					local pos = v:GetPos() + Vector(0,0,offset)
-					pos = pos:ToScreen()
-					
-					local alphavalue = math.Clamp(1200 - (dist/1.5), 0, 255)					
-					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
-					local playercolour = team.GetColor(v:Team())
-					
-					if v != LocalPlayer() && v:Alive() then
-						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
-						if classid == 6 then
-							local maxhealth
-							if PHASE == "BUILD" then maxhealth = 100
-							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
-							local hpct = math.Clamp(v:Health()/maxhealth,0,1)
-								draw.RoundedBox(crnd,pos.x-W*.025,pos.y+6,W*0.05,10,Color(31, 31, 31, 127*outlinealpha/255))
-							if hpct > .05 then
-								draw.RoundedBox(crnd,pos.x-W*.025-1,pos.y+5,W*0.05*hpct,12,Color(191, 0, 0, 127*alphavalue/255))
-							end
-						end
-					end
-				end
-			end
-		end
-
-	else
-		local ply = LocalPlayer()
-		
-		-- messages
-		for k,v in pairs(Messages) do
-			local col = v.colour
-			local y = (H - 200) - ((CurTime() - v.Time) * 100) + (k * 14)
-			draw.SimpleTextOutlined(v.text,"Message",W - 30,y,col,2,0,0.5,Color(50,50,50,255))
-			if v.Time - CurTime() <= -4 then
-				local newcol = Color(col.r,col.g,col.b,col.a - 10)
-				v.colour = newcol
-				if v.colour.a <= 0 then
-					Messages[k] = nil
-				end
-			end
-		end
-		
+		-----------------------------------------------------------------------
+		--------------------- END MODERN HUD ----------------------------------
+		-----------------------------------------------------------------------
+	else	
 		if GetConVarNumber( "ose_hidetips" ) != 1 then
 			surface.SetDrawColor(50, 50, 50, 150)
 			surface.DrawRect( 0,0, W, H * 0.04)
@@ -231,10 +229,10 @@ function GM:DrawHUD()
 			surface.DrawOutlinedRect( 0,0, W, H * 0.04)
 			draw.SimpleText( "TIP: "..tip, "HUD", W * 0.01, H * 0.006 )
 			surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
-			local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
-			local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
+			local kills = math.Round(ply:GetNWInt("kills")) or 0
+			local nextrank = RANKS[ply:GetNWInt("rank") + 1] or RANKS[ply:GetNWInt("rank")]
 			local killneeded = nextrank.KILLS or 0
-			local rank = LocalPlayer():GetNWInt("rank") or 1
+			local rank = ply:GetNWInt("rank") or 1
 			if kills > killneeded || rank >= #RANKS then
 				draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
 			else
@@ -245,10 +243,10 @@ function GM:DrawHUD()
 			surface.DrawRect( W * 0.7,0, W * 0.3, H * 0.04)
 			surface.SetDrawColor(255, 255, 255, 255)
 			surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
-			local kills = math.Round(LocalPlayer():GetNWInt("kills")) or 0
-			local nextrank = RANKS[LocalPlayer():GetNWInt("rank") + 1] or RANKS[LocalPlayer():GetNWInt("rank")]
+			local kills = math.Round(ply:GetNWInt("kills")) or 0
+			local nextrank = RANKS[ply:GetNWInt("rank") + 1] or RANKS[ply:GetNWInt("rank")]
 			local killneeded = nextrank.KILLS or 0
-			local rank = LocalPlayer():GetNWInt("rank") or 1
+			local rank = ply:GetNWInt("rank") or 1
 			if kills > killneeded || rank >= #RANKS then
 				draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
 			else
@@ -364,7 +362,7 @@ function GM:DrawHUD()
 		end
 	
 		if TimeLeft <= 0 then TimeLeft = 0 end
-		draw.DrawText("Money: "..math.Round(LocalPlayer():GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * y1, MonCol,1)
+		draw.DrawText("Money: "..math.Round(ply:GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * y1, MonCol,1)
 		draw.DrawText("Phase: "..PHASE, "ScoreboardText", W / 1.15, H * y2, Color(255,255,255,255),1)
 		draw.DrawText("Time Remaining: "..string.FormattedTime( TimeLeft, "%2i:%02i")  , "ScoreboardText", W / 1.15 , H * y3, timecol,1)
 	end
