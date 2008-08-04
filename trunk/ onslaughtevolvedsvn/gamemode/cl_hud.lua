@@ -173,6 +173,7 @@ function GM:DrawHUD()
 		-- weapon calcs and draw + health draw
 		local hbaroff = 0
 		if ValidEntity(ply:GetActiveWeapon()) then
+			if !ply:GetActiveWeapon().Primary then 	ply:GetActiveWeapon().Primary = {} end
 			local cur_mag = ply:GetActiveWeapon():Clip1() or 0
 			local alt_mag = ply:GetActiveWeapon():Clip2() or 0
 			local mags = ply:GetAmmoCount(ply:GetActiveWeapon():GetPrimaryAmmoType()) or 0
@@ -180,12 +181,12 @@ function GM:DrawHUD()
 		
 			if Weaponclass != ply:GetActiveWeapon():GetClass() then
 				Weaponclass = ply:GetActiveWeapon():GetClass()
-				Maxammo = 0
-				Maxclip = 0
+				Maxammo = ply:GetActiveWeapon().Primary.Maxammo or 0
+				Maxclip = ply:GetActiveWeapon().Primary.ClipSize or 0
 			end	
 			
-			if cur_mag > Maxclip then Maxclip = cur_mag end
-			if mags+cur_mag > Maxammo then Maxammo = mags end
+			if cur_mag > Maxclip then Maxclip = cur_mag ply:GetActiveWeapon().Primary.ClipSize = Maxclip end
+			if mags+cur_mag > Maxammo then Maxammo = mags ply:GetActiveWeapon().Primary.Maxammo = Maxammo end
 			local ammofraction = (mags)/(Maxammo)
 			local clipfraction = cur_mag/Maxclip
 		
