@@ -39,6 +39,12 @@ function SWEP:Initialize( )
 	end
 end
  
+function SWEP:Deploy()
+	self:SetNWBool( "On", false )
+	self:SetNWBool( "On2", false )
+	return true
+end
+ 
 function SWEP:Think( )
 	if self.Owner:KeyPressed( IN_ATTACK ) then
 		self:SetNWBool( "On", true )
@@ -46,7 +52,6 @@ function SWEP:Think( )
 	end
 	if self.Owner:KeyPressed( IN_ATTACK2 ) then
 		self:SetNWBool( "On2", true )
-		print("k")
 		--self.Weapon:EmitSound(self.Sound)
 	end
 	if self.Owner:KeyReleased( IN_ATTACK ) || self.Owner:KeyReleased( IN_ATTACK2 ) then
