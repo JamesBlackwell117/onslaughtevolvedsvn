@@ -100,9 +100,7 @@ function GM:DrawHUD()
 					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
 					local playercolour = team.GetColor(v:Team())
 					
-					if
-					-- v != ply && 
-					 v:Alive() then
+					if v != ply && v:Alive() then
 						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
 						if classid == 6 || ply:Alive() == false then
 							local maxhealth
