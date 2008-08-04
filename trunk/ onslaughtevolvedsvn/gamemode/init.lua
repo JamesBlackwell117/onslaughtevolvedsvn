@@ -617,7 +617,7 @@ function GM:RestockPlayer(ply)
 end
 
 function GM:OnNPCKilled( npc, killer, wep)
-	if ent.spn && ent.spn == true then
+	if npc.spn && npc.spn == true then
 		NPC_COUNT = NPC_COUNT - 1
 	end
 	if !killer:IsValid() then return end
