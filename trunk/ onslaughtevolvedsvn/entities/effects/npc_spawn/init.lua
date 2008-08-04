@@ -46,8 +46,8 @@ function EFFECT:Init( data )
 end
 
 function EFFECT:Think( )
-	if !self.EndTime || CurTime( ) > self.EndTime then
-		self:Remove()
+	if !self.EndTime || !self.BeamWidth || CurTime( ) > self.EndTime then
+		return false
 	end
 	self.BeamWidth = self.BeamWidth - FrameTime( ) * 30
 	self.RefractAmount = self.RefractAmount + FrameTime( )
