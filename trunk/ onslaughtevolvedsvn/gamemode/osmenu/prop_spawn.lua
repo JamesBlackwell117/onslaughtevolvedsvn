@@ -84,7 +84,7 @@ function PANEL:Think()
 	if self:GetParent():GetActiveTab():GetPanel() == self then
 		self:GetParent():GetParent():SetSize(360+256,750)
 	else 
-		self:GetParent():GetParent():SetSize(360,350) 
+		self:GetParent():GetParent():SetSize( 400, 350 )
 	end
 end
 
