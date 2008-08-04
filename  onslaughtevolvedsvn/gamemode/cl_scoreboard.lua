@@ -46,6 +46,7 @@ function GM:GetTeamScoreInfo()
 		PlayerInfo.Ping = _ping
 		PlayerInfo.Name = pl:Nick()
 		PlayerInfo.PlayerObj = pl
+		PlayerInfo.Money = pl:GetNWInt("money")
 		
 		local insertPos = #TeamInfo[_team].Players + 1
 		for idx,info in pairs(TeamInfo[_team].Players) do
@@ -161,6 +162,7 @@ function GM:HUDDrawScoreBoard()
 	y = y + 2
 	
 	surface.SetTextPos( xOffset + 16,								y)	surface.DrawText("#Name")
+	surface.SetTextPos( xOffset + boardWidth - (colWidth*4) + 8,	y)	surface.DrawText("Money")
 	surface.SetTextPos( xOffset + boardWidth - (colWidth*3) + 8,	y)	surface.DrawText("Kills")
 	surface.SetTextPos( xOffset + boardWidth - (colWidth*2) + 8,	y)	surface.DrawText("Class")
 	surface.SetTextPos( xOffset + boardWidth - (colWidth*1) + 8,	y)	surface.DrawText("#Ping")
@@ -207,6 +209,10 @@ function GM:HUDDrawScoreBoard()
 			
 			draw.SimpleText( plinfo.Name, "ScoreboardText", px+1, py+1, shadowcolor )
 			draw.SimpleText( plinfo.Name, "ScoreboardText", px, py, textcolor )
+			
+			px = xOffset + boardWidth - (colWidth*4) + 8			
+			draw.SimpleText( plinfo.Money, "ScoreboardText", px+1, py+1, shadowcolor )
+			draw.SimpleText( plinfo.Money, "ScoreboardText", px, py, textcolor )
 			
 			px = xOffset + boardWidth - (colWidth*3) + 8			
 			draw.SimpleText( plinfo.Frags, "ScoreboardText", px+1, py+1, shadowcolor )
