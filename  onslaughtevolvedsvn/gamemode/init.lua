@@ -582,7 +582,7 @@ function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
 	end
 	return false
 end
-
+LAGGGGG = 100
 function GM:Think()
 	TimeLeft = NextRound - CurTime()
 	if TimeLeft <= 0 then
@@ -596,15 +596,15 @@ function GM:Think()
 		 votingenabled = true
 		 AllChat("Map voting is now enabled!")
 	end
-	--self.npccalc = self.npccalc or CurTime( )
-	--if CurTime( ) - self.npccalc >= 5 then
-	--	NPC_COUNT = 0
-	--	for k,v in pairs(ents.GetAll()) do
-	--		if v.spn && v.spn == true then
-	--			NPC_COUNT = NPC_COUNT + 1
-	--		end
-	--	end	
-	--end
+	self.lagcalc = self.lagcalc or CurTime( )
+	if CurTime( ) - self.lagcalc >= 1 then
+		local avg = 0
+		local c = player.GetAll( )
+		for k,v in pairs( c ) do
+			avg = avg + v:Ping( )
+		end
+		LAGGGGG = avg / #c
+	end
 end
 
 function GM:RestockPlayer(ply)

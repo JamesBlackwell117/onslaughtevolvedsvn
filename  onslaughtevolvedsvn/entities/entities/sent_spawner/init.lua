@@ -42,7 +42,7 @@ end
 
 function ENT:Think( )
 	if PHASE == "BATTLE" then
-		if NPC_COUNT < MAX_NPCS then
+		if NPC_COUNT < MAX_NPCS && LAGGGGG < PING_LIMIT then
 			if #player.GetAll( ) == 0 then return end
 			local npc = self.Npcs[ math.random( 1, #self.Npcs) ]
 			local hacks = #ents.FindByClass("npc_manhack")
