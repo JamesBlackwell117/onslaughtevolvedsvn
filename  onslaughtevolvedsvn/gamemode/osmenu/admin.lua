@@ -74,8 +74,8 @@ function PANEL:Init( )
 			if v != LocalPlayer() then
 				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:Nick()) end )
 			end
-			menu:AddOption("Close Menu")
 		end
+		menu:AddOption("Close Menu")
 		menu:Open()
 	end )
 	self:AddAdminButton( "Kick", "Kick Selected Player", function( )
@@ -85,8 +85,8 @@ function PANEL:Init( )
 			if v != LocalPlayer() then
 				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kick", v:Nick()) end )
 			end
-			menu:AddOption("Close Menu")
 		end
+		menu:AddOption("Close Menu")
 		menu:Open()
 	end )
 	self:AddAdminButton( "Ban", "Ban Selected Player", function( )
@@ -96,8 +96,8 @@ function PANEL:Init( )
 			if v != LocalPlayer() then
 				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "ban", v:Nick()) end )
 			end
-			menu:AddOption("Close Menu")
 		end
+		menu:AddOption("Close Menu")
 		menu:Open()
 	end )
 
