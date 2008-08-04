@@ -275,7 +275,7 @@ end
 	--NPC Spawner Vars--
 	MAXHUNTERS = 2
 	MAXHACKS = 7
-	SPAWN_DELAY = .1
+	SPAWN_DELAY = .5
 	S_MAX_NPCS, MAX_NPCS = 60,30 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--
