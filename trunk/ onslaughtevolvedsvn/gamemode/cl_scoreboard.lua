@@ -46,7 +46,7 @@ function GM:GetTeamScoreInfo()
 		PlayerInfo.Ping = _ping
 		PlayerInfo.Name = pl:Nick()
 		PlayerInfo.PlayerObj = pl
-		PlayerInfo.Money = pl:GetNWInt("money")
+		PlayerInfo.Money = math.Round(pl:GetNWInt("money"))
 		
 		local insertPos = #TeamInfo[_team].Players + 1
 		for idx,info in pairs(TeamInfo[_team].Players) do
