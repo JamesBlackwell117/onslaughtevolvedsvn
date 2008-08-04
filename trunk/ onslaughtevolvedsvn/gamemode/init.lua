@@ -533,42 +533,6 @@ function GM:GravGunOnDropped( ply, ent )
 	return false
 end
 
---ANTI LAG SYSTEM-- This function modifies the amount of NPCs in the game to try and compensate server lag,
---NOTE: NOT A PING KICKER.
-
-function GM:AntiLag( )
-	if SinglePlayer( ) then
-		return
-	end
-	
-	if PHASE == "BUILD" then
-		return
-	end
-	
-	local avg = 0
-	local c = #player.GetAll( )
-	for k,v in pairs( player.GetAll( ) ) do
-		avg = avg + v:Ping( )
-	end
-	avg = avg / c
-	
-	if avg > 500 then
-		for k,v in pairs( ents.FindByClass( "npc_*" ) ) do
-			if v:GetClass( ) != "npc_turret_floor" then
-				local mindist = 1000
-				for _, pl in pairs( player.GetAll( ) ) do
-					if v:GetPos( ):Distance( pl:GetPos( ) ) < mindist then
-						mindist = v:GetPos( ):Distance( pl:GetPos( ) )
-					end
-				end
-				if mindist == 1000 then
-					v:Remove( )
-				end
-			end
-		end
-	end
-end
-
 function GM:GravGunPunt( ply, ent )
 	if !ent:GetClass() == "npc_manhack" then return false end
 	return true
@@ -632,10 +596,14 @@ function GM:Think()
 		 votingenabled = true
 		 AllChat("Map voting is now enabled!")
 	end
-	if !ANTILAG || ANTILAG == false then return end
-	self.OldAntiLagTime = self.OldAntiLagTime or CurTime( )
-	if CurTime( ) - self.OldAntiLagTime >= 5 then
-		self:AntiLag( )
+	self.npccalc = self.npccalc or CurTime( )
+	if CurTime( ) - self.npccalc >= 5 then
+		NPC_COUNT = 0
+		for k,v in pairs(ents.GetAll()) do
+			if v.spn && v.spn == true then
+				NPC_COUNT = NPC_COUNT + 1
+			end
+		end	
 	end
 end
 
@@ -649,7 +617,9 @@ function GM:RestockPlayer(ply)
 end
 
 function GM:OnNPCKilled( npc, killer, wep)
-	NPC_COUNT = NPC_COUNT - 1
+	if ent.spn && ent.spn == true then
+		NPC_COUNT = NPC_COUNT - 1
+	end
 	if !killer:IsValid() then return end
 	local class = npc:GetClass()
 	local name = npcs[class] or class

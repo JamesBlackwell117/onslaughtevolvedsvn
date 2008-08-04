@@ -118,6 +118,8 @@ function ENT:Think( )
 				ent:Fire( "setrelationship", "npc_bullseye D_HT 1" )
 			end
 			
+			ent.spn = true
+			
 			ent:Spawn( )
 			ent:Activate( )
 			NPC_COUNT = NPC_COUNT + 1
