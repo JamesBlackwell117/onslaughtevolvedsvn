@@ -106,7 +106,7 @@ function GM:DrawHUD()
 							local maxhealth
 							if PHASE == "BUILD" then maxhealth = 100
 							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
-							UnifiedBar(crnd,pos.x-W*.03,pos.y+6,W*0.06*maxhealth/100,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:Health()/maxhealth)
+							UnifiedBar(crnd,pos.x-W*.03*maxhealth/100,pos.y+6,W*0.06*maxhealth/100,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:Health()/maxhealth)
 						end
 					end
 				end
