@@ -8,7 +8,7 @@ function Class(ply,com,args)
 		end
 	end
 	if PHASE == "BATTLE" && ply:Alive() then
-		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 5)
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 		ply:Kill()
 	else
 		ply:ChatPrint("You will spawn as "..Classes[newclass].NAME.." in the battle phase")

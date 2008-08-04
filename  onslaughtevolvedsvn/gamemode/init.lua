@@ -145,7 +145,7 @@ function GM:PlayerLoadout(ply)
 		end
 	elseif PHASE == "BUILD" then
 		ply:Give("weapon_physgun")
-		ply:Give( "swep_nocollide" )
+		--ply:Give( "swep_nocollide" )
 		--ply:Give("swep_dispensermaker")
 	end
 end
@@ -181,9 +181,9 @@ end
 function GM:CalculateLiveBonus()
 	if TimeLeft > 1 then
 		for k,v in pairs(player.GetAll()) do
-			local bonus = (LIVE_BONUS + (DEATH_PENALTY * v.Died)) / 2
+			local bonus = math.Round((LIVE_BONUS + (DEATH_PENALTY * v.Died))/2
 			if bonus > 0 && v.FullRound == true then
-				v:Money(bonus,"+"..bonus.." [Round Live Bonus]") -- if the player doesn"t die in that battle round give him some money
+				v:Money(bonus,"+"..bonus.." [Round End Bonus]")
 			end
 			v.Died = 0
 		end
