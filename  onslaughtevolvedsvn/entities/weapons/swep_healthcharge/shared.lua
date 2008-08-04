@@ -13,7 +13,6 @@ if CLIENT then
 	SWEP.ViewModelFOV = 60
 	SWEP.ViewModelFlip = false
 	SWEP.Slot = 1
-	SWEP.BeamMat = Material( "cable/redlaser" ) 
 end
 
 SWEP.ViewModel	= "models/weapons/v_superphyscannon.mdl"
@@ -39,81 +38,80 @@ function SWEP:Initialize( )
 		self:SetWeaponHoldType( "physgun" )
 	end
 end
-
---function SWEP:Holster( )
---	self:SetNWBool( "On", false )
---	return true
---end
  
---function SWEP:Think( )
-	--if self.Owner:KeyPressed( IN_ATTACK ) || self.Owner:KeyReleased( IN_ATTACK2 ) then
-	--	if ( !self:CanPrimaryAttack() ) then return end
-	--	self:SetNWBool( "On", true )
-	--	self.Weapon:EmitSound(self.Sound)
-	--end
-	--if self.Owner:KeyReleased( IN_ATTACK ) || self.Owner:KeyReleased( IN_ATTACK2 ) then
-	--	self:SetNWBool( "On", false )
-	--	self.Weapon:StopSound(self.Sound)
-	--	self.Weapon:EmitSound(self.StopSoond)
-	--end
---end
+function SWEP:Think( )
+	if self.Owner:KeyPressed( IN_ATTACK ) then
+		self:SetNWBool( "On", true )
+		--self.Weapon:EmitSound(self.Sound)
+	end
+	if self.Owner:KeyPressed( IN_ATTACK2 ) then
+		self:SetNWBool( "On2", true )
+		print("k")
+		--self.Weapon:EmitSound(self.Sound)
+	end
+	if self.Owner:KeyReleased( IN_ATTACK ) || self.Owner:KeyReleased( IN_ATTACK2 ) then
+		self:SetNWBool( "On", false )
+		self:SetNWBool( "On2", false )
+		--self.Weapon:StopSound(self.Sound)
+		--self.Weapon:EmitSound(self.StopSoond)
+	end
+end
 
 
 function SWEP:PrimaryAttack( )
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
-	
-if CLIENT then
-	self.mdl = "models/weapons/v_physcannon.mdl"
-else
-
- 	local tr = util.GetPlayerTrace( self.Owner ) 
+	local tr = util.GetPlayerTrace( self.Owner ) 
  	local trace = util.TraceLine( tr )
  	if (!trace.Hit) then return end
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
-	
-	if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() then
-		ent:SetHealth(ent:Health() - 6)
-		if ent:Health() > 0 && self:Clip1() < 25 then
-			self:SetClip1(self:Clip1() + 1)
-		else
-			ent:TakeDamage(1,self.Owner, self.Owner)
-		end
+	if CLIENT then
+		self.mdl = "models/weapons/v_physcannon.mdl"
+	else
+		if ValidEntity(ent) && ent:IsNPC() && !ent:IsProp() then
+			ent:SetHealth(ent:Health() - 6)
+			if ent:Health() > 0 && self:Clip1() < 25 then
+				self:SetClip1(self:Clip1() + 1)
+			else
+				ent:TakeDamage(1,self.Owner, self.Owner)
+			end
+		end	
 	end
-	
-	
-	--local effectdata = EffectData()
- 	--effectdata:SetOrigin( hitpos )
- 	--effectdata:SetStart( self.Owner:GetShootPos() )
- 	--effectdata:SetAttachment( 1 )
- 	--effectdata:SetEntity( self.Owner )
- 	--util.Effect( "healthbeam", effectdata )
-	
-end
+	local effectdata = EffectData()
+ 	effectdata:SetStart( self.Owner:GetShootPos() )
+ 	effectdata:SetAttachment( 1 )
+ 	effectdata:SetEntity( self.Owner )
+ 	util.Effect( "support_suckbeam", effectdata )
 end
 
 function SWEP:SecondaryAttack( )
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
 	
-if CLIENT then
-	self.mdl = "models/weapons/v_superphyscannon.mdl"
-else
-
- 	local tr = util.GetPlayerTrace( self.Owner ) 
- 	local trace = util.TraceLine( tr )
- 	if (!trace.Hit) then return end
+	local tr = util.GetPlayerTrace( self.Owner ) 
+	local trace = util.TraceLine( tr )
+	if (!trace.Hit) then return end
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
 	
-	if ValidEntity(ent) && ent:IsPlayer() && ent:Health() < ent:GetMaxHealth() then
-		if self:Clip1() > 0 then
-			ent:AddHealth(4)
-			self:SetClip1(self:Clip1() - 1)
+	if CLIENT then
+		self.mdl = "models/weapons/v_superphyscannon.mdl"
+	else
+		if ValidEntity(ent) && ent:IsPlayer() && ent:Health() < ent:GetMaxHealth() then
+			if self:Clip1() > 0 then
+				ent:AddHealth(4)
+				self:SetClip1(self:Clip1() - 1)
+			end
 		end
 	end
-end
+	
+	local effectdata = EffectData()
+ 	effectdata:SetOrigin( hitpos )
+ 	effectdata:SetStart( self.Owner:GetShootPos() )
+ 	effectdata:SetAttachment( 1 )
+ 	effectdata:SetEntity( self.Owner )
+ 	util.Effect( "support_healbeam", effectdata )
 end
 
 function SWEP:GetViewModelPosition(pos,ang)
