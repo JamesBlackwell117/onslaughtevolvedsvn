@@ -172,7 +172,7 @@ function GM:DrawHUD()
 			
 		-- weapon calcs and draw + health draw
 		local hbaroff = 0
-		if ValidEntity(ply:GetActiveWeapon()) then
+		if ply:Alive() && ValidEntity(ply:GetActiveWeapon()) then
 			if !ply:GetActiveWeapon().Primary then 	ply:GetActiveWeapon().Primary = {} end
 			local cur_mag = ply:GetActiveWeapon():Clip1() or 0
 			local alt_mag = ply:GetActiveWeapon():Clip2() or 0
