@@ -37,7 +37,7 @@ SWEP.Zoomed = false
 
 SWEP.LastReload = CurTime()
 
-SWEP.ScopeScale = 0.4
+SWEP.ScopeScale = 0.5
 
 
 function SWEP:Initialize( )
