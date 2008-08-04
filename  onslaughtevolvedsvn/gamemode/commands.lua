@@ -92,11 +92,7 @@ function AdminMenu(ply,com,args)
 	elseif args[1] == "kick" then
 		game.ConsoleCommand("kick "..args[2].."\n")
 	elseif args[1] == "kill" then
-		for k,v in pairs(player.GetAll()) do
-			if string.find(string.lower(v:Nick()),string.lower(args[2])) then
-				v:Kill()
-			end
-		end
+		player.GetByID( tonumber(args[2]) ):Kill()
 	end
 end
 

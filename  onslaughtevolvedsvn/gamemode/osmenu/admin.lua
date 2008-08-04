@@ -72,7 +72,7 @@ function PANEL:Init( )
 		menu:SetPos(gui.MouseX( ),gui.MouseY( ))
 		for k,v in pairs(player.GetAll()) do
 			if v != LocalPlayer() then
-				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:Nick()) end )
+				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:EntIndex()) end )
 			end
 		end
 		menu:AddOption("Close Menu")
