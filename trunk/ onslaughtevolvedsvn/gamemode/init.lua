@@ -181,7 +181,7 @@ end
 function GM:CalculateLiveBonus()
 	if TimeLeft > 1 then
 		for k,v in pairs(player.GetAll()) do
-			local bonus = math.Round((LIVE_BONUS + (DEATH_PENALTY * v.Died))/2
+			local bonus = math.Round((LIVE_BONUS + (DEATH_PENALTY * v.Died))/2)
 			if bonus > 0 && v.FullRound == true then
 				v:Money(bonus,"+"..bonus.." [Round End Bonus]")
 			end
