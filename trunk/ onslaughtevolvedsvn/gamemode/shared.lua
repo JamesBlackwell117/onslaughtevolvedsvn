@@ -1,7 +1,7 @@
 include("swep_fix.lua")
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
-GM.Name 	= "Onslaught: Evolved - 1.7.5"
+GM.Name 	= "Onslaught: Evolved - 1.7.6"
 GM.Author 	= "Conman420, Xera, & Ailia" -- DO NOT CHANGE THIS
 GM.Email 	= ""
 GM.Website 	= ""
