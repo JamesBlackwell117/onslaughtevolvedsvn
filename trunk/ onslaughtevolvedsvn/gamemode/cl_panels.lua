@@ -65,7 +65,7 @@ function PANEL:Init( )
 	self.ContentPanel:AddSheet( "Class", vgui.Create( "onslaught_classselect", self ), "gui/silkicons/group", true, true )
 	self.ContentPanel:AddSheet( "Build", vgui.Create( "onslaught_PropSpawn", self ), "onslaught/bricks", true, true )
 	self.ContentPanel:AddSheet( "Commands", vgui.Create("onslaught_commands", self), "onslaught/help", true, true )
-	self.ContentPanel:AddSheet( "Settings and Stats", vgui.Create("onslaught_stats", self), "onslaught/help", true, true )
+	self.ContentPanel:AddSheet( "Settings", vgui.Create("onslaught_stats", self), "onslaught/help", true, true )
 	
 	if LocalPlayer( ):IsAdmin( ) then
 		self.ContentPanel:AddSheet( "Admin", vgui.Create( "onslaught_admin", self ), "onslaught/bricks", true, true )

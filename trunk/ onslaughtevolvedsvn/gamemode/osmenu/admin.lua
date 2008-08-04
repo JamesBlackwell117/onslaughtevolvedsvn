@@ -71,7 +71,10 @@ function PANEL:Init( )
 		local menu = DermaMenu()
 		menu:SetPos(gui.MouseX( ),gui.MouseY( ))
 		for k,v in pairs(player.GetAll()) do
-			menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:Nick()) end )
+			if v != LocalPlayer() then
+				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:Nick()) end )
+			end
+			menu:AddOption("Close Menu")
 		end
 		menu:Open()
 	end )
@@ -79,7 +82,10 @@ function PANEL:Init( )
 		local menu = DermaMenu()
 		menu:SetPos(gui.MouseX( ),gui.MouseY( ))
 		for k,v in pairs(player.GetAll()) do
-			menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kick", v:Nick()) end )
+			if v != LocalPlayer() then
+				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kick", v:Nick()) end )
+			end
+			menu:AddOption("Close Menu")
 		end
 		menu:Open()
 	end )
@@ -87,7 +93,10 @@ function PANEL:Init( )
 		local menu = DermaMenu()
 		menu:SetPos(gui.MouseX( ),gui.MouseY( ))
 		for k,v in pairs(player.GetAll()) do
-			menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "ban", v:Nick()) end )
+			if v != LocalPlayer() then
+				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "ban", v:Nick()) end )
+			end
+			menu:AddOption("Close Menu")
 		end
 		menu:Open()
 	end )
