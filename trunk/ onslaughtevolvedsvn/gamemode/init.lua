@@ -597,13 +597,20 @@ function GM:Think()
 		 AllChat("Map voting is now enabled!")
 	end
 	self.lagcalc = self.lagcalc or CurTime( )
-	if CurTime( ) - self.lagcalc >= 1 then
+	if CurTime( ) - self.lagcalc >= 5 then
 		local avg = 0
 		local c = player.GetAll( )
 		for k,v in pairs( c ) do
 			avg = avg + v:Ping( )
 		end
 		LAGGGGG = avg / #c
+		local npcs = 0
+		for k,v in pairs( ents.GetAll() ) do
+			if v.spn then
+				npcs = npcs + 1
+			end
+		end
+		NPC_COUNT = npcs
 	end
 end
 
@@ -617,7 +624,7 @@ function GM:RestockPlayer(ply)
 end
 
 function GM:OnNPCKilled( npc, killer, wep)
-	if npc.spn && npc.spn == true then
+	if npc.spn then
 		NPC_COUNT = NPC_COUNT - 1
 	end
 	if !killer:IsValid() then return end
