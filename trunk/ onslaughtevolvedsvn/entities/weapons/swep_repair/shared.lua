@@ -93,7 +93,7 @@ function SWEP:PrimaryAttack( )
 			ent:GetPhysicsObject( ):EnableMotion( false )
 			ent:UpdateColour( )
 		elseif ent:IsNPC() then
-			ent:TakeDamage(25)
+			ent:TakeDamage(25, self.Owner, self.Owner)
 		end
 	end
 	
