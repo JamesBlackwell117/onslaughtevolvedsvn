@@ -71,7 +71,7 @@ function PANEL:Init( )
 		local menu = DermaMenu()
 		menu:SetPos(gui.MouseX( ),gui.MouseY( ))
 		for k,v in pairs(player.GetAll()) do
-			if v != LocalPlayer() then
+			if v != LocalPlayer() && v:Alive() then
 				menu:AddOption(v:Nick(), function() RunConsoleCommand( "Admin", "kill", v:EntIndex()) end )
 			end
 		end
