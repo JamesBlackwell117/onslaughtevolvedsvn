@@ -330,7 +330,6 @@ function GM:PlayerDeath( ply, wep, killer )
 		ply.NextSpawn = CurTime() + 5
 	else
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
-		ply:CreateRagdoll( )
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
 			if v:GetRealOwner() == ply then v:PropRemove() end
 			end
@@ -339,6 +338,7 @@ function GM:PlayerDeath( ply, wep, killer )
 		end
 	end
 	
+	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
 	self:CheckDead(ply)
 	ply:AddDeaths(1)	
