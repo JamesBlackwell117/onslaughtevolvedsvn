@@ -46,8 +46,8 @@ function EFFECT:Init( data )
 end
 
 function EFFECT:Think( )
-	if CurTime( ) > self.EndTime then
-		return false
+	if !self.EndTime || CurTime( ) > self.EndTime then
+		self:Remove()
 	end
 	self.BeamWidth = self.BeamWidth - FrameTime( ) * 30
 	self.RefractAmount = self.RefractAmount + FrameTime( )
@@ -57,6 +57,7 @@ function EFFECT:Think( )
 end
 
 function EFFECT:Render( )
+	if !self.EndPos || !self.BeamWidth then return end
 	render.SetMaterial( MatBeam )
 	render.DrawBeam( self:GetPos( ), self.EndPos, self.BeamWidth, 0, 0, Color( 255, 255, 255, 255 ) )
 	
