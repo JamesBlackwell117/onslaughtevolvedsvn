@@ -596,15 +596,15 @@ function GM:Think()
 		 votingenabled = true
 		 AllChat("Map voting is now enabled!")
 	end
-	self.npccalc = self.npccalc or CurTime( )
-	if CurTime( ) - self.npccalc >= 5 then
-		NPC_COUNT = 0
-		for k,v in pairs(ents.GetAll()) do
-			if v.spn && v.spn == true then
-				NPC_COUNT = NPC_COUNT + 1
-			end
-		end	
-	end
+	--self.npccalc = self.npccalc or CurTime( )
+	--if CurTime( ) - self.npccalc >= 5 then
+	--	NPC_COUNT = 0
+	--	for k,v in pairs(ents.GetAll()) do
+	--		if v.spn && v.spn == true then
+	--			NPC_COUNT = NPC_COUNT + 1
+	--		end
+	--	end	
+	--end
 end
 
 function GM:RestockPlayer(ply)
