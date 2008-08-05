@@ -58,7 +58,7 @@ function Emeta:CheckValidOwnership(removenpcs)
 end
 
 function Emeta:IsProp()
-	if self.Spawnable == true || self:GetClass() == "npc_turret_floor" then return true end return false
+	if self.Spawnable == true || self:GetClass() == "npc_turret_floor" || self:GetClass() == "npc_turret_ceiling" then return true end return false
 end
 
 function AllChat(msg)

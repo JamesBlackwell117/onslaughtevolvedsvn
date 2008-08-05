@@ -257,7 +257,7 @@ function GM:StartBuild()
 end
 
 function GM:ScaleNPCDamage(npc,hit,dmg)
-	if npc:GetClass() == "npc_turret_floor" then return end
+	if npc:GetClass() == "npc_turret_floor" || npc:GetClass() == "npc_turret_ceiling" then return end
 	
 	local wep
 	if dmg:GetInflictor():IsPlayer() then
@@ -332,7 +332,10 @@ function GM:PlayerDeath( ply, wep, killer )
 		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
 			if v:GetRealOwner() == ply then v:PropRemove() end
-			end
+		end
+		for k,v in pairs(ents.FindByClass("npc_turret_ceiling")) do
+			if v:GetRealOwner() == ply then v:PropRemove() end
+		end
 		for k,v in pairs(ents.FindByClass("sent_dispenser")) do
 			if v:GetRealOwner() == ply && v.Type == "BATTLE" then v:PropRemove() end
 		end
@@ -479,10 +482,10 @@ function GM:ShutDown( )
 end
 
 function GM:PlayerDisconnected( ply )
-	for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
-		if v:GetRealOwner() == ply then v:PropRemove() end
-	end
-	for k,v in pairs(ents.FindByClass("sent_dispenser")) do
+	local iterator = ents.FindByClass("npc_turret_floor")
+	table.Add(iterator,ents.FindByClass("npc_turret_ceiling"))
+	table.Add(iterator,ents.FindByClass("sent_dispenser"))
+	for k,v in pairs(iterator) do
 		if v:GetRealOwner() == ply then v:PropRemove() end
 	end
 	if ValidEntity(ply.CusSpawn) then
