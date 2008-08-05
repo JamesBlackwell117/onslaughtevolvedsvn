@@ -467,9 +467,7 @@ function OSE_Spawn(ply,cmd,args)
 		ent = ents.Create(class)
 		ent:SetAngles(ang)
 		ent:SetPos(tr.HitPos)
-		if !MODELS[model].CLASS then
-			ent:SetModel(model)
-		end
+		ent:SetModel(model)
 		if MODELS[model].SPAWNFLAGS then
 			ent:SetKeyValue("spawnflags",MODELS[model].SPAWNFLAGS)
 		end
