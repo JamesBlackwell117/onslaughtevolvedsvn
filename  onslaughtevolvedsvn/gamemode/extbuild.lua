@@ -18,7 +18,7 @@ end
 
 MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,owner,tr)
 	local angl = owner:GetAngles()
-	angl.p = 180
+	angl.p = 0
 	--angl.y = angl.y-90
 	angl.r = 0
 
@@ -43,7 +43,7 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	
 	--angl.p = angl.p+180
 	
-	this:SetPos(tr.HitPos+tr.HitNormal*2)
+	this:SetPos(tr.HitPos)
 	this:SetOwner(owner)
 	this:SetAngles(angl)
 	this:SetNetworkedEntity("owner",owner)
