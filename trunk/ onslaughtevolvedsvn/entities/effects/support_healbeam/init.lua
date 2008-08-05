@@ -6,8 +6,7 @@ function EFFECT:Init( data )
  	self.WeaponEnt = self.Player:GetActiveWeapon()
  	self.Attachment = data:GetAttachment() 
 
- 	self.StartPos = self:GetTracerShootPos( self.Position, self.WeaponEnt, self.Attachment ) 
- 	self.EndPos = data:GetOrigin() 
+ 	self.StartPos = self:GetTracerShootPos( self.Position, self.WeaponEnt, self.Attachment )
 end
 
 local parts = { "models/roller/rollermine_glow", "decals/redglowfade"}
@@ -16,7 +15,7 @@ function EFFECT:Think()
 
  	self.StartPos = self:GetTracerShootPos( self.Position, self.WeaponEnt, self.Attachment )
 	self.EndPos = self.Player:GetEyeTrace().HitPos
-   	if not ValidEntity( self.WeaponEnt ) || self.WeaponEnt:GetNWBool("On2", false) == false then
+   	if not ValidEntity( self.WeaponEnt ) || self.WeaponEnt:GetNWBool("On2", true) == false then
 		return false
 	end
 	return true
