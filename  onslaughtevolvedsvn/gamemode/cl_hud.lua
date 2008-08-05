@@ -217,6 +217,10 @@ function GM:DrawHUD()
 		end
 		
 		UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(191, 0, 0, 127),bkdrop,ply:Health()/maxhealth,false,"Health: "..ply:Health().."/"..maxhealth)
+		local armor = ply:GetNWInt("Armor")
+		if armor > 0 then
+			UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(0, 0, 255, 64),Color(0,0,0,0),armor/100)
+		end
 		
 		-- turret health bars
 		local turoff = 14
@@ -310,6 +314,12 @@ function GM:DrawHUD()
 			surface.SetDrawColor(r, g, 10, 255)
 			surface.DrawRect( W * 0.025 + ((i * (W * 0.00785))/ frac), H * 0.86, W / 300, H / 40 )
 		end
+		
+		local armor = ply:GetNWInt("Armor")
+		if armor > 0 then
+			surface.SetDrawColor(0, 0, 255, 64)
+			surface.DrawRect( W * 0.025, H * 0.86, W / 5.02*armor/100, H / 40 )
+		end	
 		
 		surface.SetDrawColor(255, 255, 255, 255)
 		surface.DrawOutlinedRect( W * 0.025, H * 0.86, W / 5.02, H / 40 )

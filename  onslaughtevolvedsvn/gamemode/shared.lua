@@ -12,9 +12,9 @@ PHASE = "BUILD"
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
 Classes[1] = {NAME = "Scout", SPEED = 650, JUMP = 260, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl", DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
-Classes[2] = {NAME = "Soldier", SPEED = 280, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
-Classes[3] = {NAME = "Engineer", SPEED = 300, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", DSCR = "A must have for any onslaught team. With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
-Classes[4] = {NAME = "Sniper", SPEED = 270, WEAPON_SET = 4, HEALTH = 80,AMMO = {7,5,14}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
+Classes[2] = {NAME = "Soldier", SPEED = 280, JUMP = 160, ARMOR = 100, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
+Classes[3] = {NAME = "Engineer", SPEED = 300, JUMP = 160, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", DSCR = "A must have for any onslaught team. With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
+Classes[4] = {NAME = "Sniper", SPEED = 270, JUMP = 160, WEAPON_SET = 4, HEALTH = 80,AMMO = {7,5,14}, MODEL = "models/player/Group03/male_06.mdl", DSCR = "Cover, Shoot, Kill, Reload. Repeat Step 1. The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep under cover!"}
 Classes[5] = {NAME = "Pyro", SPEED = 450, JUMP = 210, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", DSCR = "A must have for those who enjoy setting fire to things. The pyro has the ability to set fire traps and explosions to send those enemies fliying!"  }
 Classes[6] = {NAME = "Support", SPEED = 500, JUMP = 220, WEAPON_SET = 6, HEALTH = 90, AMMO = {13}, MODEL = "models/player/Group03/Female_04.mdl", DSCR = ""  }
 
@@ -67,7 +67,7 @@ WEAPON_MDL["weapon_357"] = {MODEL = "models/weapons/W_357.mdl"}
 WEAPON_MDL["swep_xbow"] = {MODEL = "models/weapons/W_crossbow.mdl", HT = ACT_HL2MP_IDLE_CROSSBOW}
 
 AMMOS = {}
-AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 90, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
+AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 120, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}
 AMMOS[2] = {AMMO = "Pistol", NAME = "Pistol ammo", QT = 72, PRICE = 100, MODEL = "models/Items/BoxSRounds.mdl"}
 AMMOS[3] = {AMMO = "SMG1", NAME = "SMG ammo", QT = 90, PRICE = 150, MODEL = "models/Items/BoxMRounds.mdl"}
 AMMOS[4] = {AMMO = "BuckShot", NAME = "Buckshot", QT = 32, PRICE = 200, MODEL = "models/Items/BoxBuckshot.mdl"}
