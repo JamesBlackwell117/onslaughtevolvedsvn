@@ -24,10 +24,6 @@ SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "none"
 
---SWEP.Sound = Sound("items/suitcharge1.wav")
---SWEP.SuckSound = Sound("npc/vort/attack_charge.wav")
---SWEP.StopSoond = Sound("vehicles/tank_turret_stop1.wav")
-
 SWEP.Secondary.ClipSize	= -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = true
@@ -40,40 +36,21 @@ function SWEP:Initialize( )
 end
  
 function SWEP:Deploy()
-	self:SetNWBool( "On", false )
-	self:SetNWBool( "On2", false )
 	return true
 end
- 
+
 function SWEP:Think( )
-	if self.Owner:KeyPressed( IN_ATTACK ) then
-		self:SetNWBool( "On", true )
-		local effectdata = EffectData()
-		effectdata:SetStart( self.Owner:GetShootPos() )
-		effectdata:SetAttachment( 1 )
-		effectdata:SetEntity( self.Owner )
- 	util.Effect( "support_suckbeam", effectdata )
-		--self.Weapon:EmitSound(self.Sound)
-	end
-	if self.Owner:KeyPressed( IN_ATTACK2 ) then
-		self:SetNWBool( "On2", true )
-		local effectdata = EffectData()
-		effectdata:SetStart( self.Owner:GetShootPos() )
-		effectdata:SetAttachment( 1 )
-		effectdata:SetEntity( self.Owner )
-		util.Effect( "support_healbeam", effectdata )
-		--self.Weapon:EmitSound(self.Sound)
-	end
-	if self.Owner:KeyReleased( IN_ATTACK ) || self.Owner:KeyReleased( IN_ATTACK2 ) then
-		self:SetNWBool( "On", false )
-		self:SetNWBool( "On2", false )
-		--self.Weapon:StopSound(self.Sound)
-		--self.Weapon:EmitSound(self.StopSoond)
+	if !self.Owner:KeyDown( IN_ATTACK ) && !self.Owner:KeyDown( IN_ATTACK2 ) then
+		if self:GetNWInt("mode") != 0 then
+			self:SetNWInt("mode",0)
+		end
 	end
 end
-
-
+ 
 function SWEP:PrimaryAttack( )
+	if self:GetNWInt("mode") != 1 then
+		self:SetNWInt("mode",1)
+	end
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
 	local tr = util.GetPlayerTrace( self.Owner ) 
@@ -96,6 +73,9 @@ function SWEP:PrimaryAttack( )
 end
 
 function SWEP:SecondaryAttack( )
+	if self:GetNWInt("mode") != 2 then
+		self:SetNWInt("mode",2)
+	end
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
 	
@@ -131,10 +111,53 @@ function SWEP:Reload()
 				if v:IsPlayer() then v:AddHealth(200) end
 			end
 		end
-			local effectdata = EffectData()
-			effectdata:SetOrigin( self.Owner:GetPos() )
-			effectdata:SetEntity( self.Owner )
-			util.Effect( "support_healthexplode", effectdata )
-			self:SetClip1(self:Clip1() - 25)
+		local effectdata = EffectData()
+		effectdata:SetOrigin( self.Owner:GetPos() )
+		effectdata:SetEntity( self.Owner )
+		util.Effect( "support_healthexplode", effectdata )
+		self:SetClip1(self:Clip1() - 25)
+	end
+end
+
+function SWEP:DrawWorldModel()
+	self.Weapon:DrawModel()
+	if CLIENT then
+		if self:GetNWInt("mode") == 1 then
+			local spos = self.Weapon:GetAttachment(1)
+			local tr = self.Owner:GetEyeTrace( )
+			if tr.Hit then
+				render.SetMaterial( Material( "cable/redlaser" )  )
+				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
+			end
+		elseif self:GetNWInt("mode") == 2 then
+			local spos = self.Weapon:GetAttachment(1)
+			local tr = self.Owner:GetEyeTrace( )
+			if tr.Hit then
+				render.SetMaterial( Material( "cable/physbeam" )  )
+				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
+			end
+		end
+	end
+end
+
+function SWEP:ViewModelDrawn()
+	if CLIENT then
+		local ViewModel = LocalPlayer():GetViewModel()
+		if !ViewModel:IsValid() then return end
+ 		local spos = ViewModel:GetAttachment(1) 
+	
+		if self:GetNWInt("mode") == 1 then
+			local tr = self.Owner:GetEyeTrace( )
+			if tr.Hit then
+				render.SetMaterial( Material( "cable/redlaser" )  )
+				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
+			end
+		elseif self:GetNWInt("mode") == 2 then
+			local tr = self.Owner:GetEyeTrace( )
+			if tr.Hit then
+				render.SetMaterial( Material( "cable/physbeam" )  )
+				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
+			end
+		end
 	end
 end
