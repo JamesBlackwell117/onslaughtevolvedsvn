@@ -120,7 +120,8 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
 	self.Weapon:EmitSound(self.Primary.Sound) 
 	self.Weapon:EmitSound(Sound("weapons/physcannon/energy_bounce1.wav")) 
-	self.Weapon:EmitSound(Sound("weapons/physcannon/physcannon_charge.wav")) 
+	self.Weapon:EmitSound(Sound("weapons/physcannon/physcannon_charge.wav"))
+	local hitpos = nil
 	if SERVER then
 		self:TakePrimaryAmmo(1)
 		local iter = 0
@@ -142,6 +143,11 @@ function SWEP:PrimaryAttack()
 		end
 		if self:Clip1() == 0 then self:SetNWBool("zoom", false) self.Owner:SetFOV( 90, 0 ) self:Reload() end
 	end
+	local effectdata = EffectData()
+	effectdata:SetStart( self.Owner:GetShootPos() )
+	effectdata:SetAttachment( 1 )
+	effectdata:SetEntity( self.Owner )
+	util.Effect( "railgun_beam", effectdata )
 end
 
 function SWEP:SecondaryAttack( )
