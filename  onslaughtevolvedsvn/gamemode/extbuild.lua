@@ -17,12 +17,34 @@ MODELS["models/Combine_turrets/Floor_turret.mdl"].EXTBUILD = function(this,owner
 end
 
 MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,owner,tr)
-	this:SetPos(tr.HitPos)
+	local angl = owner:GetAngles()
+	angl.p = 180
+	--angl.y = angl.y-90
+	angl.r = 0
+
+	--local ent = ents.Create("npc_turret_ceiling")
+	--ent:SetAngles(angl)
+	--ent:SetPos(tr.HitPos+tr.HitNormal*2)
+	--ent:SetKeyValue("spawnflags","32")
+	--ent.Owner = ply
+	--ent:Spawn()
+	--ent:Activate()
+	
+	--for k,v in pairs(NPCS) do
+	--	ent:Fire( "setrelationship", k .. " D_HT 99" )
+	--end
+	--ent:Fire( "setrelationship", "player D_LI 99" )
+	--ent:Fire( "setrelationship", "!player D_LI 99" )
+	--ent:Fire( "setrelationship", "npc_turret_ceiling D_LI 99" )
+	--ent:Fire( "setrelationship", "npc_turret_floor D_LI 99" )
+	--for k,v in pairs(player.GetAll()) do
+	--	ent:AddEntityRelationship(v, 3, 99 )
+	--end
+	
+	--angl.p = angl.p+180
+	
+	this:SetPos(tr.HitPos+tr.HitNormal*2)
 	this:SetOwner(owner)
-	local angl = tr.HitNormal:Angle()
-	angl.p = angl.p-270
-	angl.y = angl.y+90
-	angl.r = angl.r-90
 	this:SetAngles(angl)
 	this:SetNetworkedEntity("owner",owner)
 	for k,v in pairs(NPCS) do
@@ -35,6 +57,8 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	for k,v in pairs(player.GetAll()) do
 		this:AddEntityRelationship(v, 3, 99 )
 	end
+	--this.Cleanup = ent
+	--this.OnRemove = function() self.Cleanup:Remove() end
 	local trtctrl = ents.Create("sent_turretcontroller") --this entity controls the turrets health and kills it etc.
 	trtctrl:SetPos(this:GetPos())
 	trtctrl:SetParent(this)
