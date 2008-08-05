@@ -43,6 +43,8 @@ DMGO["weapon_ar2"] = 11 * 1.4
 DMGO["weapon_smg1"] = 12
 DMGO["weapon_357"] = 50
 DMGO["npc_turret_floor"] = 6
+DMGO["npc_turret_ceiling"] = 12
+
 
 DMGO["swep_flamethrower"] = nil
 DMGO["swep_scatter"] = nil
@@ -227,6 +229,8 @@ end
 	
 	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}	
 	
+	MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 1, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
+
 	if SERVER then
 		include("extbuild.lua")
 	end

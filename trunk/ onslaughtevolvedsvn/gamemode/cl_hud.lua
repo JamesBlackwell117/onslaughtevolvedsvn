@@ -78,8 +78,11 @@ function GM:DrawHUD()
 		end
 	end
 	
-	-- player info
-	for k, v in pairs(player.GetAll()) do
+	-- Player & Turret info
+	local iterator = player.GetAll()
+	table.Add(iterator,ents.FindByClass("npc_turret_floor"))
+	table.Add(iterator,ents.FindByClass("npc_turret_ceiling"))
+	for k, v in pairs(iterator) do
 		local trace = {}
 		trace.start = ply:GetPos() + Vector(0,0,40)
 		trace.endpos = v:GetPos() + Vector(0,0,40)
@@ -98,15 +101,21 @@ function GM:DrawHUD()
 				if pos.visible == true then
 					local alphavalue = math.Clamp(1200 - (dist/1.5), 0, 255)					
 					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
-					local playercolour = team.GetColor(v:Team())
 					
-					if v != ply && v:Alive() then
-						draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
-						if classid == 6 || ply:Alive() == false then
-							local maxhealth
-							if PHASE == "BUILD" then maxhealth = 100
-							elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
-							UnifiedBar(crnd,pos.x-W*.03*maxhealth/100,pos.y+6,W*0.06*maxhealth/100,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:Health()/maxhealth)
+					if v:IsPlayer() then
+						local playercolour = team.GetColor(v:Team())
+						if v != ply && v:Alive() then
+							draw.SimpleTextOutlined(v:Name(), "HUD2", pos.x, pos.y - 10, Color(playercolour.r, playercolour.g, playercolour.b, alphavalue),1,1,1,Color(0,0,0,outlinealpha))
+							if classid == 6 || ply:Alive() == false then
+								local maxhealth
+								if PHASE == "BUILD" then maxhealth = 100
+								elseif v:GetNWInt("class") && v:GetNWInt("class")!= 0 then maxhealth = Classes[v:GetNWInt("class")].HEALTH else break end
+								UnifiedBar(crnd,pos.x-W*.03*maxhealth/100,pos.y+6,W*0.06*maxhealth/100,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:Health()/maxhealth)
+							end
+						end
+					else
+						if classid == 3 then
+							UnifiedBar(crnd,pos.x-W*.03,pos.y+6,W*0.06,12,Color(191, 0, 0, 127*alphavalue/255),Color(31, 31, 31, 127*outlinealpha/255),v:GetNWInt("health")/TURRET_HEALTH)
 						end
 					end
 				end
@@ -211,7 +220,9 @@ function GM:DrawHUD()
 		
 		-- turret health bars
 		local turoff = 14
-		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
+		local iterator = ents.FindByClass("npc_turret_floor")
+		table.Add(iterator,ents.FindByClass("npc_turret_ceiling"))
+		for k,v in pairs(iterator) do
 			if v:GetNWEntity( "Owner" ) == ply then
 				UnifiedBar(crnd,19,H-42-hbaroff-turoff,W/6,12,Color(220, 220, 0, 95),bkdrop,v:GetNWInt("health")/TURRET_HEALTH,false,"Turret Health: "..v:GetNWInt("health").."/"..TURRET_HEALTH)
 				turoff = turoff + 14

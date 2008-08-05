@@ -16,6 +16,37 @@ MODELS["models/Combine_turrets/Floor_turret.mdl"].EXTBUILD = function(this,owner
 	owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 end
 
+MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,owner,tr)
+	this:SetPos(tr.HitPos)
+	this:SetOwner(owner)
+	local angl = tr.HitNormal:Angle()
+	angl.p = angl.p-270
+	angl.y = angl.y+90
+	angl.r = angl.r-90
+	this:SetAngles(angl)
+	this:SetNetworkedEntity("owner",owner)
+	for k,v in pairs(NPCS) do
+		this:Fire( "setrelationship", k .. " D_HT 99" )
+	end
+	this:Fire( "setrelationship", "player D_LI 99" )
+	this:Fire( "setrelationship", "!player D_LI 99" )
+	this:Fire( "setrelationship", "npc_turret_ceiling D_LI 99" )
+	this:Fire( "setrelationship", "npc_turret_floor D_LI 99" )
+	for k,v in pairs(player.GetAll()) do
+		this:AddEntityRelationship(v, 3, 99 )
+	end
+	local trtctrl = ents.Create("sent_turretcontroller") --this entity controls the turrets health and kills it etc.
+	trtctrl:SetPos(this:GetPos())
+	trtctrl:SetParent(this)
+	trtctrl:Spawn()
+	trtctrl:Activate()
+	trtctrl:SetOwner(owner)
+	this.Controller = trtctrl
+	this:SetNWInt("health",trtctrl.Shealth)
+	owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
+	owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
+end
+
 MODELS["models/props_combine/combine_mine01.mdl"].EXTBUILD = function(this,owner,tr)
 	local ang = tr.HitNormal:Angle()
 	local ang2 = Angle(ang.p + 90, ang.y, ang.r)

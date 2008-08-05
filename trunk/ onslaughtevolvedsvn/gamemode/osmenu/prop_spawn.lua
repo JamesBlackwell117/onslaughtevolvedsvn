@@ -32,31 +32,29 @@ function PANEL:Init( )
 		ent:SetModel(k)
 		ent:Spawn()
 		ent:Activate()
-		ent:PhysicsInit( SOLID_VPHYSICS )    
+		ent:PhysicsInit( SOLID_VPHYSICS )   
+		local ico = vgui.Create( "DModelPanel", self )
+		ico:SetModel(k)
+		ico.Skin = math.random(0,util.GetModelInfo(k).SkinCount-1)
+		ico.Entity:SetSkin(ico.Skin)
+		ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, ico.Skin) end
+		ico.DoRightClick = function(ico) PANEL:OpenMen(ico, k)end 
+
+		ico:SetSize(64,64)
 
 		if ValidEntity(ent:GetPhysicsObject()) then
 			local center = ent:OBBCenter()
 			local dist = ent:BoundingRadius()*1.2
 			local hlth = math.Round(math.Clamp(ent:GetPhysicsObject():GetMass() * (ent:OBBMins():Distance(ent:OBBMaxs())) / 100,200,800)*1.05)
 			if v.COST then hlth = v.COST*1.05 end
-			
-			local ico = vgui.Create( "DModelPanel", self )
-			ico:SetModel(k)
-			ico.Skin = math.random(0,util.GetModelInfo(k).SkinCount-1)
-			ico.Entity:SetSkin(ico.Skin)
-			ico.DoClick = function( ico ) RunConsoleCommand("gm_spawn", k, ico.Skin) end
-			ico.DoRightClick = function(ico) PANEL:OpenMen(ico, k)end 
-
-			ico:SetSize(64,64)
+			ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
 			ico:SetLookAt( center )
 			ico:SetCamPos( center+Vector(dist,dist,dist) )
-		
+		end
 			ico:InvalidateLayout( true ) 
-			ico:SetToolTip( Format( "Cost: $%s", tostring(hlth) ) ) 
 			if v.GROUP then
 				self.IconList[v.GROUP]:AddItem( ico )
 			end
-		end
 		ent:Remove()
 	end
 end
