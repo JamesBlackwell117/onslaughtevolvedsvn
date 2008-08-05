@@ -120,14 +120,18 @@ function GM:PlayerSpawn(ply)
 		ply:SetMaxHealth(100)
 		ply:SetHealth(100)
 	else
-		local speed = Classes[ply:GetNetworkedInt("class")].SPEED
+		local class = Classes[ply:GetNetworkedInt("class")]
+		local speed = class.SPEED
 		GAMEMODE:SetPlayerSpeed(ply, speed, speed)
 		GAMEMODE:RestockPlayer(ply)
-		local hlth = Classes[ply:GetNetworkedInt("class")].HEALTH
+		local hlth = class.HEALTH
 		ply:SetMaxHealth(hlth)
 		ply:SetHealth(hlth)
-		local jump = Classes[ply:GetNetworkedInt("class")].JUMP
+		local jump = class.JUMP
 		if jump then ply:SetJumpPower(jump) end
+		local armor = class.ARMOR
+		if armor then ply:SetArmor(armor) end
+		ply:SetNWInt("Armor",armor or 0)
 	end
 	local modelname = Classes[ply:GetNetworkedInt("class",1)].MODEL
 	ply:SetModel( modelname )
@@ -600,6 +604,7 @@ function GM:Think()
 		 AllChat("Map voting is now enabled!")
 	end
 	self.lagcalc = self.lagcalc or CurTime( )
+	self.tic = self.tic or CurTime( )
 	if CurTime( ) - self.lagcalc >= 5 then
 		local avg = 0
 		local c = player.GetAll( )
@@ -614,8 +619,24 @@ function GM:Think()
 			end
 		end
 		NPC_COUNT = npcs
+		self.lagcalc = CurTime()
+	elseif CurTime( ) - self.tic >= .25 then
+		for k,v in pairs(player.GetAll())do
+			if v:GetNWInt("class") == 2 then
+				local armor = math.Clamp(v:Armor()+1,0,100)
+				v:SetArmor(armor)
+				v:SetNWInt("Armor", armor)
+				print(armor)
+			end
+		end
+		self.tic =  CurTime( )
 	end
 end
+
+hook.Add("EntityTakeDamage", "ArmorUpdate", function(ent, inflictor, attacker, amount, dmginfo)
+	if !ent:IsPlayer() then return end
+	ent:SetNWInt("Armor", ent:Armor())
+	end) 
 
 function GM:RestockPlayer(ply)
 	if !ply then return end
