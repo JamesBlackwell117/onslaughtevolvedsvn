@@ -43,10 +43,7 @@ SWEP.ScopeScale = 0.5
 function SWEP:Initialize( )
 	if SERVER then
 		self:SetWeaponHoldType( "ar2" )
-	end
-	
-		if CLIENT then
-	
+	else
 		-- We need to get these so we can scale everything to the player's current resolution.
 		local iScreenWidth = surface.ScreenWidth()
 		local iScreenHeight = surface.ScreenHeight()
@@ -105,10 +102,7 @@ function SWEP:Initialize( )
 		self.CrossHairTable.y21 = 0
 		self.CrossHairTable.x22 = 0.5*iScreenWidth
 		self.CrossHairTable.y22 = iScreenHeight
-		
 	end
-
-	
 end
 
 function SWEP:Deploy()
@@ -143,11 +137,6 @@ function SWEP:PrimaryAttack()
 		end
 		if self:Clip1() == 0 then self:SetNWBool("zoom", false) self.Owner:SetFOV( 90, 0 ) self:Reload() end
 	end
-	local effectdata = EffectData()
-	effectdata:SetStart( self.Owner:GetShootPos() )
-	effectdata:SetAttachment( 1 )
-	effectdata:SetEntity( self.Owner )
-	util.Effect( "railgun_beam", effectdata )
 end
 
 function SWEP:SecondaryAttack( )
@@ -160,39 +149,20 @@ function SWEP:SecondaryAttack( )
 	end
 end
 
---function SWEP:GetViewModelPosition(pos,ang)
---	ang = Angle(-ang.p,ang.y+180,ang.r)
---	local vec = Vector(-30,7.5,-6.5)
---	vec:Rotate(ang)
---	pos = pos+vec
---	return pos,ang
---end
-
 function SWEP:DrawHUD()
 	if self:GetNWBool("zoom") then 
-		-- Draw the crosshair
-		-- surface.SetDrawColor(0, 0, 0, 150)
-		-- surface.DrawLine(self.CrossHairTable.x11,self.CrossHairTable.y11,self.CrossHairTable.x12,self.CrossHairTable.y12)
-		-- surface.DrawLine(self.CrossHairTable.x21,self.CrossHairTable.y21,self.CrossHairTable.x22,self.CrossHairTable.y22)
-		
-		-- Draw the cool parabolic sights
-		--if self.DrawParabolicSights then
-			surface.SetDrawColor(0, 0, 0, 220)
-			surface.SetTexture(surface.GetTextureID("jaanus/ep2snip_parascope"))
-			surface.DrawTexturedRect(self.ParaScopeTable.x,self.ParaScopeTable.y,self.ParaScopeTable.w,self.ParaScopeTable.h)
-		--end
-		-- Draw the lens
+		surface.SetDrawColor(0, 0, 0, 220)
+		surface.SetTexture(surface.GetTextureID("jaanus/ep2snip_parascope"))
+		surface.DrawTexturedRect(self.ParaScopeTable.x,self.ParaScopeTable.y,self.ParaScopeTable.w,self.ParaScopeTable.h)
 		surface.SetDrawColor(20,20,20,40)
 		surface.SetTexture(surface.GetTextureID("overlays/scope_lens"))
 		surface.DrawTexturedRect(self.LensTable.x,self.LensTable.y,self.LensTable.w,self.LensTable.h)
-		-- Draw the scope
 		surface.SetDrawColor(0, 0, 0, 255)
 		surface.SetTexture(surface.GetTextureID("jaanus/sniper_corner"))
 		surface.DrawTexturedRectRotated(self.ScopeTable.x1,self.ScopeTable.y1,self.ScopeTable.l,self.ScopeTable.l,270)
 		surface.DrawTexturedRectRotated(self.ScopeTable.x2,self.ScopeTable.y2,self.ScopeTable.l,self.ScopeTable.l,180)
 		surface.DrawTexturedRectRotated(self.ScopeTable.x3,self.ScopeTable.y3,self.ScopeTable.l,self.ScopeTable.l,90)
 		surface.DrawTexturedRectRotated(self.ScopeTable.x4,self.ScopeTable.y4,self.ScopeTable.l,self.ScopeTable.l,0)
-		-- Fill in everything else
 		surface.SetDrawColor(0,0,0,255)
 		surface.DrawRect(self.QuadTable.x1,self.QuadTable.y1,self.QuadTable.w1,self.QuadTable.h1)
 		surface.DrawRect(self.QuadTable.x2,self.QuadTable.y2,self.QuadTable.w2,self.QuadTable.h2)
