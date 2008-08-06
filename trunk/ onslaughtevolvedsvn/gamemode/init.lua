@@ -626,7 +626,6 @@ function GM:Think()
 				local armor = math.Clamp(v:Armor()+1,0,100)
 				v:SetArmor(armor)
 				v:SetNWInt("Armor", armor)
-				print(armor)
 			end
 		end
 		self.tic =  CurTime( )
