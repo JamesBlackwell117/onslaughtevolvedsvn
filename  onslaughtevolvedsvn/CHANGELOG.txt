@@ -1,0 +1,60 @@
+  ____            _                   _     _     ______          _               _  |
+ / __ \          | |                 | |   | |   |  ____|        | |             | | |
+| |  | |_ __  ___| | __ _ _   _  __ _| |__ | |_  | |____   _____ | |_   _____  __| | |
+| |  | | '_ \/ __| |/ _` | | | |/ _` | '_ \| __| |  __\ \ / / _ \| \ \ / / _ \/ _` | |
+| |__| | | | \__ \ | (_| | |_| | (_| | | | | |_  | |___\ V / (_) | |\ V /  __/ (_| | |
+ \____/|_| |_|___/_|\__,_|\__,_|\__, |_| |_|\__| |______\_/ \___/|_| \_/ \___|\__,_| |
+                                 __/ |                                               |
+                                |___/                                                |
+-------------------------------------------------------------------------------------+
+CHANGELOG 1.41 - 1.8                   |Conman420, Ailia and Xera                    |
+-------------------------------------------------------------------------------------+
+1.41 - 1.8 has been a huge leap for us so this changelog is not going to be complete |
+at all. We have probably rewrote or edited every function in the gamemode so think of|
+it as a rewrite and not a new version.												 |
+-------------------------------------------------------------------------------------+
+	NEW FEATURES:
+		> Pyro - Features mine spawning and flamethrower.
+		> New build menu GUI and ammo buying GUI.
+		> Default class (stored clientside so it applies on every server you go to.
+		> Some new props added.
+		> New modern hud. (Ailia)
+		> Soldier now rechargable armor.
+		> Added super shotgun for scout - right click and look down to launch
+		> Different jumping heights.
+		> Class specific taunts.
+		> Ammo bins only display ammo for that specific class.
+		> Ranks! You earn new ranks by getting more kills, admins have all benefits
+		  of the highest rank on the server yet are displayed as their true rank.
+		> Removed antilag and replaced with something better.
+		> New npc support.
+		> Prop limit - Can be changed in shared.lua
+		> Boss spawner (sent_spawnonce) - mappers lets se some boss maps!
+		> Right click with physgun is now a form of nocollide, right click again to
+		  make the prop normal.
+		> New help menu.
+		> New Commands:
+			+ Help Im stuck!
+			+ Save kills - For ranks.
+		> New spawnpoint effect - spiral shows up when player is dead.
+		> Built in admin commands, kick, ban and kill.
+		> Admin changemap for changing map without rcon.
+		> New tab for misc. settings.
+		> Multiple prop skin support - Right click on the prop in build menu.
+		
+-------------------------------------------------------------------------------------
+	CHANGES/TWEAKS:
+		> Vastly improved bullseyes positioning code - Smartnes up AI.
+		> Optimised damage function networking.
+		> Improved prop damage realism.
+		> Optimised wrench, flamethrower.
+		> The crossbow is now a swep.
+		> Fixed map voting.
+		> Optimised and balanced all damage scaling functions.
+		> Sniper no longer has grenades.
+		> Lowered scout fall damage.
+		> Optimised prop spawning code.
+		> Fixed zombie distraction props.
+		> Vastly improved AI performance and made zombies more formidable.
+--------------------------------------------------------------------------------------
+		
