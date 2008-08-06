@@ -469,21 +469,15 @@ else
 		if ValidEntity(own) then
 			draw.SimpleTextOutlined( ent:GetNWEntity("owner"):Nick().."'s spawnpoint.", "HUD2", W * 0.02, H * 0.98, Color(255,255,255,255), 0, 1, 1, Color(0,0,0,255) )
 		end
-	elseif ent:IsNPC( ) then
-		local name = ""
-		local name2 = ""
-		local col = Color( 255, 0, 0, 50 )
-		if npcs[ ent:GetClass( ) ] then
-			name = npcs[ ent:GetClass( ) ]
+	elseif ent:GetClass( ) == "npc_turret_floor" || ent:GetClass( ) == "npc_turret_ceiling" then
+		owner = ent:GetNWEntity("Owner")
+		if owner then
+			name = owner:GetName( ) .. "'s turret"
 		else
-			if ent:GetClass( ) == "npc_turret_floor" then
-				name = ent:GetNWEntity( "Owner", LocalPlayer( ) ):GetName( ) .. "'s turret"
-				name2 = "Health: "..math.Round(ent:GetNWInt("health"))
-				col = Color( 0, 0, 255, 200 )
-			else
-				name = ent:GetClass( )
-			end
+			name = ""
 		end
+		name2 = "Health: "..math.Round(ent:GetNWInt("health"))
+		col = Color( 0, 0, 255, 200 )
 		
 		surface.SetFont( "ScoreboardText" )
 		local w, h = surface.GetTextSize( name.."\n"..name2 )
