@@ -51,20 +51,22 @@ DMGO["swep_scatter"] = nil
 DMGO["swep_xbow"] = nil
 
 WEAPON_MDL = {}
-WEAPON_MDL["weapon_crowbar"] = {MODEL = "models/weapons/w_crowbar.mdl"}
-WEAPON_MDL["swep_repair"] = {MODEL = "models/weapons/w_crowbar.mdl"}
-WEAPON_MDL["weapon_pistol"] = {MODEL = "models/weapons/W_pistol.mdl"}
-WEAPON_MDL["swep_scatter"] = {MODEL = "models/weapons/w_shotgun.mdl", HT = ACT_HL2MP_IDLE_SHOTGUN}
-WEAPON_MDL["weapon_shotgun"] = {MODEL = "models/weapons/w_shotgun.mdl", HT = ACT_HL2MP_IDLE_SHOTGUN}
-WEAPON_MDL["weapon_frag"] = {MODEL = "models/weapons/W_grenade.mdl"}
-WEAPON_MDL["weapon_ar2"] = {MODEL = "models/weapons/w_IRifle.mdl", HT = ACT_HL2MP_IDLE_AR2}
-WEAPON_MDL["weapon_physcannon"] = {MODEL = "models/weapons/w_physics.mdl"}
-WEAPON_MDL["swep_dispensermaker"] = {MODEL = "models/props_combine/health_charger001.mdl"}
-WEAPON_MDL["swep_turretmaker"] = {MODEL = "models/Combine_turrets/Floor_turret.mdl"}
-WEAPON_MDL["swep_flamethrower"] = {MODEL = "models/weapons/w_smg1.mdl", HT = ACT_HL2MP_IDLE_SMG1}
-WEAPON_MDL["swep_minemaker"] = {MODEL = "models/props_combine/combine_mine01.mdl"}
-WEAPON_MDL["weapon_357"] = {MODEL = "models/weapons/W_357.mdl"}
-WEAPON_MDL["swep_xbow"] = {MODEL = "models/weapons/W_crossbow.mdl", HT = ACT_HL2MP_IDLE_CROSSBOW}
+WEAPON_MDL["weapon_crowbar"] = {NAME = "Crowbar", MODEL = "models/weapons/w_crowbar.mdl"}
+WEAPON_MDL["swep_repair"] = {NAME = "Wrench", MODEL = "models/weapons/w_crowbar.mdl"}
+WEAPON_MDL["weapon_pistol"] = {NAME = "9mm Pistol", MODEL = "models/weapons/W_pistol.mdl"}
+WEAPON_MDL["swep_scatter"] = {NAME = "Super Shotgun", MODEL = "models/weapons/w_shotgun.mdl"}
+WEAPON_MDL["weapon_shotgun"] = {NAME = "Shotgun", MODEL = "models/weapons/w_shotgun.mdl"}
+WEAPON_MDL["weapon_frag"] = {NAME = "Frag Grenade", MODEL = "models/weapons/W_grenade.mdl"}
+WEAPON_MDL["weapon_ar2"] = {NAME = "Combine Assault Rifle", MODEL = "models/weapons/w_IRifle.mdl"}
+WEAPON_MDL["weapon_physcannon"] = {NAME = "Gravity Gun", MODEL = "models/weapons/w_physics.mdl"}
+WEAPON_MDL["swep_turretmaker"] = {NAME = "Turret", MODEL = "models/Combine_turrets/Floor_turret.mdl"}
+WEAPON_MDL["swep_flamethrower"] = {NAME = "Flamethrower", MODEL = "models/weapons/w_smg1.mdl"}
+WEAPON_MDL["swep_minemaker"] = {NAME = "Mine", MODEL = "models/props_combine/combine_mine01.mdl"}
+WEAPON_MDL["weapon_357"] = {NAME = ".357 Magnum Revolver", MODEL = "models/weapons/W_357.mdl"}
+WEAPON_MDL["swep_xbow"] = {NAME = "Crossbow", MODEL = "models/weapons/W_crossbow.mdl"}
+WEAPON_MDL["swep_railgun"] = {NAME = "Combine Railgun", MODEL = "models/weapons/w_combinesniper_e2.mdl"}
+WEAPON_MDL["swep_healthcharge"] = {NAME = "Health Charger", MODEL = "models/weapons/w_physics.mdl"}
+
 
 AMMOS = {}
 AMMOS[1] = {AMMO = "AR2", NAME = "Pulse ammo", QT = 120, PRICE = 150, MODEL = "models/Items/combine_rifle_cartridge01.mdl"}

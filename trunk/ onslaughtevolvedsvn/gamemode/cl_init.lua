@@ -59,6 +59,9 @@ function GM:Think()
 		Lstbeep = CurTime()
 	end
 	TimeLeft = NextRound - CurTime()
+	if input.IsKeyDown( KEY_F1 ) then
+		--GAMEMODE:Help( )
+	end	
 end
 
 function GM:HUDShouldDraw(nm)
