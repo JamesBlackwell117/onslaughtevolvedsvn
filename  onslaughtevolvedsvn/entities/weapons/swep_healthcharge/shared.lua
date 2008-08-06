@@ -98,9 +98,9 @@ function SWEP:SecondaryAttack( )
 end
 
 function SWEP:GetViewModelPosition(pos,ang)
-	for k,v in pairs(ents.FindByClass("viewmodel")) do
-			v:SetModel(self.mdl)
-	end
+	local ViewModel = LocalPlayer():GetViewModel()
+	if !ViewModel:IsValid() then return pos,ang end	
+	ViewModel:SetModel( self.mdl )
 	return pos,ang
 end
 
@@ -124,18 +124,18 @@ function SWEP:DrawWorldModel()
 	if CLIENT then
 		if self:GetNWInt("mode") == 1 then
 			local spos = self.Weapon:GetAttachment(1)
-			local tr = self.Owner:GetEyeTrace( )
-			if tr.Hit then
-				render.SetMaterial( Material( "cable/redlaser" )  )
-				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
-			end
+			local tr = util.GetPlayerTrace( self.Owner ) 
+			local trace = util.TraceLine( tr )
+			if (!trace.Hit) then return end
+			render.SetMaterial( Material( "cable/redlaser" )  )
+			render.DrawBeam( spos.Pos, trace.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
 		elseif self:GetNWInt("mode") == 2 then
 			local spos = self.Weapon:GetAttachment(1)
-			local tr = self.Owner:GetEyeTrace( )
-			if tr.Hit then
-				render.SetMaterial( Material( "cable/physbeam" )  )
-				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
-			end
+			local tr = util.GetPlayerTrace( self.Owner ) 
+			local trace = util.TraceLine( tr )
+			if (!trace.Hit) then return end
+			render.SetMaterial( Material( "cable/physbeam" )  )
+			render.DrawBeam( spos.Pos, trace.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
 		end
 	end
 end
@@ -147,17 +147,17 @@ function SWEP:ViewModelDrawn()
  		local spos = ViewModel:GetAttachment(1) 
 	
 		if self:GetNWInt("mode") == 1 then
-			local tr = self.Owner:GetEyeTrace( )
-			if tr.Hit then
-				render.SetMaterial( Material( "cable/redlaser" )  )
-				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
-			end
+			local tr = util.GetPlayerTrace( self.Owner ) 
+			local trace = util.TraceLine( tr )
+			if (!trace.Hit) then return end
+			render.SetMaterial( Material( "cable/redlaser" )  )
+			render.DrawBeam( spos.Pos, trace.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
 		elseif self:GetNWInt("mode") == 2 then
-			local tr = self.Owner:GetEyeTrace( )
-			if tr.Hit then
-				render.SetMaterial( Material( "cable/physbeam" )  )
-				render.DrawBeam( spos.Pos, tr.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
-			end
+			local tr = util.GetPlayerTrace( self.Owner ) 
+			local trace = util.TraceLine( tr )
+			if (!trace.Hit) then return end
+			render.SetMaterial( Material( "cable/physbeam" )  )
+			render.DrawBeam( spos.Pos, trace.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
 		end
 	end
 end
