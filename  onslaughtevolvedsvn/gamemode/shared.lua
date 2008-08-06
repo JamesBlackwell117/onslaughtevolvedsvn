@@ -43,7 +43,7 @@ DMGO["weapon_ar2"] = 11 * 1.4
 DMGO["weapon_smg1"] = 12
 DMGO["weapon_357"] = 50
 DMGO["npc_turret_floor"] = 6
-DMGO["npc_turret_ceiling"] = 12
+DMGO["npc_turret_ceiling"] = 6
 
 
 DMGO["swep_flamethrower"] = nil
