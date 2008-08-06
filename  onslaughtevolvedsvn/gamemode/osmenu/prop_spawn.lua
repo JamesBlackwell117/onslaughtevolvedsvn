@@ -78,14 +78,6 @@ function PANEL:OpenMen(ico, model)
 
 end
 
-function PANEL:Think()
-	if self:GetParent():GetActiveTab():GetPanel() == self then
-		self:GetParent():GetParent():SetSize(360+256,750)
-	else 
-		self:GetParent():GetParent():SetSize( 400, 350 )
-	end
-end
-
 function PANEL:PerformLayout( )
 	self:StretchToParent( 2, 24, 2, 2 )
 	self.Label:SetPos( 2, 2 )
