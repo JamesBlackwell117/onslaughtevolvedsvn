@@ -101,29 +101,29 @@ function PANEL:Init( )
 		menu:Open()
 	end )
 
-	--self:AddAdminButton( "Give selection SWEP", "Gives you the SWEP used to select props for saving.", function( )
-	--	RunConsoleCommand( "admin", "select" )
-	--end )
-	--self:AddAdminButton( "Set owner", "Allows you to set the owner of the selected props.", function( )
-	--	local menu = DermaMenu( )
-	--	for k,v in pairs( player.GetAll( ) ) do
-	--		menu:AddOption( v:Nick( ), function( ) RunConsoleCommand( "admin", "owner", tostring( k ) ) end )
-	--	end
-	--	menu:Open( )
-	--end )
-	--self:AddAdminButton( "Save selected", "Saves the selected props to a file.", function( )
-	--	Derma_StringRequest( "File",
-	--	"File to save select props to",
-	--	"",
-	--	function( Str )
-	--		RunConsoleCommand( "prop_save", string.gsub( Str, " ", "_" ) )
-	--	end,
-	--	function( ) end,
-	--	"Save", "Cancel" )
-	--end )
-	--self:AddAdminButton( "Load file", "Opens the load file dialog.", function( )
-	--	MENU.FileLoad = vgui.Create( "onslaught_fileload" )
-	--end, "onslaught/file" )
+	self:AddAdminButton( "Give selection SWEP", "Gives you the SWEP used to select props for saving.", function( )
+		RunConsoleCommand( "admin", "select" )
+	end )
+	self:AddAdminButton( "Set owner", "Allows you to set the owner of the selected props.", function( )
+		local menu = DermaMenu( )
+		for k,v in pairs( player.GetAll( ) ) do
+			menu:AddOption( v:Nick( ), function( ) RunConsoleCommand( "admin", "owner", tostring( k ) ) end )
+		end
+		menu:Open( )
+	end )
+	self:AddAdminButton( "Save selected", "Saves the selected props to a file.", function( )
+		Derma_StringRequest( "File",
+		"File to save select props to",
+		"",
+		function( Str )
+			RunConsoleCommand( "prop_save", string.gsub( Str, " ", "_" ) )
+		end,
+		function( ) end,
+		"Save", "Cancel" )
+	end )
+	self:AddAdminButton( "Load file", "Opens the load file dialog.", function( )
+		MENU.FileLoad = vgui.Create( "onslaught_fileload" )
+	end, "onslaught/file" )
 end
 
 local function AdminButtonDoClick( b )
