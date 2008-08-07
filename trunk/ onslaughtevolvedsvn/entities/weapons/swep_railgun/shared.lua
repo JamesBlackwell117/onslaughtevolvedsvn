@@ -109,6 +109,26 @@ function SWEP:Deploy()
 	return true
 end
 
+function SWEP:ViewModelDrawn()
+	if CLIENT then
+		local Laser = Material( "cable/blue_elec" )
+		local muz = Material("effects/blueblackflash")
+		local ViewModel = LocalPlayer():GetViewModel()
+		if !ViewModel:IsValid() then return end
+ 		local spos = ViewModel:GetAttachment(1).Pos + (self.Owner:GetAimVector() * 25)
+	
+		if self:GetNWBool("on") == true then
+			local tr = util.GetPlayerTrace( self.Owner )
+			local trace = util.TraceLine( tr )
+			if (!trace.Hit) then return end
+			render.SetMaterial( Laser )
+			render.DrawBeam( spos, trace.HitPos, 15, 0, 0, Color( 255, 255, 255, 255 ) )
+			render.SetMaterial( muz )
+			render.DrawSprite(spos, 10, 10, color_white)
+		end
+	end
+end
+
 function SWEP:PrimaryAttack()
 	if ( !self:CanPrimaryAttack() ) then return end
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
@@ -116,6 +136,8 @@ function SWEP:PrimaryAttack()
 	self.Weapon:EmitSound(Sound("weapons/physcannon/energy_bounce1.wav")) 
 	self.Weapon:EmitSound(Sound("weapons/physcannon/physcannon_charge.wav"))
 	local hitpos = nil
+	self:SetNWBool("on", true)
+	timer.Simple(0.1, self.SetNWBool, self, "on", false)
 	if SERVER then
 		self:TakePrimaryAmmo(1)
 		local iter = 0
