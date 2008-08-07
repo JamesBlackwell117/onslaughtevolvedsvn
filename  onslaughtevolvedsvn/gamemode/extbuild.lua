@@ -3,7 +3,7 @@ MODELS["models/Combine_turrets/Floor_turret.mdl"].EXTBUILD = function(this,owner
 	this:SetKeyValue("spawnflags","512")
 	this:GetPhysicsObject():EnableMotion(false)
 	this:SetOwner(owner)
-	this:SetNetworkedEntity("owner",owner)
+	--this:SetNetworkedEntity("owner",owner)
 	local trtctrl = ents.Create("sent_turretcontroller") --this entity controls the turrets health and kills it etc.
 	trtctrl:SetPos(this:GetPos())
 	trtctrl:SetParent(this)
@@ -46,7 +46,7 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	this:SetPos(tr.HitPos)
 	this:SetOwner(owner)
 	this:SetAngles(angl)
-	this:SetNetworkedEntity("owner",owner)
+	--this:SetNetworkedEntity("owner",owner)
 	for k,v in pairs(NPCS) do
 		this:Fire( "setrelationship", k .. " D_HT 99" )
 	end

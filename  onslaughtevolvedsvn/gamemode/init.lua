@@ -73,9 +73,11 @@ function GM:PlayerInitialSpawn(ply)
 		for k,v in pairs(ents.GetAll()) do
 			if v.Owner == oldobj then
 				v.Owner = ply
+				ent:SetNWEntity("Owner", ply)
 			end
 			if v:GetOwner() == oldobj then
 				v:SetOwner(ply)
+				ent:SetNWEntity("Owner", ply)
 			end
 		end
 		discplayers[ply:SteamID()] = nil
