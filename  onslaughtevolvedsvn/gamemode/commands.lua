@@ -286,7 +286,7 @@ function Votemap(ply,cmd,args)
 	elseif PHASE == "BATTLE" then
 		ply:ChatPrint("You can't start a vote in battle phase!")
 		return
-	elseif string.sub(args[1],1, -5 ) == game.GetMap() then
+	elseif string.sub(args[1],1, -5 ) == game.GetMap() && voting == false then
 		ply:ChatPrint("You can't start a vote for the current map!")
 		return
 	elseif voting == false then
