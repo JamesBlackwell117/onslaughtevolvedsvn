@@ -119,6 +119,7 @@ function SWEP:ViewModelDrawn()
 	
 		if self:GetNWBool("on") == true then
 			local tr = util.GetPlayerTrace( self.Owner )
+			tr.filter = ents.GetAll()
 			local trace = util.TraceLine( tr )
 			if (!trace.Hit) then return end
 			render.SetMaterial( Laser )
