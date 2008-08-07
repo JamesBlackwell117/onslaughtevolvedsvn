@@ -472,6 +472,7 @@ function OSE_Spawn(ply,cmd,args)
 			ent:SetKeyValue("spawnflags",MODELS[model].SPAWNFLAGS)
 		end
 		ent.Owner = ply
+		ent:SetNWEntity("Owner", ply)
 		ent:Spawn()
 		ent:Activate()
 		//garry

@@ -396,113 +396,19 @@ function GM:HUDDrawTargetID( )
 	end
 	local W,H = ScrW(), ScrH()
 	local ent = tr.Entity
-	
-	local sw,sh = ScrW( ), ScrH( )
-	local midx, midy = sw / 2, sh / 2
-	local y, bh = midy - 20, 42
-	
-if GetConVarNumber( "ose_hud" ) == 1 then
-	--if ent:IsPlayer( ) then
-	--	draw.SimpleTextOutlined(ent:Nick(), "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-	--elseif ent:GetClass( ) == "npc_turret_floor" then
-	--	local own = ent:GetNWEntity( "Owner")
-	--	if ValidEntity(own) then
-	--		draw.SimpleTextOutlined(own:GetName( ) .. "'s turret", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-	--	end
-	--else
-	if ent:GetClass() == "sent_spawpoint" then
-		local own = ent:GetNWEntity("owner")
-		if ValidEntity(own) then
-			draw.SimpleTextOutlined(own:Nick().."'s spawnpoint.", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
-		end
-	end
-else
-	if ent:IsPlayer( ) then
-		surface.SetFont( "ScoreboardText" )
-		local w, h = surface.GetTextSize( ent:GetName( ) )
 		
-		if w > 100 then
-			surface.SetDrawColor(50, 50, 50, 200)
-			surface.DrawRect(  midx - ( w / 2 ) - 2, y + 46, w + 5, bh )
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect(  midx - ( w / 2 ) - 2, y + 46, w + 5, bh )
+	if ent.Turret then ent = ent.Turret end
+	local own = ent:GetNWEntity("owner")
+	if !ValidEntity(own) then return end
 
-			--surface.SetDrawColor(255, 255, 255, 255)
-			--surface.DrawOutlinedRect( W * x, H * y, W * w, H * h ) -- left outline
-			--surface.DrawOutlinedRect( W / 1.3, H * xY, W * 0.2, H *  xH) -- right
-			--draw.RoundedBox( 8, midx - ( w / 2 ) - 2, y + 26, w + 5, bh, Color( 0, 0, 255, 200 ) )
+	if ent:GetClass() == "sent_spawpoint" then
+		draw.SimpleTextOutlined(own:Nick().."'s spawnpoint", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
+	else
+		local mdl = ent:GetModel()
+		if MODELS[mdl].NAME then
+			draw.SimpleTextOutlined(own:Nick().."'s "..MODELS[mdl].NAME, "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
 		else
-			surface.SetDrawColor(50, 50, 50, 200)
-			surface.DrawRect(  midx - 50, y + 46, 100, bh )
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect(  midx - 50, y + 46, 100, bh )
+			draw.SimpleTextOutlined(own:Nick().."'s prop", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
 		end
-		
-		
-		
-		draw.Text( {
-			text = "Health: " .. ent:Health( ),
-			font = "ScoreboardText",
-			pos = { midx, midy - 10 + 46 },
-			color = Color( 255, 255, 255, 255 ),
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER
-		} )
-		draw.Text( {
-			text = "Class: " .. Classes[ ent:GetNWInt( "Class", 1 ) ].NAME,
-			font = "ScoreboardText",
-			pos = { midx, midy + 10 + 46 },
-			color = Color( 255, 255, 255, 255 ),
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER
-		} )
-		draw.Text( {
-			text = ent:GetName( ),
-			font = "ScoreboardText",
-			pos = { midx, midy + 46 },
-			color = Color( 255, 255, 255, 255 ),
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER
-		} )
-	elseif ent:GetClass() == "sent_spawpoint" then
-		local own = ent:GetNWEntity("owner")
-		if ValidEntity(own) then
-			draw.SimpleTextOutlined( ent:GetNWEntity("owner"):Nick().."'s spawnpoint.", "HUD2", W * 0.02, H * 0.98, Color(255,255,255,255), 0, 1, 1, Color(0,0,0,255) )
-		end
-	elseif ent:GetClass( ) == "npc_turret_floor" || ent:GetClass( ) == "npc_turret_ceiling" then
-		owner = ent:GetNWEntity("Owner")
-		if owner then
-			name = owner:GetName( ) .. "'s turret"
-		else
-			name = ""
-		end
-		name2 = "Health: "..math.Round(ent:GetNWInt("health"))
-		col = Color( 0, 0, 255, 200 )
-		
-		surface.SetFont( "ScoreboardText" )
-		local w, h = surface.GetTextSize( name.."\n"..name2 )
-		surface.SetDrawColor(50, 50, 50, 200)
-		surface.DrawRect( midx - ( w / 2 ) - 4, midy - ( h / 2 ) - 4 + 26, w + 8, h + 8 )
-		surface.SetDrawColor(255, 255, 255, 255)
-		surface.DrawOutlinedRect( midx - ( w / 2 ) - 4, midy - ( h / 2 ) - 4 + 26, w + 8, h + 8 )
-		draw.Text( {
-			text = name,
-			font = "ScoreboardText",
-			pos = { midx, midy + 25 },
-			color = Color( 255, 255, 255, 255 ),
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER
-		} )
-		
-		draw.Text( {
-			text = name2,
-			font = "ScoreboardText",
-			pos = { midx, midy + 37 },
-			color = Color( 255, 255, 255, 255 ),
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER
-		} )
-		
-	end
-end
+	end		
 end

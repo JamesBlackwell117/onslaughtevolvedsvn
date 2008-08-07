@@ -181,45 +181,45 @@ end
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
 	
 	MODELS =   {}
-	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4}
-	MODELS["models/props_c17/furnitureStove001a.mdl"] = {GROUP = 2}
-	MODELS["models/props_combine/breendesk.mdl"] = {GROUP = 2}
-	MODELS["models/props_lab/blastdoor001c.mdl"] = {GROUP = 1}
-	MODELS["models/props_lab/blastdoor001b.mdl"] = {GROUP = 1}
-	MODELS["models/props_junk/wood_crate001a.mdl"] = {GROUP = 2}
-	MODELS["models/props_junk/wood_crate002a.mdl"] = {GROUP = 2}
+	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4, NAME = "Rack"}
+	MODELS["models/props_c17/furnitureStove001a.mdl"] = {GROUP = 2, NAME = "Stove"}
+	MODELS["models/props_combine/breendesk.mdl"] = {GROUP = 2, NAME = "Desk"}
+	MODELS["models/props_lab/blastdoor001c.mdl"] = {GROUP = 1, NAME = "Blast Door"}
+	MODELS["models/props_lab/blastdoor001b.mdl"] = {GROUP = 1, NAME = "Blast Door"}
+	MODELS["models/props_junk/wood_crate001a.mdl"] = {GROUP = 2, NAME = "Crate"}
+	MODELS["models/props_junk/wood_crate002a.mdl"] = {GROUP = 2, NAME = "Crate"}
 	MODELS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {GROUP = 5}
-	MODELS["models/props_wasteland/wood_fence01a.mdl"] = {ANG = Angle(0,90,0), GROUP = 1}
-	MODELS["models/props_wasteland/wood_fence02a.mdl"] = {ANG = Angle(0,90,0), GROUP = 1}
-	MODELS["models/props_wasteland/kitchen_counter001b.mdl"] = {GROUP = 2}
-	MODELS["models/props_interiors/VendingMachineSoda01a_door.mdl"] = {GROUP = 1}
-	MODELS["models/props_interiors/VendingMachineSoda01a.mdl"] = {GROUP = 2}
-	MODELS["models/props_pipes/concrete_pipe001a.mdl"] = {GROUP = 4}
+	MODELS["models/props_wasteland/wood_fence01a.mdl"] = {ANG = Angle(0,90,0), GROUP = 1, NAME = "Fence"}
+	MODELS["models/props_wasteland/wood_fence02a.mdl"] = {ANG = Angle(0,90,0), GROUP = 1, NAME = "Fence"}
+	MODELS["models/props_wasteland/kitchen_counter001b.mdl"] = {GROUP = 2, NAME = "Table"}
+	MODELS["models/props_interiors/VendingMachineSoda01a_door.mdl"] = {GROUP = 1, NAME = "Vending Machine Door"}
+	MODELS["models/props_interiors/VendingMachineSoda01a.mdl"] = {GROUP = 2, NAME = "Vending Machine"}
+	MODELS["models/props_pipes/concrete_pipe001a.mdl"] = {GROUP = 4, NAME = "Pipe"}
 	--MODELS["models/props_docks/dock01_pole01a_128.mdl"] = {GROUP = 3} -- hacky prop
-	MODELS["models/props_c17/door01_left.mdl"] = {GROUP = 5}
-	MODELS["models/props_c17/shelfunit01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 1}
-	MODELS["models/props_interiors/Furniture_Couch02a.mdl"] = {GROUP = 5}
-	MODELS["models/props_wasteland/kitchen_fridge001a.mdl"] = {GROUP = 2}
-	MODELS["models/props_wasteland/kitchen_stove002a.mdl"] = {GROUP = 2}
-	MODELS["models/props_combine/combine_barricade_short01a.mdl"] = {ANG = Angle(0,180,0),GROUP = 4}
-	MODELS["models/props_junk/TrashDumpster02b.mdl"] = {GROUP = 4}
-	MODELS["models/props_c17/oildrum001.mdl"] = {GROUP = 5}
-	MODELS["models/props_c17/gravestone_coffinpiece002a.mdl"] = {GROUP = 3}
-	MODELS["models/props_junk/PushCart01a.mdl"] = {GROUP = 5}
-	MODELS["models/props_c17/FurnitureCouch001a.mdl"] = {GROUP = 5}
-	MODELS["models/props_wasteland/laundry_cart001.mdl"] = {GROUP = 5}
+	MODELS["models/props_c17/door01_left.mdl"] = {GROUP = 5, NAME = "Door"}
+	MODELS["models/props_c17/shelfunit01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 1, NAME = "Shelf"}
+	MODELS["models/props_interiors/Furniture_Couch02a.mdl"] = {GROUP = 5, NAME = "Couch"}
+	MODELS["models/props_wasteland/kitchen_fridge001a.mdl"] = {GROUP = 2, NAME = "Fridge"}
+	MODELS["models/props_wasteland/kitchen_stove002a.mdl"] = {GROUP = 2, NAME = "Large Stove"}
+	MODELS["models/props_combine/combine_barricade_short01a.mdl"] = {ANG = Angle(0,180,0),GROUP = 4, NAME = "Combine Barricade"}
+	MODELS["models/props_junk/TrashDumpster02b.mdl"] = {GROUP = 4, NAME = "Dumpster"}
+	MODELS["models/props_c17/oildrum001.mdl"] = {GROUP = 5, NAME = "Oil Drum"}
+	MODELS["models/props_c17/gravestone_coffinpiece002a.mdl"] = {GROUP = 3, NAME = "Gravestone"}
+	MODELS["models/props_junk/PushCart01a.mdl"] = {GROUP = 5, NAME = "Cart"}
+	MODELS["models/props_c17/FurnitureCouch001a.mdl"] = {GROUP = 5, NAME = "Couch"}
+	MODELS["models/props_wasteland/laundry_cart001.mdl"] = {GROUP = 5, NAME = "Cart"}
 	--MODELS["models/props_trainstation/handrail_64decoration001a.mdl"] = {GROUP = 3}
-	MODELS["models/props_trainstation/traincar_rack001.mdl"] = {GROUP = 3}
-	MODELS["models/props_wasteland/laundry_basket001.mdl"] = {GROUP = 5}
-	MODELS["models/props_wasteland/prison_celldoor001a.mdl"] = {GROUP = 1}
+	MODELS["models/props_trainstation/traincar_rack001.mdl"] = {GROUP = 3, NAME = "Rack"}
+	MODELS["models/props_wasteland/laundry_basket001.mdl"] = {GROUP = 5, NAME = "Basket"}
+	MODELS["models/props_wasteland/prison_celldoor001a.mdl"] = {GROUP = 1, NAME = "Cell Door"}
 	--MODELS["models/props_rooftop/chimneypipe01a.mdl"] = {GROUP = 3}
-	MODELS["models/props_wasteland/prison_bedframe001b.mdl"] = {GROUP = 5}
-	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3}
-	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1}
-	MODELS["models/props_debris/metal_panel02a.mdl"] = {GROUP = 1}
-	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4}
-	MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
-	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2}
+	MODELS["models/props_wasteland/prison_bedframe001b.mdl"] = {GROUP = 5, NAME = "Bedframe"}
+	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3, NAME = "I-Beam"}
+	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1, NAME = "Sheet Metal"}
+	MODELS["models/props_debris/metal_panel02a.mdl"] = {GROUP = 1, NAME = "Sheet Metal"}
+	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4, NAME = "Barricade"}
+	--MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
+	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2, NAME = "Fridge"}
 	
 	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, COST = 800, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
 	
