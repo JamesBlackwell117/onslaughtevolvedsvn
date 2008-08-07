@@ -160,8 +160,8 @@ function SWEP:ViewModelDrawn()
 			render.SetMaterial( Material( "cable/redlaser" )  )
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
 			
-			render.SetMaterial(Material("sprites/animglow02"))
-			render.DrawSprite(trace.HitPos, 10, 10, Color( 255, 50, 50, 255 ))
+			render.SetMaterial(Material("sprites/redglow1"))
+			render.DrawSprite(trace.HitPos, 20, 20, Color( 255, 50, 50, 255 ))
 			
 		elseif self:GetNWInt("mode") == 2 then
 			local tr = util.GetPlayerTrace( self.Owner ) 
