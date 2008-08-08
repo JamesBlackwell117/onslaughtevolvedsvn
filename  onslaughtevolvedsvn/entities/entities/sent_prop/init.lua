@@ -36,12 +36,12 @@ function ENT:CalculateHealth()
 end
 
 function ENT:Touch(ent) -- Zombies need all the help they can get :-(
-	if table.HasValue(Zombies, ent:GetClass()) && self.LastTouch + 2 < CurTime() then
+	if table.HasValue(Zombies, ent:GetClass()) && (!ent.LastTouch || ent.LastTouch + 2 < CurTime()) then
 		ent:SetSchedule(SCHED_MELEE_ATTACK1)
 		ent:SetNPCState(3)
 		self.Shealth = self.Shealth - 70
 		self.Entity:UpdateColour()
-		self.LastTouch = CurTime()
+		ent.LastTouch = CurTime()
 		if self.Shealth <= 0 then
 			self:Dissolve()
 		elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
