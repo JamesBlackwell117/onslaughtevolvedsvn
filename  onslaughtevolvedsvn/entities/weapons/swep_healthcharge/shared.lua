@@ -189,7 +189,7 @@ function SWEP:ViewModelDrawn()
 			
 			render.SetMaterial( Material( "onslaught/refract_ring"))
 			render.UpdateRefractTexture()
-			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
+			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )`
 			
 			render.SetMaterial(Material( "cable/physbeam"))
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
