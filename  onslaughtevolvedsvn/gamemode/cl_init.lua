@@ -60,7 +60,7 @@ function GM:Think()
 		--GAMEMODE:Help( )
 	end	
 	if !SinglePlayer() && GetConVarNumber( "rate" ) < 100000 then
-		RunConsoleCommand("rate 100000")
+		RunConsoleCommand("rate", "100000")
 	end
 end
 
