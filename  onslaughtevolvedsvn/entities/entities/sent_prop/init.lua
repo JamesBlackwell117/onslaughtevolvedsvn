@@ -169,6 +169,10 @@ function ENT:OnTakeDamage(dmg)
 	if ValidEntity(dmg:GetInflictor()) then	
 		if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
 	end
+	
+	if ZOMBIEMODE_ENABLED then
+		damage = damage * 2
+	end	
 
 	self.Shealth = self.Shealth - damage 
 	
