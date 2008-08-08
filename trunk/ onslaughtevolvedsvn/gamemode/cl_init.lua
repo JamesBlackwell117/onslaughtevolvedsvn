@@ -38,7 +38,7 @@ end
 function GM:PlayerInitialSpawn(ply)
 	ply.Class = 1
 	if !SinglePlayer() then
-		RunConsoleCommand("rate 10000") -- reduce lag
+		RunConsoleCommand("rate 100000") -- reduce lag
 	end
 end
 
