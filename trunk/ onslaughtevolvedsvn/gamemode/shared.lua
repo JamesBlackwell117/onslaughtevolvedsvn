@@ -8,6 +8,7 @@ GM.Website 	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 
 PHASE = "BUILD"
+ZOMBIEMODE_ENABLED = true
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
@@ -282,7 +283,7 @@ end
 	MAXHUNTERS = 2
 	MAXHACKS = 7
 	SPAWN_DELAY = .5
-	S_MAX_NPCS, MAX_NPCS = 60,30 -- S is for singleplayer normal is multiplayer
+	S_MAX_NPCS, MAX_NPCS = 60,60 -- S is for singleplayer normal is multiplayer
 	
 	--turret vars--
 	TURRET_COST = 700

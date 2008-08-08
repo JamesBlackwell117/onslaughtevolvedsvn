@@ -277,6 +277,10 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 	if hit == 1 then
 		dmg:ScaleDamage(2)
 	end
+	
+	if ZOMBIEMODE_ENABLED then
+		dmg:ScaleDamage(.5)
+	end
 
 	dmg:ScaleDamage(1 / DamageMod())
 	return dmg
@@ -441,6 +445,9 @@ function GM:ScalePlayerDamage(ply, hitgrp, dmg)
 	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
 		dmg:ScaleDamage(10)
 	elseif dmg:GetAttacker():GetClass() == "npc_manhack" then
+		dmg:ScaleDamage(2)
+	end
+	if ZOMBIEMODE_ENABLED then
 		dmg:ScaleDamage(2)
 	end
 	return dmg
