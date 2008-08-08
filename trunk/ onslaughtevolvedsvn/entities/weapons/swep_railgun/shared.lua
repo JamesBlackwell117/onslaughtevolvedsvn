@@ -135,9 +135,7 @@ function SWEP:DrawWorldModel()
 	if CLIENT then
 		local Laser = Material( "cable/blue_elec" )
 		local muz = Material("effects/blueblackflash")
-		local ViewModel = LocalPlayer():GetViewModel()
-		if !ViewModel:IsValid() then return end
- 		local spos = ViewModel:GetAttachment(1).Pos + (self.Owner:GetAimVector() * 25)
+		local spos = self.Weapon:GetAttachment(1)
 	
 		if self:GetNWBool("on") == true then
 			local tr = util.GetPlayerTrace( self.Owner )
