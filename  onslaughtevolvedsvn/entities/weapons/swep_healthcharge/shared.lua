@@ -122,7 +122,7 @@ end
 function SWEP:DrawWorldModel()
 	self.Weapon:DrawModel()
 	if CLIENT then
- 		local spos = ViewModel:GetAttachment(1) 
+		local spos = self.Weapon:GetAttachment(1)
 	
 		local TexOffset = CurTime()*-2.0
 	
