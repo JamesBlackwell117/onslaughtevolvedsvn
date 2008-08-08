@@ -17,7 +17,7 @@ function ENT:KeyValue( key, value )
 		end
 		for k,v in pairs(self.Npcs) do
 			if table.HasValue(Zombies,v) then
-			else ZOMBIEMODE_ENABLED = nil MAX_NPCS = MAX_NPCS /2
+			else ZOMBIEMODE_ENABLED = nil MAX_NPCS = MAX_NPCS /2 break end
 		end
 	end
 	if key == "path" then
