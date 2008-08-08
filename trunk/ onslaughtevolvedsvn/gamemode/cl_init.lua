@@ -37,9 +37,6 @@ end
 
 function GM:PlayerInitialSpawn(ply)
 	ply.Class = 1
-	if !SinglePlayer() then
-		RunConsoleCommand("rate 100000") -- reduce lag
-	end
 end
 
 function GM:SpawnMenuEnabled( )
@@ -62,6 +59,9 @@ function GM:Think()
 	if input.IsKeyDown( KEY_F1 ) then
 		--GAMEMODE:Help( )
 	end	
+	if !SinglePlayer() && GetConVarNumber( "rate" ) < 100000 then
+		RunConsoleCommand("rate 100000")
+	end
 end
 
 function GM:HUDShouldDraw(nm)
