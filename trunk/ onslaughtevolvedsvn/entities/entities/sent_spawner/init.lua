@@ -15,9 +15,11 @@ function ENT:KeyValue( key, value )
 			ErrorNoHalt("WARNING!: sent_spawner keyvalues set up incorrectly!\n See a mapper!\n")
 			self.Npcs = npc_types
 		end
-		for k,v in pairs(self.Npcs) do
-			if table.HasValue(Zombies,v) then
-			else ZOMBIEMODE_ENABLED = nil MAX_NPCS = MAX_NPCS /2 break end
+		if ZOMBIEMODE_ENABLED then
+			for k,v in pairs(self.Npcs) do
+				if table.HasValue(Zombies,v) then
+				else ZOMBIEMODE_ENABLED = nil MAX_NPCS = MAX_NPCS /2 break end
+			end
 		end
 	end
 	if key == "path" then
