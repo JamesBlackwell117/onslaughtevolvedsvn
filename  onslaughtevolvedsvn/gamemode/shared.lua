@@ -45,7 +45,7 @@ DMGO["weapon_smg1"] = 12
 DMGO["weapon_357"] = 50
 DMGO["npc_turret_floor"] = 6
 DMGO["npc_turret_ceiling"] = 6
-DMGO["swep_flamethrower"] = 5
+DMGO["swep_flamethrower"] = nil
 DMGO["swep_scatter"] = 12
 DMGO["swep_xbow"] = nil
 
