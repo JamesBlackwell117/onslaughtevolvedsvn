@@ -55,14 +55,14 @@ function SWEP:PrimaryAttack()
 	if SERVER then
 		self.Weapon:SetNextPrimaryFire( CurTime( ) + .07 )
 	end
-	self.Weapon:EmitSound("Weapon_AR2.Single") 
-	self:Shoot(20,2,0.05) 
+	self.Weapon:EmitSound("Weapon_AR2.Single")
+	self:Shoot(20,2,0.05)
 	self:TakePrimaryAmmo(1)
 	self.Owner:ViewPunch( Angle( -1, 0, 0 ) )
 end
 
 function SWEP:Shoot( damage, num_bullets, aimcone )
-  
+
 	local bullet = {}
 	bullet.Num = num_bullets
 	bullet.Src = self.Owner:GetShootPos() // Source

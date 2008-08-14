@@ -633,7 +633,7 @@ function GM:Think()
 		for k,v in pairs(player.GetAll())do
 			if v:GetNWInt("class") == 2 then
 				local armor = math.Clamp(v:Armor()+1,0,100)
-				if armor < v:Health() / 2 then
+				if armor <= v:Health() / 2 then
 					v:SetArmor(armor)
 					v:SetNWInt("Armor", armor)
 				end

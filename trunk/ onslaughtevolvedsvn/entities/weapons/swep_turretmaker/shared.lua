@@ -73,7 +73,7 @@ function SWEP:PrimaryAttack()
 	trace.filter = self.Owner
 	local trc = util.TraceLine(trace)
 	if !trc.Hit then return end
-	
+
 	local trt = ents.Create("npc_turret_floor")
 	trt:SetPos(trc.HitPos + Vector(0,0,1))
 	local ang = self.Owner:EyeAngles()
@@ -110,10 +110,10 @@ function SWEP:SecondaryAttack( )
 	trace.endpos = trace.start + ( self.Owner:GetAimVector( ) * 1000 )
 	trace.filter = self.Owner
 	local tr = util.TraceLine( trace )
-	
+
 	if not tr.Hit then return end
 	if not ValidEntity( tr.Entity ) then return end
-	
+
 	if tr.Entity:GetClass() == "npc_turret_floor" && tr.Entity:GetOwner() == self.Owner then
 	tr.Entity.Controller:Remove( )
 	tr.Entity:Remove( )
@@ -123,7 +123,7 @@ function SWEP:SecondaryAttack( )
 	else
 	return
 	end
-	
+
 	self.Owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	self.Owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + 0.5 )
@@ -133,7 +133,7 @@ end
 function SWEP:Reload()
 	if SERVER then
 		if self.LastReload + 1 < CurTime() then
-		
+
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
 			if v:GetOwner() == self.Owner then v.Controller:Remove() v:Remove() end
 		end

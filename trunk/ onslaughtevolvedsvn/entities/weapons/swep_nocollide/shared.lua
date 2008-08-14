@@ -35,13 +35,13 @@ end
 
 function SWEP:PrimaryAttack( )
 	if CLIENT then return end
-	
+
 	local tr = self.Owner:GetEyeTrace( )
-	
+
 	if not tr.Hit or not tr.HitNonWorld or not ValidEntity( tr.Entity ) or tr.Entity:GetClass( ) != "sent_prop" and tr.Entity:GetClass( ) != "sent_ladder" then
 		return
 	end
-	
+
 	if ValidEntity( self.FirstEntity ) and self.FirstBone then
 		if self.FirstEntity == tr.Entity then return end
 		constraint.NoCollide( tr.Entity, self.FirstEntity, tr.PhysicsBone, self.FirstBone )
@@ -56,8 +56,8 @@ function SWEP:PrimaryAttack( )
 		self.FirstBone = tr.PhysicsBone
 		timer.Simple(2,self.FirstEntity.UpdateColour, self.FirstEntity)
 	end
-	
-	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
+
+	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 )
 end
 
 function SWEP:Holster( wep )

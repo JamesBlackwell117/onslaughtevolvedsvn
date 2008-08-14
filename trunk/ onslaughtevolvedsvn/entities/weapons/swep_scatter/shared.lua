@@ -55,9 +55,9 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + 0.6)
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.6)
 	self:ShootBullet( 10, 10, 0.015 )
-	self.Weapon:EmitSound(self.Primary.Sound) 
+	self.Weapon:EmitSound(self.Primary.Sound)
 	self:TakePrimaryAmmo( 1 )
-	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
+	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 )
 	self.Owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
 	if SERVER then
 		timer.Simple(0.2, function(self) if ValidEntity(self) then self:EmitSound("weapons/shotgun/shotgun_cock.wav") end end, self)
@@ -75,9 +75,9 @@ function SWEP:SecondaryAttack( )
 	self.Weapon:SetNextPrimaryFire(CurTime() + 0.6)
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.6)
 	self:ShootBullet( 10, 30, 0.03 )
-	self.Weapon:EmitSound(self.Primary.Sound) 
+	self.Weapon:EmitSound(self.Primary.Sound)
 	self:TakePrimaryAmmo( 4 )
-	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
+	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 )
 	self.Owner:SetAnimation(ACT_RANGE_ATTACK_SHOTGUN)
 	if SERVER then
 		local aimvec = self.Owner:GetAimVector()
@@ -105,7 +105,7 @@ function SWEP:Reload()
 end
 
 function DoReload(swep)
-	if ValidEntity(swep) then 
+	if ValidEntity(swep) then
 		if swep.Weapon:Clip1() >= swep.Primary.ClipSize || swep:Ammo1() <= 0 then swep.AT = false swep:SendWeaponAnim( ACT_SHOTGUN_RELOAD_FINISH ) swep:SetBodygroup(1,1) return end
 		if swep.Reloading == true then
 			swep:SetBodygroup(1,0)
