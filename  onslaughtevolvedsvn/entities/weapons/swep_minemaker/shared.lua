@@ -42,8 +42,8 @@ function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
 	if ( !self:CanPrimaryAttack() ) then
 			self.Owner:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-		return 
-	end 
+		return
+	end
 	self:TakePrimaryAmmo(1)
 	local mine = ents.Create("ose_mines")
 	local pos = self.Owner:GetShootPos()

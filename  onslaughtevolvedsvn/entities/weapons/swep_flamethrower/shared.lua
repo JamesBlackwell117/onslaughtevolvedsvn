@@ -74,13 +74,15 @@ function SWEP:PrimaryAttack( )
 	util.Effect( "flamer", effectdata )
 	if SERVER then
 		if self.LastBall + 0.25 <= CurTime() then
-			self:TakePrimaryAmmo(1)
+			self:TakePrimaryAmmo(1)	
+			local dmg = 6
 			for k,v in pairs(ents.FindInCone( self.Owner:GetShootPos(), self.Owner:GetAimVector(), 400, 10 )) do
 				if v:IsNPC() && v:GetClass() != "npc_turret_floor" then
 					if !v:IsOnFire() then
-					v:TakeDamage(5,self.Owner,self.Owner)
+					v:TakeDamage(dmg,self.Owner,self.Owner)
+					dmg = dmg / 1.5
 					end
-					if v:Health() / v:GetMaxHealth() < .33 then
+					if v:Health() / v:GetMaxHealth() < .20 then
 						v.Igniter = self:GetOwner()
 						v:Ignite(10,40)
 					end

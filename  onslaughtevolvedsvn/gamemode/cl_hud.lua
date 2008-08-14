@@ -66,7 +66,8 @@ function GM:DrawHUD()
 	local crnd = H/256
 	local classid = ply:GetNetworkedInt("class") or 1
 	local health = ply:Health()
-	if !ply:Alive() then health = 0 end
+	local armor = ply:GetNWInt("Armor")
+	if !ply:Alive() then health = 0 armor = 0 end
 	local maxhealth = 100
 	if PHASE == "BATTLE" then
 		maxhealth = Classes[classid].HEALTH
@@ -79,7 +80,6 @@ function GM:DrawHUD()
 		TTimeleft = TimeLeft
 	end
 
-	local armor = ply:GetNWInt("Armor")
 
 	local moncolor = Color(100,255,100,95)
 	local money = ply:GetNetworkedInt( "money")
@@ -249,8 +249,7 @@ function GM:DrawHUD()
 	else
 		local x,y = 0.02, 0.80
 		local w,h = 0.208, 0.13
-		if Maxammo > 0 then
-			w = 0.208
+		if Maxammo <= 0 then
 			h = 0.1
 		end
 
@@ -262,9 +261,10 @@ function GM:DrawHUD()
 		if GetConVarNumber("ose_hidetips") != 1 then
 			UnifiedBar(0,0,0,W,H*0.04,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
 			draw.SimpleText("TIP: "..tip,"HUD",W*0.01,H*0.006)
+		else
+			UnifiedBar(0,W*0.7,0,W*0.3,H*0.04,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
 		end
-
-		UnifiedBar(0,W*0.7,0,W*0.3,H*0.04,Color(0, 0, 0, 0),Color(255, 255, 255, 255))
+		
 		local killneeded = nextrank.KILLS or 0
 		if kills > killneeded || rank >= #RANKS then
 			draw.SimpleText("KILLS: "..kills, "HUD",W*0.71,H*0.006)

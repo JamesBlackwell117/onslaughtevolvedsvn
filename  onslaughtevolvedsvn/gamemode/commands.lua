@@ -108,7 +108,7 @@ function GM:PlayerSay( ply, txt, pub )
 			ply:ChatPrint("Wrong Syntax! Type !give <partial player name> <amount to give>")
 			return ""
 		end
-		if ply:GetNetworkedInt("money") <= tonumber(args[3]) then
+		if ply:GetNetworkedInt("money") < tonumber(args[3]) then
 			ply:ChatPrint("You do not have enough money to give that amount!")
 			return ""
 		end

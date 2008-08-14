@@ -63,18 +63,18 @@ function SWEP:PrimaryAttack( )
 	trace.start = self.Owner:GetShootPos( )
 	trace.endpos = trace.start + ( self.Owner:GetAimVector( ) * 100 )
 	trace.filter = self.Owner
-	
+
 	local tr = util.TraceLine( trace )
 	if !tr.Entity || !tr.HitNonWorld then
 		self.Weapon:EmitSound( "weapons/iceaxe/iceaxe_swing1.wav" )
 		return false
 	end
-	
+
 	self.Weapon:EmitSound("physics/flesh/flesh_impact_bullet3.wav")
-	
+
 	local ent = tr.Entity
 	if ent.Controller then ent = ent.Controller end
-	
+
 	if SERVER then
 		if ent:GetClass() == "sent_turretcontroller" then
 			if ent.Shealth >= TURRET_HEALTH then return end
@@ -83,7 +83,7 @@ function SWEP:PrimaryAttack( )
 			ent.Turret:SetNWInt("health", ent.Shealth)
 		elseif ent:IsProp() && ent.Shealth then
 			if ent.Shealth >= ent.Mhealth then return end
-			if !ent:IsOnFire() then 
+			if !ent:IsOnFire() then
 				ent.Shealth = ent.Shealth + 25
 				if ent.Shealth > ent.Mhealth then ent.Shealth = ent.Mhealth end
 			end
@@ -96,18 +96,18 @@ function SWEP:PrimaryAttack( )
 			ent:TakeDamage(25, self.Owner, self.Owner)
 		end
 	end
-	
+
 	if tr.MatType == MAT_FLESH || tr.HitType == MAT_BLOODYFLESH then
-		local effectdata = EffectData() 
- 		effectdata:SetOrigin( tr.HitPos ) 
+		local effectdata = EffectData()
+ 		effectdata:SetOrigin( tr.HitPos )
 		util.Effect( "BloodImpact", effectdata )
 	else
-		local effectdata = EffectData() 
-		effectdata:SetOrigin( tr.HitPos ) 
-		effectdata:SetNormal( tr.HitNormal:Angle() ) 
-		effectdata:SetMagnitude( 1 ) 
-		effectdata:SetScale( 1 ) 
-		effectdata:SetRadius( 1 ) 
+		local effectdata = EffectData()
+		effectdata:SetOrigin( tr.HitPos )
+		effectdata:SetNormal( tr.HitNormal:Angle() )
+		effectdata:SetMagnitude( 1 )
+		effectdata:SetScale( 1 )
+		effectdata:SetRadius( 1 )
 		util.Effect( "Sparks", effectdata )
 	end
 

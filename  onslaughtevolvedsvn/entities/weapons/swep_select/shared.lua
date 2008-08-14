@@ -39,13 +39,13 @@ end
 
 function SWEP:PrimaryAttack( )
 	if CLIENT then return end
-	
+
 	local tr = self.Owner:GetEyeTrace( )
 	if not tr.Hit or tr.HitWorld then return end
 	if not ValidEntity( tr.Entity ) then return end
-	
+
 	local e = tr.Entity
-	
+
 	if e:GetClass( ) == "sent_prop" || e:GetClass() == "sent_ladder" then
 		if table.HasValue( GAMEMODE.SaveProps, e ) then
 			GAMEMODE:DeselectProp( e )
@@ -53,13 +53,13 @@ function SWEP:PrimaryAttack( )
 			GAMEMODE:SelectProp( e )
 		end
 	end
-	
+
 	self:SetNextPrimaryFire( CurTime( ) + .5 )
 end
 
 function SWEP:SecondaryAttack( )
 	if CLIENT then return end
-	
+
 	if not self.FirstPoint then
 		self.FirstPoint = self.Owner:GetEyeTrace( ).HitPos
 	else

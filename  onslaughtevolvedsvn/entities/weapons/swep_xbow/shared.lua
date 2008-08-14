@@ -62,9 +62,9 @@ function SWEP:PrimaryAttack()
 		bolt:Spawn()
 		bolt:Activate()
 	end
-	self.Weapon:EmitSound(self.Primary.Sound) 
+	self.Weapon:EmitSound(self.Primary.Sound)
 	self:TakePrimaryAmmo( 1 )
-	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 ) 
+	self.Weapon:SendWeaponAnim( ACT_VM_RECOIL1 )
 	self.Owner:ViewPunch(Vector(-10,0,0))
 	self:Reload()
 end
@@ -72,10 +72,10 @@ end
 function SWEP:SecondaryAttack( )
 	if !self.Zoomed then
 		self.Owner:SetFOV( 30, 0 )
-		self.Zoomed = true	
+		self.Zoomed = true
 	else
 		self.Zoomed = false
-		self.Owner:SetFOV( 80, 0 ) 
+		self.Owner:SetFOV( 80, 0 )
 	end
 end
 
