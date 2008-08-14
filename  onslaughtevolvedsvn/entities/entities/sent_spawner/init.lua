@@ -30,20 +30,20 @@ function ENT:KeyValue( key, value )
 	end
 end
 
-function ENT:Initialize( )   
+function ENT:Initialize( )
 	self.Entity:SetModel( "models/props_junk/wood_crate002a.mdl" )
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 
 	self:SetNotSolid( true )
 	self:SetNoDraw( true )
-	self:DrawShadow( false )	
+	self:DrawShadow( false )
 
-	local phys = self.Entity:GetPhysicsObject( )  	
-	if phys:IsValid( ) then  		
+	local phys = self.Entity:GetPhysicsObject( )
+	if phys:IsValid( ) then
 		phys:Wake( )
 		phys:EnableMotion( false )
 		phys:EnableCollisions( false )
-	end 
+	end
 end
 
 function ENT:Think( )
@@ -64,21 +64,21 @@ function ENT:Think( )
 					return true
 				end
 			end
-			
+
 			for k,v in pairs(self.Npcs) do
 				if v == "npc_hunter" && hunters < MAXHUNTERS + math.Round(#player.GetAll()/4) then
 					npc = v
 					break
 				end
 			end
-			
+
 			local ent = ents.Create( npc )
 			if !ValidEntity(ent) then return end --stop non existant npcs spawning
 			local SpawnPos = Vector( (self.Entity:GetPos( ).x + math.random( -200, 200 )), (self.Entity:GetPos( ).y + math.random( -200, 200 )), self.Entity:GetPos( ).z + 10 )
 			ent:SetPos( SpawnPos )
 			ent:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
-			
-			local v = NPCS[npc]	
+
+			local v = NPCS[npc]
 			if v then -- This code makes sense to me :D
 				if v[1] then v = v[math.random(1,#v)] end
 				local flags = v.FLAGS
@@ -98,21 +98,21 @@ function ENT:Think( )
 				ent:SetKeyValue("wakesquad", 1)
 				ent:SetKeyValue("wakeradius", 999999)
 			end
-			
+
 			ent:SetKeyValue("target",self.pathname)
-			
+
 			local ED = EffectData( )
 			ED:SetEntity( ent )
-			util.Effect( "npc_spawn", ED ) 
-			
+			util.Effect( "npc_spawn", ED )
+
 			for k,v in pairs(player.GetAll()) do
 				ent:AddEntityRelationship(v, 1, 99 )
 			end
-			
+
 			for k,v in pairs(NPCS) do
 				ent:Fire( "setrelationship", k .. " D_LI 99" ) -- make the npcs like eachother
 			end
-			
+
 			if table.HasValue(Zombies, ent:GetClass()) then
 				for k,v in pairs(ents.FindByClass("npc_bullseye")) do
 					local trace = util.QuickTrace(v:GetPos(), Vector(0,0,-75), ents.FindByClass("sent_*"))
@@ -123,7 +123,7 @@ function ENT:Think( )
 			else
 				ent:Fire( "setrelationship", "npc_bullseye D_HT 1" )
 			end
-			ent.spn = true	
+			ent.spn = true
 			ent:Spawn( )
 			ent:Activate( )
 			NPC_COUNT = NPC_COUNT + 1

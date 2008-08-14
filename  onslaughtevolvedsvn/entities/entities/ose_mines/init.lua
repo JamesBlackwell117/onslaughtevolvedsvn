@@ -3,15 +3,15 @@ AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
 
-function ENT:Initialize()   
+function ENT:Initialize()
 	self.Entity:SetModel( "models/props_combine/combine_mine01.mdl")
-	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )  
+	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetSolid( SOLID_VPHYSICS ) 
+	self.Entity:SetSolid( SOLID_VPHYSICS )
 	self.Entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
-	local phys = self.Entity:GetPhysicsObject()  	
-	if (phys:IsValid()) then 	
+	local phys = self.Entity:GetPhysicsObject()
+	if (phys:IsValid()) then
 		phys:Wake()
 		--phys:EnableGravity( false )
 	end

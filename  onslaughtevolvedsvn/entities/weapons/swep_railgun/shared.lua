@@ -21,9 +21,9 @@ SWEP.Contact = "FP thread"
 SWEP.Purpose = "Shoot and kill"
 SWEP.Instructions = "Shoot and kill"
 SWEP.AdminSpawnable	= false
-SWEP.Spawnable	= false
-SWEP.ViewModel				= "models/weapons/v_combinesniper_e2.mdl"
-SWEP.WorldModel				= "models/weapons/w_combinesniper_e2.mdl"
+SWEP.Spawnable = false
+SWEP.ViewModel = "models/weapons/v_combinesniper_e2.mdl"
+SWEP.WorldModel	= "models/weapons/w_combinesniper_e2.mdl"
 SWEP.Primary.ClipSize = 4
 SWEP.Primary.DefaultClip = 4
 SWEP.Primary.Automatic = false
@@ -47,7 +47,7 @@ function SWEP:Initialize( )
 		-- We need to get these so we can scale everything to the player's current resolution.
 		local iScreenWidth = surface.ScreenWidth()
 		local iScreenHeight = surface.ScreenHeight()
-		
+
 		-- The following code is only slightly riped off from Night Eagle
 		-- These tables are used to draw things like scopes and crosshairs to the HUD.
 		self.ScopeTable = {}
@@ -60,13 +60,13 @@ function SWEP:Initialize( )
 		self.ScopeTable.y3 = self.ScopeTable.y2
 		self.ScopeTable.x4 = self.ScopeTable.x3
 		self.ScopeTable.y4 = self.ScopeTable.y1
-				
+
 		self.ParaScopeTable = {}
 		self.ParaScopeTable.x = 0.5*iScreenWidth - self.ScopeTable.l
 		self.ParaScopeTable.y = 0.5*iScreenHeight - self.ScopeTable.l
 		self.ParaScopeTable.w = 2*self.ScopeTable.l
 		self.ParaScopeTable.h = 2*self.ScopeTable.l
-		
+
 		self.ScopeTable.l = (iScreenHeight + 1)*self.ScopeScale -- I don't know why this works, but it does.
 
 		self.QuadTable = {}
@@ -116,7 +116,7 @@ function SWEP:ViewModelDrawn()
 		local ViewModel = LocalPlayer():GetViewModel()
 		if !ViewModel:IsValid() then return end
  		local spos = ViewModel:GetAttachment(1).Pos + (self.Owner:GetAimVector() * 25)
-	
+
 		if self:GetNWBool("on") == true then
 			local tr = util.GetPlayerTrace( self.Owner )
 			tr.filter = ents.GetAll()
@@ -136,7 +136,7 @@ function SWEP:DrawWorldModel()
 		local Laser = Material( "cable/blue_elec" )
 		local muz = Material("effects/blueblackflash")
 		local spos = self.Weapon:GetAttachment(1).Pos
-	
+
 		if self:GetNWBool("on") == true then
 			local tr = util.GetPlayerTrace( self.Owner )
 			tr.filter = ents.GetAll()
@@ -153,8 +153,8 @@ end
 function SWEP:PrimaryAttack()
 	if ( !self:CanPrimaryAttack() ) then return end
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
-	self.Weapon:EmitSound(self.Primary.Sound) 
-	self.Weapon:EmitSound(Sound("weapons/physcannon/energy_bounce1.wav")) 
+	self.Weapon:EmitSound(self.Primary.Sound)
+	self.Weapon:EmitSound(Sound("weapons/physcannon/energy_bounce1.wav"))
 	self.Weapon:EmitSound(Sound("weapons/physcannon/physcannon_charge.wav"))
 	local hitpos = nil
 	self:SetNWBool("on", true)
@@ -162,12 +162,12 @@ function SWEP:PrimaryAttack()
 	if SERVER then
 		self:TakePrimaryAmmo(1)
 		local iter = 0
-		local tr = util.GetPlayerTrace( self.Owner ) 
+		local tr = util.GetPlayerTrace( self.Owner )
 		tr.filter = ents.FindByClass("sent*")
  		local trace = util.TraceLine( tr )
  		if (!trace.Hit) then return end
 		local ent = trace.Entity
-		while ent && iter < 10 do 
+		while ent && iter < 10 do
 			if ent:IsNPC() then
 				ent.Igniter = self.Owner
 				ent:NPCDiss()
@@ -188,12 +188,12 @@ function SWEP:SecondaryAttack( )
 		self:SetNWBool("zoom", true)
 	else
 		self:SetNWBool("zoom", false)
-		self.Owner:SetFOV( 90, 0 ) 
+		self.Owner:SetFOV( 90, 0 )
 	end
 end
 
 function SWEP:DrawHUD()
-	if self:GetNWBool("zoom") then 
+	if self:GetNWBool("zoom") then
 		surface.SetDrawColor(0, 0, 0, 220)
 		surface.SetTexture(surface.GetTextureID("jaanus/ep2snip_parascope"))
 		surface.DrawTexturedRect(self.ParaScopeTable.x,self.ParaScopeTable.y,self.ParaScopeTable.w,self.ParaScopeTable.h)

@@ -34,7 +34,7 @@ function SWEP:Initialize( )
 		self:SetWeaponHoldType( "physgun" )
 	end
 end
- 
+
 function SWEP:Deploy()
 	return true
 end
@@ -46,14 +46,14 @@ function SWEP:Think( )
 		end
 	end
 end
- 
+
 function SWEP:PrimaryAttack( )
 	if self:GetNWInt("mode") != 1 then
 		self:SetNWInt("mode",1)
 	end
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
-	local tr = util.GetPlayerTrace( self.Owner ) 
+	local tr = util.GetPlayerTrace( self.Owner )
  	local trace = util.TraceLine( tr )
  	if (!trace.Hit) then return end
 	local ent = trace.Entity
@@ -68,7 +68,7 @@ function SWEP:PrimaryAttack( )
 			else
 				ent:TakeDamage(1,self.Owner, self.Owner)
 			end
-		end	
+		end
 	end
 end
 
@@ -78,13 +78,13 @@ function SWEP:SecondaryAttack( )
 	end
 	self.Weapon:SetNextPrimaryFire( CurTime( ) + .1 )
 	self.Weapon:SetNextSecondaryFire( CurTime( ) + .1 )
-	
-	local tr = util.GetPlayerTrace( self.Owner ) 
+
+	local tr = util.GetPlayerTrace( self.Owner )
 	local trace = util.TraceLine( tr )
 	if (!trace.Hit) then return end
 	local ent = trace.Entity
 	local hitpos = trace.HitPos
-	
+
 	if CLIENT then
 		self.mdl = "models/weapons/v_superphyscannon.mdl"
 	else
@@ -99,7 +99,7 @@ end
 
 function SWEP:GetViewModelPosition(pos,ang)
 	local ViewModel = LocalPlayer():GetViewModel()
-	if !ViewModel:IsValid() then return pos,ang end	
+	if !ViewModel:IsValid() then return pos,ang end
 	ViewModel:SetModel( self.mdl )
 	return pos,ang
 end
@@ -123,36 +123,36 @@ function SWEP:DrawWorldModel()
 	self.Weapon:DrawModel()
 	if CLIENT then
 		local spos = self.Weapon:GetAttachment(1)
-	
+
 		local TexOffset = CurTime()*-2.0
-	
+
 		if self:GetNWInt("mode") == 1 then
-			local tr = util.GetPlayerTrace( self.Owner ) 
+			local tr = util.GetPlayerTrace( self.Owner )
 			local trace = util.TraceLine( tr )
 			if (!trace.Hit) then return end
-			
+
 			render.SetMaterial( Material( "onslaught/refract_ring") )
 			render.UpdateRefractTexture()
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial( Material( "cable/redlaser" )  )
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material("sprites/redglow1"))
 			render.DrawSprite(trace.HitPos, 20, 20, Color( 255, 50, 50 ))
-			
+
 		elseif self:GetNWInt("mode") == 2 then
-			local tr = util.GetPlayerTrace( self.Owner ) 
+			local tr = util.GetPlayerTrace( self.Owner )
 			local trace = util.TraceLine( tr )
 			if (!trace.Hit) then return end
-			
+
 			render.SetMaterial( Material( "onslaught/refract_ring"))
 			render.UpdateRefractTexture()
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material( "cable/physbeam"))
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material("sprites/animglow02"))
 			render.DrawSprite(trace.HitPos, 10, 10, Color( 50, 50, 255 ))
 		end
@@ -163,37 +163,37 @@ function SWEP:ViewModelDrawn()
 	if CLIENT then
 		local ViewModel = LocalPlayer():GetViewModel()
 		if !ViewModel:IsValid() then return end
- 		local spos = ViewModel:GetAttachment(1) 
-	
+ 		local spos = ViewModel:GetAttachment(1)
+
 		local TexOffset = CurTime()*-2.0
-	
+
 		if self:GetNWInt("mode") == 1 then
-			local tr = util.GetPlayerTrace( self.Owner ) 
+			local tr = util.GetPlayerTrace( self.Owner )
 			local trace = util.TraceLine( tr )
 			if (!trace.Hit) then return end
-			
+
 			render.SetMaterial( Material( "onslaught/refract_ring") )
 			render.UpdateRefractTexture()
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial( Material( "cable/redlaser" )  )
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material("sprites/redglow1"))
 			render.DrawSprite(trace.HitPos, 20, 20, Color( 255, 50, 50 ))
-			
+
 		elseif self:GetNWInt("mode") == 2 then
-			local tr = util.GetPlayerTrace( self.Owner ) 
+			local tr = util.GetPlayerTrace( self.Owner )
 			local trace = util.TraceLine( tr )
 			if (!trace.Hit) then return end
-			
+
 			render.SetMaterial( Material( "onslaught/refract_ring"))
 			render.UpdateRefractTexture()
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material( "cable/physbeam"))
 			render.DrawBeam( spos.Pos, trace.HitPos, 15,TexOffset*-0.4,TexOffset*-0.4, Color( 255, 255, 255, 255 ) )
-			
+
 			render.SetMaterial(Material("sprites/animglow02"))
 			render.DrawSprite(trace.HitPos, 10, 10, Color( 50, 50, 255 ))
 		end

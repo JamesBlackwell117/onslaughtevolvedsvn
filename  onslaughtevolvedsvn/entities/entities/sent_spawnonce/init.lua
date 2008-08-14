@@ -35,22 +35,22 @@ function ENT:KeyValue( key, value )
 	if key == "sptime" then
 		self.sptime = tonumber(value)
 	end
-end 
+end
 
-function ENT:Initialize( )   
+function ENT:Initialize( )
 	self.Entity:SetModel( "models/props_junk/wood_crate002a.mdl" )
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 
 	self:SetNotSolid( true )
 	self:SetNoDraw( true )
-	self:DrawShadow( false )	
+	self:DrawShadow( false )
 
-	local phys = self.Entity:GetPhysicsObject( )  	
-	if phys:IsValid( ) then  		
+	local phys = self.Entity:GetPhysicsObject( )
+	if phys:IsValid( ) then
 		phys:Wake( )
 		phys:EnableMotion( false )
 		phys:EnableCollisions( false )
-	end 
+	end
 end
 
 function ENT:Think( )
@@ -68,7 +68,7 @@ function ENT:Think( )
 				return true
 			end
 		end
-		
+
 
 		local ent = ents.Create( self.Npc )
 		ent:SetPos( self.Entity:GetPos( ) )
@@ -76,7 +76,7 @@ function ENT:Think( )
 
 		ent:SetKeyValue("spawnflags", self.Flags)
 		ent:SetName(self.namecpy)
-		
+
 		if self.cpykeys != nil then
 			for k,v in pairs(self.cpykeys) do
 				if (k / 2) != math.Round(k / 2) then
@@ -86,19 +86,19 @@ function ENT:Think( )
 		end
 
 		ent:SetKeyValue("target",self.pathname)
-		
+
 		local ED = EffectData( )
 		ED:SetEntity( ent )
-		util.Effect( "npc_spawn", ED ) 
-		
+		util.Effect( "npc_spawn", ED )
+
 		for k,v in pairs(player.GetAll()) do
 			ent:AddEntityRelationship(v, 1, 999 )
 		end
-		
+
 		for k,v in pairs(NPCS) do
 			ent:Fire( "setrelationship", k .. " D_LI 99" ) -- make the npcs like eachother
 		end
-		
+
 		ent:Fire( "setrelationship", "npc_bullseye D_HT 1" )
 		ent:Spawn( )
 		ent:Activate( )

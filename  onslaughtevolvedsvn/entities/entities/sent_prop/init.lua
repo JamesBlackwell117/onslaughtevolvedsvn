@@ -9,19 +9,19 @@ ENT.SMH = 100
 ENT.Model = ""
 ENT.Owner = nil
 ENT.LastTouch = CurTime()
-ENT.LastUpdate = CurTime()		
+ENT.LastUpdate = CurTime()
 ENT.count = 0
 
 
 function ENT:Initialize()
 	self.Entity:SetModel( self.Model ) 	//Model path
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )  
-	self.Entity:SetSolid( SOLID_VPHYSICS )      
-	
-	
-	local phys = self.Entity:GetPhysicsObject()  	
-	if (phys:IsValid()) then  		
+	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
+	self.Entity:SetSolid( SOLID_VPHYSICS )
+
+
+	local phys = self.Entity:GetPhysicsObject()
+	if (phys:IsValid()) then
 		phys:Wake()
 		phys:EnableMotion(false)
 		self:SetUnFreezable( true )
@@ -63,40 +63,40 @@ function ENT:Prepare()
 			self:Remove()
 		end
 		self.Mhealth=self.SMH
-	
+
 		local ang = self:GetAngles()
 		local spawners = ents.FindByClass("sent_spawner")
- 
+
 		local bull = ents.Create("npc_bullseye")
 		local pos = spawners[math.random(1,#spawners)]:GetPos()
-  
-		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))	
- 
+
+		local bullpos = self.NearestPoint(self, Vector(pos.x,pos.y,self:LocalToWorld(self:OBBCenter()).z))
+
 		bullpos = self:WorldToLocal(bullpos)
-		
+
 		local posone = self:OBBMaxs()
 		local postwo = self:OBBMins()
- 
+
 		local xd = posone.x - postwo.x
 		local yd = posone.y - postwo.y
 		local zd = posone.z - postwo.z
- 
+
 		local xy = xd*yd
 		local xz = xd*zd
 		local yz = yd*zd
- 
-		if xy > xz && xy > yz then 
+
+		if xy > xz && xy > yz then
 		bullpos.z = self:OBBCenter().z
 		end
-		
+
 		if xz > yz && xz > xy then
 		bullpos.x = self:OBBCenter().x
 		else
 		bullpos.y = self:OBBCenter().y
 		end
- 
+
 		bullpos = self:LocalToWorld(bullpos)
- 
+
 		bull:SetPos(bullpos)
 		bull:SetParent(self.Entity)
 		bull:SetKeyValue("health","9999")
@@ -105,28 +105,28 @@ function ENT:Prepare()
 		bull:SetNotSolid( true )
 		bull:Spawn()
 		bull:Activate()
-		
+
 		--local debugprop = ents.Create("prop_physics")
 		--debugprop:SetPos(bullpos)
 		--debugprop:SetParent(self.Entity)
 		--debugprop:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
 		--debugprop:Spawn()
-		
+
 		self:SetAngles(ang)
-	
+
 	local trace = util.QuickTrace(self:GetPos(), Vector(0,0,-1000), ents.FindByClass("sent_*"))
 	if trace.HitWorld then
 		if trace.Fraction > .01 then
 			self.Mhealth = self.Mhealth / (10*trace.Fraction)
 		end
 	end
-	
+
 	local propcount = #ents.FindByClass("sent_prop")
 	self.Mhealth = self.Mhealth - ((propcount / 3) * self.Mhealth / 320) --less health for more props
-	
+
 	if self.Mhealth <= 50 then self.Mhealth = 50 end
 	self.Shealth = self.Mhealth
-	
+
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
 	self:SetColor(255,255,255,255)
 	self.Entity:SetMoveType( MOVETYPE_NONE )
@@ -150,7 +150,7 @@ function ENT:OnTakeDamage(dmg)
 	if ValidEntity(dmg:GetInflictor()) then
 		if dmg:GetInflictor():IsPlayer() then
 		 	dmg:SetDamage(0)
-			return dmg 
+			return dmg
 		elseif ValidEntity(dmg:GetInflictor():GetRealOwner()) then
 			if dmg:GetInflictor():GetRealOwner():IsPlayer() then
 				dmg:SetDamage(0)
@@ -158,24 +158,24 @@ function ENT:OnTakeDamage(dmg)
 			end
 		end
 	end
-	
+
 	local damage = dmg:GetDamage()
 	local pos = self:LocalToWorld(self:OBBCenter())
 	local base = 0
 
 	if self.count == 0 then damage = damage * DamageMod()
 	else damage = damage * DamageMod() / self.count end
-	
-	if ValidEntity(dmg:GetInflictor()) then	
+
+	if ValidEntity(dmg:GetInflictor()) then
 		if dmg:GetInflictor():GetClass() == "weapon_shotgun" then damage = damage / 2 end
 	end
-	
+
 	if ZOMBIEMODE_ENABLED then
 		damage = damage * 2
-	end	
+	end
 
-	self.Shealth = self.Shealth - damage 
-	
+	self.Shealth = self.Shealth - damage
+
 	if self.LastUpdate + 2 < CurTime() then
 		self:UpdateColour()
 		self.count = 0
