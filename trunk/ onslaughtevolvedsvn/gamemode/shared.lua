@@ -45,10 +45,8 @@ DMGO["weapon_smg1"] = 12
 DMGO["weapon_357"] = 50
 DMGO["npc_turret_floor"] = 6
 DMGO["npc_turret_ceiling"] = 6
-
-
-DMGO["swep_flamethrower"] = nil
-DMGO["swep_scatter"] = nil
+DMGO["swep_flamethrower"] = 5
+DMGO["swep_scatter"] = 12
 DMGO["swep_xbow"] = nil
 
 WEAPON_MDL = {}
@@ -145,7 +143,6 @@ TIPS = {"Press reload with your physgun to delete the prop you are looking at.",
 		"say !resetspawn to reset your custom spawnpoint",
 		"say !voteskip to vote to skip the build phase"
 		}
-
 TIP_DELAY = 30
 
 team.SetUp( 1, "Dead", Color( 70, 70, 70, 255 ) )
@@ -180,6 +177,22 @@ end
 	VOTE_TIME = 30 -- how long players have to vote for a map.
 	VOTE_ENABLE_TIME = 660 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
+	FLAMABLE_PROPS = false
+	PROP_CLEANUP = false
+	PROP_LIMIT = 25
+	STARTING_MONEY = 20000
+	LADDER_COST = 800
+	LIVE_BONUS = 5000
+	DEATH_PENALTY = -1500
+	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
+	MAXHUNTERS = 2
+	MAXHACKS = 7
+	SPAWN_DELAY = .5
+	S_MAX_NPCS, MAX_NPCS = 60,60 -- S is for singleplayer normal is multiplayer
+	TURRET_COST = 700
+	DISP_COST = 600
+	DISP_RATE = 50 -- lower is faster
+	TURRET_HEALTH = 100
 
 	MODELS =   {}
 	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4, NAME = "Rack"}
@@ -196,7 +209,6 @@ end
 	MODELS["models/props_interiors/VendingMachineSoda01a_door.mdl"] = {GROUP = 1, NAME = "Vending Machine Door"}
 	MODELS["models/props_interiors/VendingMachineSoda01a.mdl"] = {GROUP = 2, NAME = "Vending Machine"}
 	MODELS["models/props_pipes/concrete_pipe001a.mdl"] = {GROUP = 4, NAME = "Pipe"}
-	--MODELS["models/props_docks/dock01_pole01a_128.mdl"] = {GROUP = 3} -- hacky prop
 	MODELS["models/props_c17/door01_left.mdl"] = {GROUP = 5, NAME = "Door"}
 	MODELS["models/props_c17/shelfunit01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 1, NAME = "Shelf"}
 	MODELS["models/props_interiors/Furniture_Couch02a.mdl"] = {GROUP = 5, NAME = "Couch"}
@@ -209,30 +221,27 @@ end
 	MODELS["models/props_junk/PushCart01a.mdl"] = {GROUP = 5, NAME = "Cart"}
 	MODELS["models/props_c17/FurnitureCouch001a.mdl"] = {GROUP = 5, NAME = "Couch"}
 	MODELS["models/props_wasteland/laundry_cart001.mdl"] = {GROUP = 5, NAME = "Cart"}
-	--MODELS["models/props_trainstation/handrail_64decoration001a.mdl"] = {GROUP = 3}
 	MODELS["models/props_trainstation/traincar_rack001.mdl"] = {GROUP = 3, NAME = "Rack"}
 	MODELS["models/props_wasteland/laundry_basket001.mdl"] = {GROUP = 5, NAME = "Basket"}
 	MODELS["models/props_wasteland/prison_celldoor001a.mdl"] = {GROUP = 1, NAME = "Cell Door"}
-	--MODELS["models/props_rooftop/chimneypipe01a.mdl"] = {GROUP = 3}
 	MODELS["models/props_wasteland/prison_bedframe001b.mdl"] = {GROUP = 5, NAME = "Bedframe"}
 	MODELS["models/props_junk/iBeam01a.mdl"] = {ANG = Angle(0,-90,0),GROUP = 3, NAME = "I-Beam"}
 	MODELS["models/props_debris/metal_panel01a.mdl"] = {GROUP = 1, NAME = "Sheet Metal"}
 	MODELS["models/props_debris/metal_panel02a.mdl"] = {GROUP = 1, NAME = "Sheet Metal"}
 	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4, NAME = "Barricade"}
-	--MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2, NAME = "Fridge"}
 
-	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, COST = 800, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
+	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, COST = LADDER_COST, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
 
 	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
 
-	MODELS["models/Combine_turrets/Floor_turret.mdl"] = {ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_floor", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
+	MODELS["models/Combine_turrets/Floor_turret.mdl"] = {ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_floor", NAME = "Turret", LIMIT = 2, COST = TURRET_COST, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
 
 	MODELS["models/props_combine/combine_mine01.mdl"] = {GROUP = 6, PLYCLASS = 5, CLASS = "ose_mines", NAME = "Mine", LIMIT = 10, COST = 300, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 150}
 
-	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}
+	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = DISP_COST, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}
 
-	MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
+	MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 2, COST = TURRET_COST, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
 
 	if SERVER then
 		include("extbuild.lua")
@@ -264,29 +273,3 @@ end
 		end
 	end
 
-	--MONEY VARIABLES--
-	STARTING_MONEY = 20000
-
-	LADDER_COST = 800
-	LIVE_BONUS = 5000
-	DEATH_PENALTY = -1500
-
-	--PROP VARS--
-	FLAMABLE_PROPS = false
-	PROP_CLEANUP = false
-	PROP_LIMIT = 25
-
-	--NETWORK VARS--
-	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
-
-	--NPC Spawner Vars--
-	MAXHUNTERS = 2
-	MAXHACKS = 7
-	SPAWN_DELAY = .5
-	S_MAX_NPCS, MAX_NPCS = 60,60 -- S is for singleplayer normal is multiplayer
-
-	--turret vars--
-	TURRET_COST = 700
-	DISP_COST = 600
-	DISP_RATE = 50 -- lower is faster
-	TURRET_HEALTH = 100
