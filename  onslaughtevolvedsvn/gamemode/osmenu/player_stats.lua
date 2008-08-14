@@ -36,7 +36,7 @@ function PANEL:Init( )
 	chk:SetValue( GetConVarNumber( "ose_hidetips" ) )
 	chk:SizeToContents()
 	table.insert(self.Checks, chk)
-	self:InvalidateLayout() 
+	self:InvalidateLayout()
 end
 
 function PANEL:Paint()

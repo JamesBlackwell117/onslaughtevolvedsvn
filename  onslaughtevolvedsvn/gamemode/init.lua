@@ -43,9 +43,9 @@ function GM:PlayerInitialSpawn(ply)
 	ply.LastKill = 0
 	ply.Buddies = {} --I'll get round to this I swear
 	AllChat(ply:Nick().." has finished joining the server!")
-	
+
 	timer.Simple(1,UpdateTime,ply)
-	
+
 	local id = string.Replace( ply:SteamID(), ":", "." )
 	if !file.Exists("onslaught_profiles/"..string.lower(id)..".txt") then
 		local name = string.Replace( ply:SteamID(), ":", "." )
@@ -60,9 +60,9 @@ function GM:PlayerInitialSpawn(ply)
 		ply:SetNetworkedInt( "kills", read.kills)
 		ply:SetNetworkedInt( "rank", read.rank)
 	end
-	
+
 	GAMEMODE:CheckRanks(ply)
-	
+
 	if discplayers[ply:SteamID()] != nil then
 		ply:SetNWInt("money", discplayers[ply:SteamID()].MONEY )
 		ply.NextSpawn = discplayers[ply:SteamID()].NEXTSPAWN
@@ -87,7 +87,7 @@ function GM:PlayerInitialSpawn(ply)
 		ply:SetNetworkedInt( "class", 1 )
 		timer.Simple(2,ply.GetDefaultClass, ply)
 	end
-	
+
 	if PHASE == "BATTLE" then
 		if !ply.NextSpawn then
 			ply.NextSpawn = CurTime() + 5
@@ -96,7 +96,7 @@ function GM:PlayerInitialSpawn(ply)
 	end
 end
 
-function GM:PlayerCanPickupWeapon(ply, wep) 
+function GM:PlayerCanPickupWeapon(ply, wep)
 	if PHASE == "BUILD" then
 		return true
 	end
@@ -109,14 +109,14 @@ function GM:PlayerCanPickupWeapon(ply, wep)
 
 	return false
 end
- 
+
 function GM:PlayerSpawn(ply)
 	ply:ShouldDropWeapon(false)
-	ply:UnSpectate() 
+	ply:UnSpectate()
 	ply:SetTeam(ply:GetNWInt("rank") + 1)
 	ply:RemoveAllAmmo()
-	GAMEMODE:PlayerLoadout(ply) 
-	
+	GAMEMODE:PlayerLoadout(ply)
+
 	if PHASE == "BUILD" then
 		GAMEMODE:SetPlayerSpeed(ply, 350, 500)
 		ply:SetMaxHealth(100)
@@ -178,7 +178,7 @@ function GM:StartBattle()
 	end
 
 	umsg.Start("StartBattle")
-	umsg.End() 
+	umsg.End()
 	for k,v in pairs(ents.FindByName("ose_battle")) do
 		v:Fire("trigger",0,3)
 	end
@@ -235,9 +235,9 @@ function GM:StartBuild()
 	GAMEMODE:CalculateLiveBonus()
 	PHASE = "BUILD"
 	end
-	
+
 	NPC_COUNT = 0
-	
+
 	NextRound = CurTime() + BUILDTIME
 	UpdateTime()
 	voted = 0
@@ -264,20 +264,20 @@ end
 
 function GM:ScaleNPCDamage(npc,hit,dmg)
 	if npc:GetClass() == "npc_turret_floor" || npc:GetClass() == "npc_turret_ceiling" then return end
-	
+
 	local wep
 	if dmg:GetInflictor():IsPlayer() then
 		wep = dmg:GetInflictor():GetActiveWeapon():GetClass()
-	else 
-		wep = dmg:GetInflictor():GetClass() 
+	else
+		wep = dmg:GetInflictor():GetClass()
 	end
-	
+
 	if DMGO[wep] then dmg:SetDamage(DMGO[wep]) end
-	
+
 	if hit == 1 then
 		dmg:ScaleDamage(2)
 	end
-	
+
 	if ZOMBIEMODE_ENABLED then
 		dmg:ScaleDamage(.5)
 	end
@@ -294,7 +294,7 @@ function GM:Initialize()
 	game.ConsoleCommand("mp_falldamage 1\n") -- we could do this in the scaleplayerdamage but I think the engines function works best
 	self.SaveProps = { }
 	GAMEMODE:StartBuild()
-	
+
 	if SinglePlayer() then
 		PROP_LIMIT = 10000
 		MAX_NPCS = S_MAX_NPCS -- If it isnt a server raise the NPC limit since you shouldn't have to worry about lag :)
@@ -327,15 +327,15 @@ function GM:PlayerDeath( ply, wep, killer )
 	ply.specid = 1
 	ply.Specatemode = OBS_MODE_CHASE
 	local name = npcs[killer:GetClass()] or killer:GetClass()
-		
+
 	if ply != killer then
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
 		end
 	end
-	
+
 	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin = nil end
-	
+
 	if PHASE == "BUILD" then
 		ply.NextSpawn = CurTime() + 5
 	else
@@ -350,11 +350,11 @@ function GM:PlayerDeath( ply, wep, killer )
 			if v:GetRealOwner() == ply && v.Type == "BATTLE" then v:PropRemove() end
 		end
 	end
-	
+
 	ply:CreateRagdoll( )
 	ply.Died = ply.Died + 1
 	self:CheckDead(ply)
-	ply:AddDeaths(1)	
+	ply:AddDeaths(1)
 	return true
 end
 
@@ -427,8 +427,8 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 			return false
 		end
 	end
-	
-	if attacker:IsPlayer() then 
+
+	if attacker:IsPlayer() then
 	return false
 	elseif ValidEntity(attacker:GetOwner()) then
 		if attacker:GetOwner():IsPlayer() then
@@ -537,7 +537,7 @@ function GM:DeleteProps(ply, ID, nick)
 end
 
 function GM:GravGunOnPickedUp( ply,ent )
-	if ent:GetClass() == "sent_turret_controller" then 
+	if ent:GetClass() == "sent_turret_controller" then
 		ent:GetPhysicsObject():EnableMotion(true)
 		if ValidEntity(ent.Turret) then
 			ent.Turret:GetPhysicsObject():EnableMotion(true)
@@ -579,20 +579,20 @@ function GM:OnPhysgunFreeze(weapon, physobj, ent, ply)
 end
 
 function GM:OnPhysgunReload( wep, ply ) -- TODO: BUDDY SYSTEM
-	
+
 	local trace = {}
 	trace.start = ply:GetShootPos()
 	trace.endpos = trace.start + (ply:GetAimVector() * 1000)
 	trace.filter = ply
 	local trc = util.TraceLine(trace)
-	
+
 	if !trc.Entity then return false end
 	if !trc.Entity:IsValid( ) then return false end
-	
+
 	local ent = trc.Entity
-	
-	if ent.Turret then ent = ent.Turret end 
-	
+
+	if ent.Turret then ent = ent.Turret end
+
 	if ent:PropOp(ply) then
 		ent:PropRemove(true)
 	end
@@ -633,20 +633,20 @@ function GM:Think()
 		for k,v in pairs(player.GetAll())do
 			if v:GetNWInt("class") == 2 then
 				local armor = math.Clamp(v:Armor()+1,0,100)
-				if armor < v:Health() / 2 then 
+				if armor < v:Health() / 2 then
 					v:SetArmor(armor)
-					v:SetNWInt("Armor", armor) 
+					v:SetNWInt("Armor", armor)
 				end
 			end
 		end
-		self.tic =  CurTime( )
+		self.tic =	CurTime( )
 	end
 end
 
 hook.Add("EntityTakeDamage", "ArmorUpdate", function(ent, inflictor, attacker, amount, dmginfo)
 	if !ent:IsPlayer() then return end
 	ent:SetNWInt("Armor", ent:Armor())
-	end) 
+	end)
 
 function GM:RestockPlayer(ply)
 	if !ply then return end
@@ -677,7 +677,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 		end
 	end
 	local plyobj = killer
-	if killer:IsPlayer() then 
+	if killer:IsPlayer() then
 	elseif ValidEntity(killer:GetOwner()) && killer:GetOwner():IsPlayer() then
 			plyobj = killer:GetOwner()
 	elseif ValidEntity(npc.Igniter) then
@@ -721,5 +721,5 @@ function GM:CreateEntityRagdoll( entity, ragdoll )
 
 	ragdoll:SetCollisionGroup( COLLISION_GROUP_WEAPON )
 	timer.Simple( 2, function( r ) if ValidEntity( r ) then r:Remove( ) end end, ragdoll )
-	
+
 end

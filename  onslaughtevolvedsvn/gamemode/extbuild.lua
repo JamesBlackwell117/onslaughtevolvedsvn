@@ -29,7 +29,7 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	--ent.Owner = ply
 	--ent:Spawn()
 	--ent:Activate()
-	
+
 	--for k,v in pairs(NPCS) do
 	--	ent:Fire( "setrelationship", k .. " D_HT 99" )
 	--end
@@ -40,9 +40,9 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	--for k,v in pairs(player.GetAll()) do
 	--	ent:AddEntityRelationship(v, 3, 99 )
 	--end
-	
+
 	--angl.p = angl.p+180
-	
+
 	this:SetPos(tr.HitPos)
 	this:SetOwner(owner)
 	this:SetAngles(angl)
@@ -77,7 +77,7 @@ MODELS["models/props_combine/combine_mine01.mdl"].EXTBUILD = function(this,owner
 	this:SetPos(tr.HitPos)
 	this:SetAngles(ang2)
 	this:SetOwner(owner)
-	
+
 	owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 end
@@ -92,7 +92,7 @@ MODELS["models/props_combine/health_charger001.mdl"].EXTBUILD = function(this,ow
 	if tr.Entity then
 		if tr.Entity:IsPlayer() || tr.Entity:GetClass() == "sent_dispenser" || tr.Entity:GetClass() == "npc_turret_floor" || tr.Entity:GetClass() == "sent_turretcontroller" then return end
 	end
-	
+
 	local ang = tr.HitNormal:Angle()
 	if ang.pitch < 10 || ang.pitch > 350 then
 		local disp = ents.Create("sent_dispenser")

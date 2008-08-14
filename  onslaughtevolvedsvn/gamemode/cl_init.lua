@@ -26,7 +26,7 @@ function GM:Initialize( )
 	surface.CreateFont( "coolvetica", 24, 500, true, false, "ScoreboardSub" )
 	surface.CreateFont( "Tahoma", 16, 1000, true, false, "ScoreboardText" )
 	surface.CreateFont( "Tahoma", 18, 1000, true, false, "Message" )
-	
+
 end
 
 /*
@@ -47,7 +47,7 @@ function GM:SpawnMenuOpen()
 	return false
 end
 
-function GM:InitPostEntity()	
+function GM:InitPostEntity()
 end
 
 function GM:Think()
@@ -58,7 +58,7 @@ function GM:Think()
 	TimeLeft = NextRound - CurTime()
 	if input.IsKeyDown( KEY_F1 ) then
 		--GAMEMODE:Help( )
-	end	
+	end
 end
 
 function GM:HUDShouldDraw(nm)
@@ -70,15 +70,15 @@ function GM:HUDShouldDraw(nm)
 end
 
 function GM:HUDPaint()
-	
+
 	if GetConVarNumber( "cl_drawhud" ) == 0 then return false end
-	
+
 	if d && LocalPlayer():GetNetworkedInt( "money") == 0 then -- this bit of code stops the HUD from displaying if the usermessages haven't been sent yet
 		return false
 	else
 		d = false
 	end
-	
+
 	GAMEMODE:DrawHUD()
 	GAMEMODE:HUDDrawTargetID()
 end
@@ -159,22 +159,22 @@ function Message(um)
 	Messages[#Messages + 1] = msg
 end
 
-usermessage.Hook("ose_msg", Message) 
+usermessage.Hook("ose_msg", Message)
 
 local function GetTargetPos(ent)
 	local attach = nil
-	if ent:IsPlayer() 
+	if ent:IsPlayer()
 	|| ent:GetModel() == "models/zombie/classic.mdl"
 	 || ent:GetModel() == "models/zombie/zombie_soldier.mdl"
 	  || ent:GetModel() == "models/combine_soldier.mdl"
 	  || ent:GetModel() == "models/combine_super_soldier.mdl"
 	  || ent:GetModel() == "models/combine_soldier_prisonguard.mdl"
 	   || ent:GetModel() == "models/police.mdl"
-	    || ent:GetModel() == "models/zombie/fast.mdl"
-	     || ent:GetModel() == "models/zombie/poison.mdl" then
+		|| ent:GetModel() == "models/zombie/fast.mdl"
+		 || ent:GetModel() == "models/zombie/poison.mdl" then
 		attach = ent:GetAttachment(2)
 		end
-		
+
 		if attach then
 			if ent:GetModel() == "models/zombie/classic.mdl" || ent:GetModel() == "models/zombie/zombie_soldier.mdl" then
 				return attach.Pos + ent:GetAngles():Forward() * 2
@@ -186,8 +186,8 @@ local function GetTargetPos(ent)
 				return attach.Pos
 			end
 		end
-				
-	return ent:OBBCenter() 
+
+	return ent:OBBCenter()
 end
 
 function MdlMessage(um)
@@ -205,30 +205,30 @@ function MdlMessage(um)
 	--msg.colour = col
 	--msg.Time = CurTime()
 	--Messages[#Messages + 1] = msg
-	
-	
+
+
 	local mdlmsg = vgui.Create( "onslaught_message" )
 	mdlmsg.mdl:SetModel(mdl)
 	mdlmsg.mdl:SetSize( 80,80 )
-			
+
 	local ent = ents.Create("prop_physics") -- lol ailias filthy hack
 	ent:SetAngles(Angle(0,0,0))
 	ent:SetPos(Vector(0,0,0))
 	ent:SetModel(mdl)
 	ent:Spawn()
 	ent:Activate()
-	ent:PhysicsInit( SOLID_VPHYSICS )    
+	ent:PhysicsInit( SOLID_VPHYSICS )
 
 	local dist = ent:BoundingRadius()*1.2
 	local center = GetTargetPos(ent)
 	--if center == ent:OBBCenter() then dist = ent:BoundingRadius()*1.2 else dist = ent:BoundingRadius()/3 end
-			
+
 	ent:Remove()
-			
+
 	mdlmsg.mdl:SetLookAt( center )
 	mdlmsg.mdl:SetCamPos( center+Vector(-dist,-dist,dist) )
 	mdlmsg.mdl:SetPos(244,20)
 
 end
 
-usermessage.Hook("ose_mdl_msg", MdlMessage) 
+usermessage.Hook("ose_mdl_msg", MdlMessage)

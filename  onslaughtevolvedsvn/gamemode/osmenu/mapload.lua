@@ -6,36 +6,36 @@ function PANEL:Init( )
 	self.Label = vgui.Create( "DLabel", self )
 	self.Label:SetText( "Loading file list.." )
 	self.Label:SizeToContents( )
-	
+
 	self.List = vgui.Create( "DListView", self )
 	self.List:AddColumn( "Maps" )
 	function self.List.DoDoubleClick( list, rowid, row )
 		RunConsoleCommand( "votemap", row:GetColumnText( 1 ) )
 		self:Close( )
 	end
-	
+
 	self:SetTitle( "Load file" )
 	self:SetDeleteOnClose( true )
 	self:Center( )
 	self:MakePopup( )
-	
+
 	timer.Simple(0.5, RunConsoleCommand, "getmaps" )
 end
 
 function PANEL:PerformLayout()
 	self:SetSize( 200, 200 )
-	
+
 	self.Label:SizeToContents()
 	self.Label:SetPos( 2, 22 )
-	
+
 	self.List:StretchToParent( 2, self.Label:GetTall( ) + 24, 2, 2 )
-	
+
 	DFrame.PerformLayout( self )
 end
 
 function PANEL:Close()
- 	self:SetVisible( false ) 
-   	RememberCursorPosition( )
+	self:SetVisible( false )
+	RememberCursorPosition( )
 	gui.EnableScreenClicker( false )
 	self:Remove()
 end

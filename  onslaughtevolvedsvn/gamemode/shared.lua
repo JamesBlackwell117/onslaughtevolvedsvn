@@ -2,9 +2,9 @@ include("swep_fix.lua")
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 GM.Name 	= "Onslaught: Evolved - 1.9"
-GM.Author 	= "Ailia, Conman420, & Xera" -- DO NOT CHANGE THIS
-GM.Email 	= ""
-GM.Website 	= ""
+GM.Author	= "Ailia, Conman420, & Xera" -- DO NOT CHANGE THIS
+GM.Email	= ""
+GM.Website	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 
 PHASE = "BUILD"
@@ -12,12 +12,12 @@ ZOMBIEMODE_ENABLED = true
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
-Classes[1] = {NAME = "Scout", SPEED = 650, JUMP = 260, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl", 					DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
-Classes[2] = {NAME = "Soldier", SPEED = 280, JUMP = 160, ARMOR = 100, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl", 	DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
-Classes[3] = {NAME = "Engineer", SPEED = 300, JUMP = 160, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl", 					DSCR = "With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
+Classes[1] = {NAME = "Scout", SPEED = 650, JUMP = 260, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl",					DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
+Classes[2] = {NAME = "Soldier", SPEED = 280, JUMP = 160, ARMOR = 100, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl",	DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
+Classes[3] = {NAME = "Engineer", SPEED = 300, JUMP = 160, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl",					DSCR = "With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
 Classes[4] = {NAME = "Sniper", SPEED = 270, JUMP = 160, WEAPON_SET = 4, HEALTH = 80,AMMO = {7,5,14}, MODEL = "models/player/Group03/male_06.mdl",					DSCR = "The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep cover!"}
-Classes[5] = {NAME = "Pyro", SPEED = 450, JUMP = 210, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl", 				DSCR = "The pyro has the ability to set enemies alight and place mines to send those enemies fliying!"  }
-Classes[6] = {NAME = "Support", SPEED = 500, JUMP = 220, WEAPON_SET = 6, HEALTH = 90, AMMO = {13}, MODEL = "models/player/Group03/Female_04.mdl", 					DSCR = "Acting as the team medic, the support helps keep the team alive and the base standing."  }
+Classes[5] = {NAME = "Pyro", SPEED = 450, JUMP = 210, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl",				DSCR = "The pyro has the ability to set enemies alight and place mines to send those enemies fliying!"	}
+Classes[6] = {NAME = "Support", SPEED = 500, JUMP = 220, WEAPON_SET = 6, HEALTH = 90, AMMO = {13}, MODEL = "models/player/Group03/Female_04.mdl",					DSCR = "Acting as the team medic, the support helps keep the team alive and the base standing."  }
 
 TAUNTS = {}
 TAUNTS[1] = {"vo/episode_1/npc/female01/cit_kill02.wav","vo/npc/female01/gotone01.wav","vo/episode_1/npc/female01/cit_kill04.wav", "vo/episode_1/npc/female01/cit_kill09.wav", "vo/episode_1/npc/female01/cit_kill06.wav","vo/episode_1/npc/female01/cit_kill11.wav","vo/episode_1/npc/female01/cit_kill16.wav"}
@@ -29,11 +29,11 @@ TAUNTS[6] = {"vo/episode_1/npc/female01/cit_kill02.wav","vo/npc/female01/gotone0
 
 WEAPON_SET = {}
 WEAPON_SET[1] = {"weapon_crowbar",	"weapon_pistol",	"swep_scatter"}
-WEAPON_SET[2] = {"weapon_crowbar",	"weapon_pistol", 	"weapon_ar2", 		"weapon_frag"}
-WEAPON_SET[3] = {"swep_repair",		"weapon_pistol", 	"weapon_shotgun", 	"weapon_physcannon",  		"swep_dispensermaker", "swep_turretmaker" }
-WEAPON_SET[4] = {"weapon_crowbar",	"weapon_357",		"swep_xbow", 		"swep_railgun"}
-WEAPON_SET[5] = {"weapon_crowbar", 	"weapon_pistol", 	"swep_flamethrower","weapon_frag", 		 		"swep_minemaker"}
-WEAPON_SET[6] = {"weapon_crowbar", 	"swep_healthcharge"}
+WEAPON_SET[2] = {"weapon_crowbar",	"weapon_pistol",	"weapon_ar2",		"weapon_frag"}
+WEAPON_SET[3] = {"swep_repair", 	"weapon_pistol",	"weapon_shotgun",	"weapon_physcannon",		"swep_dispensermaker", "swep_turretmaker" }
+WEAPON_SET[4] = {"weapon_crowbar",	"weapon_357",		"swep_xbow",		"swep_railgun"}
+WEAPON_SET[5] = {"weapon_crowbar",	"weapon_pistol",	"swep_flamethrower","weapon_frag",				"swep_minemaker"}
+WEAPON_SET[6] = {"weapon_crowbar",	"swep_healthcharge"}
 
 DMGO = {}
 DMGO["weapon_crowbar"] = 25
@@ -89,24 +89,24 @@ AMMOS[14] = {AMMO = "AR2AltFire", NAME = "Core Energy", SMULT = 2, QT = 1, PRICE
 
 NPCS = {}
 NPCS["npc_combine_s"] = {}
-NPCS["npc_combine_s"][1] =		{FLAGS = 403204, MONEY = 100, 	MODEL = "models/combine_soldier.mdl", 	  			KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 999999 wakeradius 999999"}
-NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 140, 	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakeradius 999999"}
-NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 120, 	MODEL = "models/combine_soldier_prisonguard.mdl", 	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 999999 wakeradius 999999"}
-NPCS["npc_metropolice"]  = 		{FLAGS = 403204, MONEY = 50,  	MODEL = "models/police.mdl",			  			KEYS = "additionalequipment weapon_pistol"}
-NPCS["npc_hunter"]  = 			{FLAGS = 9984, 	 MONEY = 500, 	MODEL = "models/hunter.mdl"}
-NPCS["npc_manhack"]  = 			{FLAGS = 263940, MONEY = 50,  	MODEL = "models/manhack.mdl"}
-NPCS["npc_zombie"]  = 			{FLAGS = 1796, 	 MONEY = 75,  	MODEL = "models/zombie/classic.mdl"}
-NPCS["npc_fastzombie"]  = 		{FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/fast.mdl"}
-NPCS["npc_zombine"]  = 			{FLAGS = 1796,   MONEY = 100, 	MODEL = "models/zombie/zombie_soldier.mdl"}
-NPCS["npc_antlion"] = 			{FLAGS = 9984,   MONEY = 100, 	MODEL = "models/antlion.mdl", 	 		  			KEYS = "radius 512"}
-NPCS["npc_headcrab"] = 			{FLAGS = 1796,   MONEY = 33,  	MODEL = "models/headcrabclassic.mdl"}
-NPCS["npc_headcrab_fast"] = 	{FLAGS = 1796,   MONEY = 40,  	MODEL = "models/headcrab.mdl"}
-NPCS["npc_antlionguard"] = 		{FLAGS = 9988,   MONEY = 700, 	MODEL = "models/antlion_guard.mdl"}
-NPCS["npc_rollermine"] = 		{FLAGS = 9988,   MONEY = 175, 	MODEL = "models/roller.mdl", 		 		  		KEYS = "uniformsightdist 1"}
-NPCS["npc_poisonzombie"] = 		{FLAGS = 9988,   MONEY = 125, 	MODEL = "models/zombie/poison.mdl",		  			KEYS = "crabcount 3"}
-NPCS["npc_headcrab_black"] =	{FLAGS = 9988,   MONEY = 120, 	MODEL = "models/headcrabblack.mdl"}
-NPCS["npc_zombie_torso"] = 		{FLAGS = 1796, 	 MONEY = 50,  	MODEL = "models/zombie/classic.mdl"}
-NPCS["npc_fastzombie_torso"] = 	{FLAGS = 1796,   MONEY = 75,	MODEL = "models/zombie/fast.mdl"}
+NPCS["npc_combine_s"][1] =		{FLAGS = 403204, MONEY = 100,	MODEL = "models/combine_soldier.mdl",				KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 999999 wakeradius 999999"}
+NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 140,	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakeradius 999999"}
+NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 120,	MODEL = "models/combine_soldier_prisonguard.mdl",	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 999999 wakeradius 999999"}
+NPCS["npc_metropolice"]  =		{FLAGS = 403204, MONEY = 50,	MODEL = "models/police.mdl",						KEYS = "additionalequipment weapon_pistol"}
+NPCS["npc_hunter"]	=			{FLAGS = 9984,	 MONEY = 500,	MODEL = "models/hunter.mdl"}
+NPCS["npc_manhack"]  =			{FLAGS = 263940, MONEY = 50,	MODEL = "models/manhack.mdl"}
+NPCS["npc_zombie"]	=			{FLAGS = 1796,	 MONEY = 75,	MODEL = "models/zombie/classic.mdl"}
+NPCS["npc_fastzombie"]	=		{FLAGS = 1796,	 MONEY = 100,	MODEL = "models/zombie/fast.mdl"}
+NPCS["npc_zombine"]  =			{FLAGS = 1796,	 MONEY = 100,	MODEL = "models/zombie/zombie_soldier.mdl"}
+NPCS["npc_antlion"] =			{FLAGS = 9984,	 MONEY = 100,	MODEL = "models/antlion.mdl",						KEYS = "radius 512"}
+NPCS["npc_headcrab"] =			{FLAGS = 1796,	 MONEY = 33,	MODEL = "models/headcrabclassic.mdl"}
+NPCS["npc_headcrab_fast"] = 	{FLAGS = 1796,	 MONEY = 40,	MODEL = "models/headcrab.mdl"}
+NPCS["npc_antlionguard"] =		{FLAGS = 9988,	 MONEY = 700,	MODEL = "models/antlion_guard.mdl"}
+NPCS["npc_rollermine"] =		{FLAGS = 9988,	 MONEY = 175,	MODEL = "models/roller.mdl",						KEYS = "uniformsightdist 1"}
+NPCS["npc_poisonzombie"] =		{FLAGS = 9988,	 MONEY = 125,	MODEL = "models/zombie/poison.mdl", 				KEYS = "crabcount 3"}
+NPCS["npc_headcrab_black"] =	{FLAGS = 9988,	 MONEY = 120,	MODEL = "models/headcrabblack.mdl"}
+NPCS["npc_zombie_torso"] =		{FLAGS = 1796,	 MONEY = 50,	MODEL = "models/zombie/classic.mdl"}
+NPCS["npc_fastzombie_torso"] =	{FLAGS = 1796,	 MONEY = 75,	MODEL = "models/zombie/fast.mdl"}
 
 npcs = {
 	npc_combine_s = "Combine Soldier",
@@ -145,7 +145,7 @@ TIPS = {"Press reload with your physgun to delete the prop you are looking at.",
 		"say !resetspawn to reset your custom spawnpoint",
 		"say !voteskip to vote to skip the build phase"
 		}
-		
+
 TIP_DELAY = 30
 
 team.SetUp( 1, "Dead", Color( 70, 70, 70, 255 ) )
@@ -180,7 +180,7 @@ end
 	VOTE_TIME = 30 -- how long players have to vote for a map.
 	VOTE_ENABLE_TIME = 660 -- how long the current map has to go on for until map voting is allowed -- once a vote has passed it redisables it then reenables it again after this time.
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
-	
+
 	MODELS =   {}
 	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4, NAME = "Rack"}
 	MODELS["models/props_c17/furnitureStove001a.mdl"] = {GROUP = 2, NAME = "Stove"}
@@ -221,23 +221,23 @@ end
 	MODELS["models/props_c17/concrete_barrier001a.mdl"] = {GROUP = 4, NAME = "Barricade"}
 	--MODELS["models/props_c17/playgroundTick-tack-toe_post01.mdl"] = {GROUP = 5}
 	MODELS["models/props_c17/FurnitureFridge001a.mdl"] = {GROUP = 2, NAME = "Fridge"}
-	
+
 	MODELS["models/props_c17/metalladder002.mdl"] = {GROUP = 6, COST = 800, CLASS = "sent_ladder", NAME = "Ladder", LIMIT = 3}
-	
+
 	MODELS["models/Items/ammocrate_smg1.mdl"] = {GROUP = 6, CLASS = "sent_ammo_dispenser", NAME = "Ammo Crate", LIMIT = 1}
-	
+
 	MODELS["models/Combine_turrets/Floor_turret.mdl"] = {ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_floor", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
-	
-	MODELS["models/props_combine/combine_mine01.mdl"] = {GROUP = 6, PLYCLASS = 5, CLASS = "ose_mines", NAME = "Mine", LIMIT = 10, COST = 300, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 150}	
-	
-	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}	
-	
+
+	MODELS["models/props_combine/combine_mine01.mdl"] = {GROUP = 6, PLYCLASS = 5, CLASS = "ose_mines", NAME = "Mine", LIMIT = 10, COST = 300, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 150}
+
+	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = 600, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}
+
 	MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 2, COST = 700, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
 
 	if SERVER then
 		include("extbuild.lua")
 	end
-	
+
 	MODELGROUPS = {}
 	MODELGROUPS[1] = "Walls"
 	MODELGROUPS[2] = "Boxes"
@@ -245,17 +245,17 @@ end
 	MODELGROUPS[4] = "Other"
 	MODELGROUPS[5] = "Junk"
 	MODELGROUPS[6] = "Special"
-				
+
 	for k,v in pairs(MODELS) do
 		util.PrecacheModel(k)
 	end
-	
+
 	for k,v in pairs(Classes) do
 		util.PrecacheModel(v.MODEL)
 	end
-	
+
 	for k,v in pairs(NPCS) do
-		if v[1] then 
+		if v[1] then
 			for _,x in pairs(v) do
 				util.PrecacheModel(x.MODEL)
 			end
@@ -263,10 +263,10 @@ end
 			util.PrecacheModel(v.MODEL)
 		end
 	end
-	
+
 	--MONEY VARIABLES--
 	STARTING_MONEY = 20000
-	
+
 	LADDER_COST = 800
 	LIVE_BONUS = 5000
 	DEATH_PENALTY = -1500
@@ -278,13 +278,13 @@ end
 
 	--NETWORK VARS--
 	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
-	
+
 	--NPC Spawner Vars--
 	MAXHUNTERS = 2
 	MAXHACKS = 7
 	SPAWN_DELAY = .5
 	S_MAX_NPCS, MAX_NPCS = 60,60 -- S is for singleplayer normal is multiplayer
-	
+
 	--turret vars--
 	TURRET_COST = 700
 	DISP_COST = 600
