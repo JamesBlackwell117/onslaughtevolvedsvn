@@ -14,7 +14,7 @@ function PANEL:Init( )
 	self.PanelList = vgui.Create( "DPanelList", self )
 	self.PanelList:SetPadding( 2 )
 	self.PanelList:EnableVerticalScrollbar( true )
-	
+
 	self:AddAdminButton( "Start build", "Forces the game to switch to build mode.", function( ) RunConsoleCommand( "Admin", "2" ) end, "gui/silkicons/box" )
 	self:AddAdminButton( "Start battle", "Forces the game to switch to battle mode.", function( ) RunConsoleCommand( "Admin", "1" ) end, "gui/silkicons/bomb" )
 	self:AddAdminButton( "Set spawn time", "Allows you to set the amount of time before players respawn.", function( )
@@ -140,11 +140,11 @@ function PANEL:AddAdminButton( txt, ttip, func, img )
 	btn.AdminClick = func
 	btn:SetText( txt )
 	btn:SetSize( self:GetWide( ) - 4, 20 )
-	
+
 	if ttip then
 		btn:SetTooltip( ttip )
 	end
-	
+
 	if img then
 		btn:Setup( img )
 	end
@@ -186,4 +186,4 @@ function GetMap()
 	mapname = string.gsub(mapname,".bsp","")
 
 	return mapname
-end 
+end

@@ -100,7 +100,7 @@ function Emeta:PropRemove(sell,silent)
 	if sell then
 		local owner = self:GetRealOwner()
 		local model = self:GetModel()
-	
+
 		if owner then
 			if MODELS[model] && MODELS[model].COST then
 				cost = MODELS[model].COST
@@ -125,8 +125,8 @@ end
 function Pmeta:Money(amt,msg,col)
 	local suffix = " "
 	local money = self:GetNWInt("money")
-	if amt < 0 then 
-		if money + amt < 0 then 
+	if amt < 0 then
+		if money + amt < 0 then
 			self:Message("Insufficient Funds!", Color(255,100,100,255))
 			self:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 			return false
@@ -138,8 +138,8 @@ function Pmeta:Money(amt,msg,col)
 	end
 
 	self:SetNetworkedInt("money",money + amt)
-	if msg then	self:Message(msg,col) end
-	
+	if msg then self:Message(msg,col) end
+
 	return true
 end
 

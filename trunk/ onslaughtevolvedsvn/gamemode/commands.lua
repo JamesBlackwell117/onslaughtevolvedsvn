@@ -19,7 +19,7 @@ concommand.Add("join_class", Class)
 
 function AdminMenu(ply,com,args)
 	if not ply:IsAdmin( ) then return false end
-	
+
 	if args[ 1 ] == "1" then
 		GAMEMODE:StartBattle()
 		AllChat("Admin: " .. ply:Nick() .. " skipped to battle mode!")
@@ -62,7 +62,7 @@ function AdminMenu(ply,com,args)
 		end
 		SPAWN_TIME = tonumber( args[ 2 ] )
 		AllChat("Admin: " .. ply:Nick() .. " changed spawn time to " .. string.ToMinutesSeconds(tonumber(args[ 2 ])))
-		
+
 	elseif args[ 1 ] == "select" then
 		ply:Give( "swep_select" )
 	elseif args[ 1 ] == "owner" then
@@ -420,50 +420,50 @@ function OSE_Spawn(ply,cmd,args)
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
 		return
 	end
-	
+
 	local class = "sent_prop"
 	local name = "Prop"
 	if MODELS[model].CLASS then class = MODELS[model].CLASS end
 	if MODELS[model].NAME then name = MODELS[model].NAME end
-	
+
 	local propcount = 0
 	for k,v in pairs(ents.FindByClass(class)) do
 		if v:GetRealOwner() == ply then
 			propcount = propcount + 1
 		end
 	end
-	if MODELS[model].LIMIT then 
-		if propcount >= MODELS[model].LIMIT then 
-			ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+	if MODELS[model].LIMIT then
+		if propcount >= MODELS[model].LIMIT then
+			ply:Message(name.."  Limit Reached!", Color(255,100,100,255))
 			ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-			return 
-		end 
-	elseif propcount >= PROP_LIMIT then 
-		ply:Message(name.."  Limit Reached!", Color(255,100,100,255)) 
+			return
+		end
+	elseif propcount >= PROP_LIMIT then
+		ply:Message(name.."  Limit Reached!", Color(255,100,100,255))
 		ply:SendLua([[surface.PlaySound("common/wpn_denyselect.wav")]])
-		return 
+		return
 	end
-	
+
 	local tracelen = 1000
 	if MODELS[model].RANGE then tracelen = MODELS[model].RANGE end
- 
-	local trace = {} 
- 	trace.start = ply:GetShootPos()
- 	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * tracelen) 
- 	trace.filter = ply
- 
- 	local tr = util.TraceLine( trace ) 
- 
+
+	local trace = {}
+	trace.start = ply:GetShootPos()
+	trace.endpos = ply:GetShootPos() + (ply:GetAimVector() * tracelen)
+	trace.filter = ply
+
+	local tr = util.TraceLine( trace )
+
 	if !tr.Hit then return end
-	
+
 	local ent
-	
-	if !MODELS[model].DONTSPAWN then 
+
+	if !MODELS[model].DONTSPAWN then
 		local ang = ply:EyeAngles()
 		ang.yaw = ang.yaw + 180
 		if MODELS[model].ANG then ang.yaw = ang.yaw + MODELS[model].ANG.yaw end
- 		ang.roll = 0 
- 		ang.pitch = 0 
+		ang.roll = 0
+		ang.pitch = 0
 		ent = ents.Create(class)
 		ent:SetAngles(ang)
 		ent:SetPos(tr.HitPos)
@@ -476,30 +476,30 @@ function OSE_Spawn(ply,cmd,args)
 		ent:Spawn()
 		ent:Activate()
 		//garry
-		local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )	// Find a point that is definitely out of the object in the direction of the floor 
-		vFlushPoint = ent:NearestPoint( vFlushPoint )			// Find the nearest point inside the object to that point 
-		vFlushPoint = ent:GetPos() - vFlushPoint				// Get the difference 
-		vFlushPoint = tr.HitPos + vFlushPoint					// Add it to our target pos 
-	 
+		local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )	// Find a point that is definitely out of the object in the direction of the floor
+		vFlushPoint = ent:NearestPoint( vFlushPoint )			// Find the nearest point inside the object to that point
+		vFlushPoint = ent:GetPos() - vFlushPoint				// Get the difference
+		vFlushPoint = tr.HitPos + vFlushPoint					// Add it to our target pos
+
 		ent:SetPos( vFlushPoint )
 		//endgarry
-		
+
 		local cost = MODELS[model].COST or ent.SMH or 1000
 		cost = cost * 1.05
-		
-		if args[2] then 
+
+		if args[2] then
 			if tonumber(args[2]) < util.GetModelInfo(ent:GetModel()).SkinCount then
 				ent:SetSkin(tonumber(args[2]))
 			end
 		end
-		
+
 		local msg
 		if MODELS[model].NAME then
 			msg = math.Round(cost * -1).." [Spawned "..MODELS[model].NAME.."]"
 		else
 			msg = math.Round(cost * -1).." [Spawned Item]"
 		end
-		
+
 		if not ent:IsInWorld( ) then
 			ent:Remove()
 			ply:ChatPrint( "Prop was outside of the world!" )
@@ -509,9 +509,9 @@ function OSE_Spawn(ply,cmd,args)
 			return
 		end
 	end
-	if MODELS[model].EXTBUILD then 
+	if MODELS[model].EXTBUILD then
 		MODELS[model].EXTBUILD(ent, ply, tr)
 	end
 end
- 
+
 concommand.Add("gm_spawn", OSE_Spawn)

@@ -40,13 +40,13 @@ concommand.Add( "prop_save", function( pl, cmd, args )
 	if not pl:IsAdmin( ) then
 		return
 	end
-	
+
 	pl:StripWeapon( "swep_select" )
-	
+
 	if #GAMEMODE.SaveProps == 0 then
 		return
 	end
-	
+
 	local save = { }
 
 	for k,v in pairs( GAMEMODE.SaveProps ) do
@@ -63,9 +63,9 @@ concommand.Add( "prop_save", function( pl, cmd, args )
 	if not file.Exists( "onslaught_saves" ) then
 		file.CreateDir( "onslaught_saves" )
 	end
-	
+
 	file.Write( "onslaught_saves/" .. ( args[ 1 ] != nil && args[ 1 ] || game.GetMap( ) .. os.date( "%H%M%S" ) ) .. ".txt", util.TableToKeyValues( save ) )
-	
+
 	GAMEMODE:DeselectAll( )
 end )
 
@@ -86,23 +86,23 @@ concommand.Add( "prop_load", function( pl, cmd, args )
 	if not pl:IsAdmin( ) or not args[ 1 ] or not file.Exists( "onslaught_saves/" .. args[ 1 ] .. ".txt" ) then
 		return
 	end
-	
+
 	local read = util.KeyValuesToTable( file.Read( "onslaught_saves/" .. args[ 1 ] .. ".txt" ) )
-	
+
 	if game.GetMap( ) != read.map then
 		pl:ChatPrint( "Must load save on same map as it was saved on!" )
 		pl:ChatPrint( "This is to ensure that no props go outside of the map." )
 		return
 	end
-	
+
 	read.map = nil
-	
+
 	local time = 0
-	
+
 	for k,v in pairs( read ) do
 		timer.Simple( k * .05, makeprop, v.class, v.model, v.pos, v.ang, pl )
 		time = time + .05
 	end
-	
+
 	timer.Simple( time, function( ) for k,v in pairs( player.GetAll( ) ) do v:ChatPrint( "Finished loading!" ) end end )
 end )

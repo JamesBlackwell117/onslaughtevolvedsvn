@@ -1,14 +1,16 @@
 
-Weaponclass = "weapon_none"
-Maxammo = 0
-Maxclip = 0
-lastphase = "none"
-TTimeleft = 0
-Maxmoney = 0
+local Weaponclass = "weapon_none"
+local Maxammo = 0
+local Maxclip = 0
+local lastphase = "none"
+local TTimeleft = 0
+local Maxmoney = 0
 local ply = LocalPlayer()
+local bkdrop = Color(31, 31, 31, 127)
 
 function UnifiedBar(r,x,y,w,h,c,d,p,b,t)
 	b = b or false
+	p = p or 1
 	p = math.Clamp(p,0,1)
 	if GetConVarNumber( "ose_hud" ) == 1 then
 		if b == false then
@@ -17,7 +19,7 @@ function UnifiedBar(r,x,y,w,h,c,d,p,b,t)
 				draw.RoundedBox(r,x+1,y+1,(w-2)*p,h-2,c)
 			end
 			if t && ply:KeyDown(IN_WALK) then
-				draw.SimpleTextOutlined(t, "HUD2", x+w/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined(t,"HUD2",x+w/2,y,Color(255,255,255,255),1,0,1,Color(0,0,0,255))
 			end
 		else
 			draw.RoundedBox(r,x-w,y,w,h,d)
@@ -25,7 +27,7 @@ function UnifiedBar(r,x,y,w,h,c,d,p,b,t)
 				draw.RoundedBox(r,(x-1)-(w-2)*p,y+1,(w-2)*p,h-2,c)
 			end
 			if t && ply:KeyDown(IN_WALK) then
-				draw.SimpleTextOutlined(t, "HUD2", x-w/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined(t,"HUD2",x-w/2,y,Color(255,255,255,255),1,0,1,Color(0,0,0,255))
 			end
 		end
 	else
@@ -45,14 +47,14 @@ function UnifiedSplitBar(r,x,y,w,h,c,d,p,b,t,n,s)
 				UnifiedBar(r,x+(w+s)*(i-1),y,w,h,c,d,p-i+1,b)
 			end
 			if t && ply:KeyDown(IN_WALK) then
-				draw.SimpleTextOutlined(t, "HUD2", x+w*(n)/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined(t,"HUD2",x+w*(n)/2,y,Color(255,255,255,255),1,0,1,Color(0,0,0,255))
 			end
 		else
 			for i=1,n do
 				UnifiedBar(r,x-(w+s)*(i-1),y,w,h,c,d,p-i+1,b)
 			end
 			if t && ply:KeyDown(IN_WALK) then
-				draw.SimpleTextOutlined(t, "HUD2", x-w*(n)/2, y, Color(255,255,255,255), 1, 0, 1, Color(0,0,0,255) )
+				draw.SimpleTextOutlined(t,"HUD2",x-w*(n)/2,y,Color(255,255,255,255),1,0,1,Color(0,0,0,255))
 			end
 		end
 	end
@@ -63,6 +65,65 @@ function GM:DrawHUD()
 	ply = LocalPlayer()
 	local crnd = H/256
 	local classid = ply:GetNetworkedInt("class") or 1
+	local health = ply:Health()
+	if !ply:Alive() then health = 0 end
+	local maxhealth = 100
+	if PHASE == "BATTLE" then
+		maxhealth = Classes[classid].HEALTH
+	end
+	if PHASE != lastphase then
+		TTimeleft = 0
+		lastphase = PHASE
+	end
+	if TTimeleft < TimeLeft then
+		TTimeleft = TimeLeft
+	end
+
+	local armor = ply:GetNWInt("Armor")
+
+	local moncolor = Color(100,255,100,95)
+	local money = ply:GetNetworkedInt( "money")
+	if money <= 2500 then
+		moncolor = Color(255,100,100,95)
+	end
+
+	local rank = ply:GetNWInt("rank") or 1
+	local prevrank = RANKS[rank - 1] or RANKS[rank]
+	local currank = RANKS[rank]
+	local nextrank = RANKS[rank + 1] or RANKS[rank]
+	local kills = math.Round(ply:GetNWInt("kills")) or 0
+
+	local timecolor = Color(190, 200, 220, 95)
+	if TimeLeft <= 30 && (math.Round(TimeLeft) / 2) == math.Round(TimeLeft / 2) then timecolor = Color(220, 100, 95, 95) end
+
+	local cur_mag,alt_mag,mags,alt_mags,ammofraction,clipfraction,maxclips,clips,alts
+	local wdraw = false
+
+	if ply:Alive() && ValidEntity(ply:GetActiveWeapon()) then
+		wdraw = true
+		local w = ply:GetActiveWeapon()
+		if !ply:GetActiveWeapon().Primary then	ply:GetActiveWeapon().Primary = {} end
+		local wt = w.Primary
+		cur_mag = w:Clip1() or 0
+		alt_mag = w:Clip2() or 0
+		mags = ply:GetAmmoCount(w:GetPrimaryAmmoType()) or 0
+		alt_mags = ply:GetAmmoCount(w:GetSecondaryAmmoType()) or 0
+
+		if Weaponclass != w:GetClass() then
+			Weaponclass = w:GetClass()
+			Maxammo = wt.Maxammo or 0
+			Maxclip = wt.ClipSize or 0
+		end
+
+		if cur_mag > Maxclip then Maxclip = cur_mag wt.ClipSize = Maxclip end
+		if mags+cur_mag > Maxammo then Maxammo = mags wt.Maxammo = Maxammo end
+		ammofraction = (mags)/(Maxammo)
+		clipfraction = cur_mag/Maxclip
+
+		maxclips = math.ceil(Maxammo/math.Clamp(Maxclip,1,math.huge))
+		clips = math.floor(mags/math.Clamp(Maxclip,1,math.huge))
+		alts = math.Clamp(alt_mags-1,-1,math.Round(W/36))
+	end
 
 	-- messages
 	for k,v in pairs(Messages) do
@@ -77,7 +138,7 @@ function GM:DrawHUD()
 			end
 		end
 	end
-	
+
 	-- Player & Turret info
 	local iterator = player.GetAll()
 	table.Add(iterator,ents.FindByClass("npc_turret_floor"))
@@ -88,20 +149,20 @@ function GM:DrawHUD()
 		trace.endpos = v:GetPos() + Vector(0,0,40)
 		trace.filter = ply
 		local trace = util.TraceLine( trace )
-		
+
 		if !trace.HitWorld then
 			local spos = ply:GetPos()
 			local tpos = v:GetPos()
 			local dist = spos:Distance(tpos)
-				
+
 			if dist <= 1800 then
 				local offset = -0.03333 * dist
 				local pos = v:GetPos() + Vector(0,0,offset)
 				pos = pos:ToScreen()
 				if pos.visible == true then
-					local alphavalue = math.Clamp(1200 - (dist/1.5), 0, 255)					
-					local outlinealpha = math.Clamp(900 - (dist/2), 0, 255)
-					
+					local alphavalue = math.Clamp(1200 - (dist/1.5),0,255)
+					local outlinealpha = math.Clamp(900 - (dist/2),0,255)
+
 					if v:IsPlayer() then
 						local playercolour = team.GetColor(v:Team())
 						if v != ply && v:Alive() then
@@ -122,44 +183,16 @@ function GM:DrawHUD()
 			end
 		end
 	end
-	
-	if GetConVarNumber( "ose_hud" ) == 1 then
-		//Alias Modern HUD
-		local bkdrop = Color(31, 31, 31, 127)
-		local maxhealth = 100
-		if PHASE == "BATTLE" then
-			maxhealth = Classes[classid].HEALTH
-		end
-		if PHASE != lastphase then 
-			TTimeleft = 0
-			lastphase = PHASE
-		end
-		if TTimeleft < TimeLeft then
-			TTimeleft = TimeLeft
-		end
-		
-		local moncolor = Color(100,255,100,95)
-		local money = ply:GetNetworkedInt( "money")
-		if money <= 2500 then
-			moncolor = Color(255,100,100,95)
-		end		
 
-		local rank = ply:GetNWInt("rank") or 1
-		local prevrank = RANKS[rank - 1] or RANKS[rank]
-		local currank =	RANKS[rank]
-		local nextrank = RANKS[rank + 1] or RANKS[rank]
-		local kills = math.Round(ply:GetNWInt("kills")) or 0
-			
-		-- timer calcs and draw
-		local timecolor = Color(190, 200, 220, 95)
-		if TimeLeft <= 30 && (math.Round(TimeLeft) / 2) == math.Round(TimeLeft / 2) then timecolor = Color(220, 100, 95, 95) end
+	if GetConVarNumber( "ose_hud" ) == 1 then
+		-- timer draw
 		UnifiedBar(crnd,W-19,H-42,W/6,22,timecolor,bkdrop,TimeLeft/TTimeleft,true,"Time: "..string.FormattedTime( TimeLeft, "%2i:%02i"))
-		
+
 		-- money calcs and draw
 		if money > Maxmoney then Maxmoney = money end
 		local wads = math.ceil(Maxmoney/5000)
 		UnifiedSplitBar(crnd,W-19,H-66,W/6/wads,22,moncolor,bkdrop,money/(wads*5000),true,"Money: "..money,wads)
-		
+
 		-- rank calcs and draw
 		if currank != nextrank then
 			local prbk = Color(prevrank.COLOR.r*2/3,prevrank.COLOR.g*2/3,prevrank.COLOR.b*2/3,bkdrop.a)
@@ -167,7 +200,7 @@ function GM:DrawHUD()
 			local nrbk = Color(nextrank.COLOR.r*2/3,nextrank.COLOR.g*2/3,nextrank.COLOR.b*2/3,bkdrop.a)
 			local prc = Color(prevrank.COLOR.r,prevrank.COLOR.g,prevrank.COLOR.b,95)
 			local crc = Color(currank.COLOR.r,currank.COLOR.g,currank.COLOR.b,95)
-			
+
 			local rankpct = (kills-currank.KILLS) / (nextrank.KILLS-currank.KILLS)
 			if prevrank != currank then
 			draw.RoundedBox(crnd,W-19-W/6,H-90,W/6/5,22,prbk)
@@ -175,53 +208,34 @@ function GM:DrawHUD()
 			end
 			draw.RoundedBox(crnd,W-19-W/6+W/6/5,H-90,W/6/5*3,22,crbk)
 			if W/6/5*3*rankpct-2 > crnd/2 then draw.RoundedBox(crnd,W-18-W/6+W/6/5,H-89,W/6/5*3*rankpct-2,20,crc) end
-	
+
 			draw.RoundedBox(crnd,W-19-W/6+W/6*4/5,H-90,W/6/5,22,nrbk)
 		end
-			
-		-- weapon calcs and draw + health draw
+
+		-- weapon draw
 		local hbaroff = 0
-		if ply:Alive() && ValidEntity(ply:GetActiveWeapon()) then
-			if !ply:GetActiveWeapon().Primary then 	ply:GetActiveWeapon().Primary = {} end
-			local cur_mag = ply:GetActiveWeapon():Clip1() or 0
-			local alt_mag = ply:GetActiveWeapon():Clip2() or 0
-			local mags = ply:GetAmmoCount(ply:GetActiveWeapon():GetPrimaryAmmoType()) or 0
-			local alt_mags = ply:GetAmmoCount(ply:GetActiveWeapon():GetSecondaryAmmoType()) or 0
-		
-			if Weaponclass != ply:GetActiveWeapon():GetClass() then
-				Weaponclass = ply:GetActiveWeapon():GetClass()
-				Maxammo = ply:GetActiveWeapon().Primary.Maxammo or 0
-				Maxclip = ply:GetActiveWeapon().Primary.ClipSize or 0
-			end	
-			
-			if cur_mag > Maxclip then Maxclip = cur_mag ply:GetActiveWeapon().Primary.ClipSize = Maxclip end
-			if mags+cur_mag > Maxammo then Maxammo = mags ply:GetActiveWeapon().Primary.Maxammo = Maxammo end
-			local ammofraction = (mags)/(Maxammo)
-			local clipfraction = cur_mag/Maxclip
-		
+		if wdraw == true then
 			if Maxammo > 0 then
-				local maxclips = math.ceil(Maxammo/math.Clamp(Maxclip,1,math.huge))
-				local clips = math.floor(mags/math.Clamp(Maxclip,1,math.huge))
-				local alts = math.Clamp(alt_mags-1,-1,math.Round(W/36))
 				UnifiedSplitBar(crnd,19,H-32,22,12,Color(190, 200, 220, 95),bkdrop,mags/(maxclips*Maxclip),false,"Clips: "..clips,maxclips,2)
 				for i=0,alts do
 					draw.RoundedBox(crnd,22+12*i,H-29,6, 6, Color(200, 200, 0, 200))
 				end
 				hbaroff = hbaroff + 14
 			end
-			
 			if Maxclip > 0 then
 				UnifiedBar(crnd,19,H-42-hbaroff,W/6*Maxclip/20,22,Color(190, 200, 220, 95),bkdrop,clipfraction,false,"Clip: "..cur_mag.."/"..Maxclip)
 				hbaroff = hbaroff + 24
 			end
 		end
-		
-		UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(191, 0, 0, 127),bkdrop,ply:Health()/maxhealth,false,"Health: "..ply:Health().."/"..maxhealth)
-		local armor = ply:GetNWInt("Armor")
+
+		-- health draw
+		UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(191, 0, 0, 127),bkdrop,health/maxhealth,false,"Health: "..health.."/"..maxhealth)
+
+		-- armor
 		if armor > 0 then
 			UnifiedBar(crnd,19,H-42-hbaroff,W*maxhealth/600,22,Color(0, 0, 255, 64),Color(0,0,0,0),armor/100)
 		end
-		
+
 		-- turret health bars
 		local turoff = 14
 		local iterator = ents.FindByClass("npc_turret_floor")
@@ -232,159 +246,75 @@ function GM:DrawHUD()
 				turoff = turoff + 14
 			end
 		end
-		-----------------------------------------------------------------------
-		--------------------- END MODERN HUD ----------------------------------
-		-----------------------------------------------------------------------
-	else	
-		if GetConVarNumber( "ose_hidetips" ) != 1 then
-			surface.SetDrawColor(50, 50, 50, 150)
-			surface.DrawRect( 0,0, W, H * 0.04)
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect( 0,0, W, H * 0.04)
-			draw.SimpleText( "TIP: "..tip, "HUD", W * 0.01, H * 0.006 )
-			surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
-			local kills = math.Round(ply:GetNWInt("kills")) or 0
-			local nextrank = RANKS[ply:GetNWInt("rank") + 1] or RANKS[ply:GetNWInt("rank")]
-			local killneeded = nextrank.KILLS or 0
-			local rank = ply:GetNWInt("rank") or 1
-			if kills > killneeded || rank >= #RANKS then
-				draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
-			else
-				draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
-			end
-		else
-			surface.SetDrawColor(50, 50, 50, 150)
-			surface.DrawRect( W * 0.7,0, W * 0.3, H * 0.04)
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawOutlinedRect( W * 0.7,0, W * 0.3, H * 0.04)
-			local kills = math.Round(ply:GetNWInt("kills")) or 0
-			local nextrank = RANKS[ply:GetNWInt("rank") + 1] or RANKS[ply:GetNWInt("rank")]
-			local killneeded = nextrank.KILLS or 0
-			local rank = ply:GetNWInt("rank") or 1
-			if kills > killneeded || rank >= #RANKS then
-				draw.SimpleText( "KILLS: "..kills, "HUD", W * 0.71, H * 0.006 )
-			else
-				draw.SimpleText( "KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD", W * 0.71, H * 0.006 )
-			end
-		end
-		
-		if !ply:Alive() then return end
-		local Mhlth = 100
-		if PHASE == "BATTLE" then
-			Mhlth = Classes[ply:GetNWInt("class",1)].HEALTH
-		end
-		local hlth = (ply:Health() / Mhlth) * 25
-		if hlth > Mhlth then hlth = Mhlth end
+	else
 		local x,y = 0.02, 0.80
 		local w,h = 0.208, 0.13
-		if not ValidEntity(ply:GetActiveWeapon()) then return end
-		local cur_mag = ply:GetActiveWeapon():Clip1()
-		local alt_mag = ply:GetActiveWeapon():Clip2()
-		local mags = ply:GetAmmoCount(ply:GetActiveWeapon():GetPrimaryAmmoType())
-		local alt_mags = ply:GetAmmoCount(ply:GetActiveWeapon():GetSecondaryAmmoType())
-		if cur_mag <= 0 && mags <= 0 && alt_mags <= 0 then
+		if Maxammo > 0 then
 			w = 0.208
 			h = 0.1
 		end
-		local y1,y2,y3 = 0.91,0.93,0.95
-		local xH = 0.08
-		local xY = 0.90
-		local MonCol = Color(255,255,255,255)
-		local timecol = Color(255,255,255,255)
-			
-		if ply:GetNetworkedInt( "money") <= 0 then
-			MonCol = Color(255,100,100,255)
+
+		-- main bottom pannels
+		UnifiedBar(0, W*x,H*y, W*w, H*h,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
+		UnifiedBar(0, W/1.3, H*0.90, W*0.2, H*0.08,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
+
+		-- top bar
+		if GetConVarNumber("ose_hidetips") != 1 then
+			UnifiedBar(0,0,0,W,H*0.04,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
+			draw.SimpleText("TIP: "..tip,"HUD",W*0.01,H*0.006)
 		end
-		if TimeLeft <= 30 && (math.Round(TimeLeft) / 2) == math.Round(TimeLeft / 2) then --is even
-		 	timecol = Color(255,100,100,255)
-		end
-		
-		surface.SetDrawColor(50, 50, 50, 200)
-		surface.DrawRect( W * x, H * y, W * w, H * h ) -- left pannel
-		surface.DrawRect( W / 1.3, H * xY, W * 0.2, H *  xH) -- right
-	
-		surface.SetDrawColor(255, 255, 255, 255)
-		surface.DrawOutlinedRect( W * x, H * y, W * w, H * h ) -- left outline
-		surface.DrawOutlinedRect( W / 1.3, H * xY, W * 0.2, H *  xH) -- right
-		
-		for i = 0, Mhlth do
-			local frac = Mhlth / hlth
-			local r = math.Clamp(255 - i,0,255)
-			local g = math.Clamp((ply:Health() / Mhlth) * 255, 0, 255)
-			surface.SetDrawColor(r, g, 10, 255)
-			surface.DrawRect( W * 0.025 + ((i * (W * 0.00785))/ frac), H * 0.86, W / 300, H / 40 )
-		end
-		
-		local armor = ply:GetNWInt("Armor")
-		if armor > 0 then
-			surface.SetDrawColor(0, 0, 255, 64)
-			surface.DrawRect( W * 0.025, H * 0.86, W / 5.02*armor/100, H / 40 )
-		end	
-		
-		surface.SetDrawColor(255, 255, 255, 255)
-		surface.DrawOutlinedRect( W * 0.025, H * 0.86, W / 5.02, H / 40 )
-		local classid = ply:GetNetworkedInt("class") or 1
-		
-		draw.SimpleTextOutlined( "Class: "..Classes[classid].NAME, "HUD", W * 0.03, H * 0.82, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-		draw.SimpleTextOutlined( "Health: "..ply:Health().."/"..Mhlth, "HUD2", W * 0.03, H * 0.86, Color(255,255,255,255),0, 0, 1, Color(0,0,0,255) )
-		if cur_mag <= 0 && mags <= 0 then
-			if alt_mags > 0 then
-				draw.SimpleText( "Alt: "..alt_mags, "HUD", W * 0.18, H * 0.892, Color(255,255,255,255), 0, 0, 1)
-			end
+
+		UnifiedBar(0,W*0.7,0,W*0.3,H*0.04,Color(0, 0, 0, 0),Color(255, 255, 255, 255))
+		local killneeded = nextrank.KILLS or 0
+		if kills > killneeded || rank >= #RANKS then
+			draw.SimpleText("KILLS: "..kills, "HUD",W*0.71,H*0.006)
 		else
-			if Weaponclass != ply:GetActiveWeapon():GetClass() then
-				Weaponclass = ply:GetActiveWeapon():GetClass()
-				Maxammo = 0
-				Maxclip = 0
-			end	
-			if cur_mag == -1 then
-				if 1 > Maxclip then Maxclip = 1 end
-				if mags > Maxammo then Maxammo = mags end
-				local ammofraction = (mags)/(Maxammo)
-				local clipfraction = 1/(Maxammo)
-				
+			draw.SimpleText("KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD",W*0.71,H*0.006)
+		end
+
+		-- health bar
+		local itr = W / 5.02 * health/maxhealth - 2
+		for i = 0, itr do
+			local r = math.Clamp(255 - i,0,255)
+			local g = math.Clamp((health / maxhealth)*255,0,255)
+			surface.SetDrawColor(r, g, 10, 255)
+			surface.DrawRect( W * 0.025 + i, H * 0.86, 1, H / 40 )
+		end
+
+		if armor > 0 then
+			UnifiedBar(0,W * 0.025, H * 0.86, W / 5.02*armor/100, H / 40,Color(0, 0, 255, 64),Color(0,0,0,0),armor/100)
+		end
+
+		UnifiedBar(0,W*0.025,H*0.86,W/5.02,H/40,Color(0, 0, 0, 0),Color(255, 255, 255, 255))
+		draw.SimpleTextOutlined("Class: "..Classes[classid].NAME,"HUD",W*0.03,H*0.82,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
+		draw.SimpleTextOutlined("Health: "..health.."/"..maxhealth,"HUD2",W*0.03,H*0.86,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
+
+		-- weapon bars
+		if wdraw == true then
+			if Maxammo > 0 then
 				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02), H / 40 )
-				
-				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction), H / 160 )
-				
+				surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*math.abs(cur_mag)/Maxclip, H / 40 )
+
 				surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction-clipfraction), H / 160 )
-				
-				surface.SetDrawColor(255, 255, 255, 255)
-				surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
-				draw.SimpleTextOutlined( "Ammo: "..mags, "HUD2", W * 0.03, H * 0.89, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-			else
-				if cur_mag > Maxclip then Maxclip = cur_mag end
-				if mags+cur_mag > Maxammo then Maxammo = mags+cur_mag end
-				local ammofraction = (mags+cur_mag)/(Maxammo)
-				local clipfraction = cur_mag/(Maxammo)
+				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip+cur_mag)/(Maxammo), H / 160 )
 				
 				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*cur_mag/Maxclip, H / 40 )
-				
-				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction), H / 160 )
-				
-				surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(ammofraction-clipfraction), H / 160 )
-				
+				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip)/(Maxammo), H / 160 )
+
 				surface.SetDrawColor(255, 255, 255, 255)
 				surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
 				surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 32 )
-				draw.SimpleTextOutlined( "Ammo: "..cur_mag.."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-				
-				if alt_mags > 0 then
-					draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
-				end
+				draw.SimpleTextOutlined( "Ammo: "..math.abs(cur_mag).."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+			end
+			if alt_mags > 0 then
+				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
 			end
 		end
-	
+		-- right panel
 		if TimeLeft <= 0 then TimeLeft = 0 end
-		draw.DrawText("Money: "..math.Round(ply:GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * y1, MonCol,1)
-		draw.DrawText("Phase: "..PHASE, "ScoreboardText", W / 1.15, H * y2, Color(255,255,255,255),1)
-		draw.DrawText("Time Remaining: "..string.FormattedTime( TimeLeft, "%2i:%02i")  , "ScoreboardText", W / 1.15 , H * y3, timecol,1)
+		draw.DrawText("Money: "..math.Round(ply:GetNetworkedInt( "money")), "ScoreboardText", W / 1.15 , H * 0.91, MonCol,1)
+		draw.DrawText("Phase: "..PHASE, "ScoreboardText", W / 1.15, H * 0.93, Color(255,255,255,255),1)
+		draw.DrawText("Time Remaining: "..string.FormattedTime( TimeLeft, "%2i:%02i")  , "ScoreboardText", W / 1.15 , H * 0.95, timecol,1)
 	end
 end
 
@@ -396,7 +326,7 @@ function GM:HUDDrawTargetID( )
 	end
 	local W,H = ScrW(), ScrH()
 	local ent = tr.Entity
-		
+
 	if ent.Turret then ent = ent.Turret end
 	local own = ent:GetNWEntity("owner")
 	if !ValidEntity(own) then return end
@@ -410,5 +340,5 @@ function GM:HUDDrawTargetID( )
 		else
 			draw.SimpleTextOutlined(own:Nick().."'s prop", "HUD2", W * 0.5, H * 0.9, Color(255,255,255,255), 1, 1, 1, Color(0,0,0,255) )
 		end
-	end		
+	end
 end

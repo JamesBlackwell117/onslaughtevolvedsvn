@@ -6,30 +6,30 @@ function PANEL:Init( )
 	self.Label = vgui.Create( "DLabel", self )
 	self.Label:SetText( "Loading file list.." )
 	self.Label:SizeToContents( )
-	
+
 	self.List = vgui.Create( "DListView", self )
 	self.List:AddColumn( "Files" )
 	function self.List.DoDoubleClick( list, rowid, row )
 		RunConsoleCommand( "prop_load", row:GetColumnText( 1 ) )
 		self:Close( )
 	end
-	
+
 	self:SetTitle( "Load file" )
 	self:SetDeleteOnClose( true )
 	self:Center( )
 	self:MakePopup( )
-	
+
 	RunConsoleCommand( "admin", "getfiles" )
 end
 
 function PANEL:PerformLayout( )
 	self:SetSize( 200, 200 )
-	
+
 	self.Label:SizeToContents( )
 	self.Label:SetPos( 2, 22 )
-	
+
 	self.List:StretchToParent( 2, self.Label:GetTall( ) + 24, 2, 2 )
-	
+
 	DFrame.PerformLayout( self )
 end
 

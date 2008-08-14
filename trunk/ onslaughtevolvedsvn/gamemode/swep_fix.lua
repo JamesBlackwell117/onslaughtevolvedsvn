@@ -1,13 +1,13 @@
 --[[
 	SWEP Multiplayer Fix by aVoN
-	
+
 	This fixes the Clientside of a SWEP calling SWEP:PrimaryAttack or SWEP:SecondaryAttack multiple times until the server tells the client "Hey stop,
 	NextPrimaryFire is in X seconds". This bug happens especially if your ping is higher than 40ms.
-	
-	And example video is here (Recoil increases MUCH!): 
+
+	And example video is here (Recoil increases MUCH!):
 		VIDEO http://www.youtube.com/watch?v=IWdnU4sR9pc
 		COMPLETE EXPLAINATION: http://forums.facepunchstudios.com/showpost.php?p=9492119&postcount=366
-		
+
 	Sadly garry does not (want to?) fix it. Well here is the fix. it's licensed under the GPLv3 so do what you want with it <http://www.gnu.org/licenses/>.
 --]]
 
@@ -26,7 +26,7 @@ if not (meta.__SetNextSecondaryFire) then meta.__SetNextSecondaryFire = meta.Set
 --################### The actual fix @aVoN
 local function PrimaryAttack(self,...)
 	if(self.__PrimaryAttack and (self.__NextPrimaryAttack or 0) < CurTime()) then
-		return self:__PrimaryAttack(...) 
+		return self:__PrimaryAttack(...)
 	end;
 end
 local function SecondaryAttack(self,...)
