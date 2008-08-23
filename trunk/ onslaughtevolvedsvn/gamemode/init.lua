@@ -424,7 +424,13 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 				return false
 			end
 		end
-		if attacker:IsPlayer() then return false end
+		if attacker:IsPlayer() then
+			return false
+		elseif ValidEntity(attacker:GetOwner()) then
+		if attacker:GetOwner():IsPlayer() then
+			return false
+		end
+	end
 		return true
 	else
 		if attacker:GetClass() == "worldspawn" then
@@ -432,13 +438,7 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 		end
 	end
 
-	if attacker:IsPlayer() then
-		return false
-	elseif ValidEntity(attacker:GetOwner()) then
-		if attacker:GetOwner():IsPlayer() then
-			return false
-		end
-	end
+
 	if !attacker:IsNPC() && !attacker:GetClass() == "trigger_hurt" then return false end
 	return true
 end
