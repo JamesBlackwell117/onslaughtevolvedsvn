@@ -84,6 +84,22 @@ function GM:HUDPaint()
 end
 
 function GM:RenderScreenspaceEffects( )
+	if LocalPlayer():GetNWBool("pois", false) == true then
+		local tab = {}
+		tab[ "$pp_colour_addr" ] = 0
+		tab[ "$pp_colour_addg" ] = 8 * 0.03
+		tab[ "$pp_colour_addb" ] = 0
+		tab[ "$pp_colour_brightness" ] = -0.21
+		tab[ "$pp_colour_contrast" ] = 1.01
+		tab[ "$pp_colour_colour" ] = 1
+		tab[ "$pp_colour_mulr" ] = 0
+		tab[ "$pp_colour_mulg" ] = 0
+		tab[ "$pp_colour_mulb" ] = 0
+
+		DrawColorModify( tab ) 
+		
+		DrawMotionBlur( 0.1, 0.5, 0.05)
+	end
 end
 
 CreateClientConVar("ose_hidetips", "0", true, false)

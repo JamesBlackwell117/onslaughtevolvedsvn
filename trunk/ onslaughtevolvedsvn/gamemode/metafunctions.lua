@@ -17,6 +17,13 @@ function Emeta:Dissolve()
 	end
 end
 
+function Emeta:IsZombie()
+	if ValidEntity( self ) then
+		if table.HasValue(Zombies, self:GetClass()) then return true end
+	end
+	return false
+end
+
 function Emeta:NPCDiss()
 	if ( ValidEntity( self) && !self.Dissolving ) then
 		local dissolve = ents.Create( "env_entity_dissolver" )
@@ -67,10 +74,31 @@ function AllChat(msg)
 	end
 end
 
--------------------------------------------------------------------------------
---PropOp
---Check to see if a player can do an operation on a prop)
--------------------------------------------------------------------------------
+function Pmeta:Poison(npc)
+	if self.Poisoned == true then
+		self.Poisonend = self.Poisonend + math.Rand(10,15)
+	else
+		self:EmitSound("HL1/fvox/blood_toxins.wav", 150,100)
+		self:SetColor(100,150,100,255)
+		self.Poisoned = true
+		self.Poisoner = npc
+		self.Poisonend = CurTime() + math.random(2,30)
+		self:PoisonThink()
+	end
+end
+
+function Pmeta:PoisonThink()
+	if !self.Poisoned || CurTime() > self.Poisonend then --stop poisoning
+		self:EmitSound("HL1/fvox/antitoxin_shot.wav", 150,100)
+		self:SetColor(255,255,255,255)
+		self:SetNWBool("pois", false)
+		self.Poisoned = false
+		return false
+	end
+	self:SetNWBool("pois", true)
+	self:TakeDamage(math.random(2,6), self.Poisoner, self.Poisoner)
+	timer.Simple(math.Rand(0.5,1.5),self.PoisonThink,self)
+end
 
 function Pmeta:SaveProfile()
 	self:ChatPrint("Your kill data has been saved!")
@@ -78,6 +106,11 @@ function Pmeta:SaveProfile()
 	local t = {id = self:SteamID(), kills = self:GetNWInt("kills"), rank = self:GetNWInt("rank")}
 	file.Write( "onslaught_profiles/"..name..".txt", util.TableToKeyValues(t) )
 end
+
+-------------------------------------------------------------------------------
+--PropOp
+--Check to see if a player can do an operation on a prop)
+-------------------------------------------------------------------------------
 
 function Emeta:PropOp(ply,noadmin)
 	if !self:IsProp() then return false end
