@@ -321,6 +321,8 @@ function GM:CheckRanks(ply,join)
 end
 
 function GM:PlayerDeath( ply, wep, killer )
+	ply:SetNWBool("pois", false) -- prevent being poisened on death
+	ply.Poisoned = false
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
@@ -422,6 +424,8 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 				return false
 			end
 		end
+		if attacker:IsPlayer() then return false end
+		return true
 	else
 		if attacker:GetClass() == "worldspawn" then
 			return false
@@ -429,20 +433,20 @@ function GM:PlayerShouldTakeDamage( ply, attacker )
 	end
 
 	if attacker:IsPlayer() then
-	return false
+		return false
 	elseif ValidEntity(attacker:GetOwner()) then
 		if attacker:GetOwner():IsPlayer() then
 			return false
 		end
 	end
-		if !attacker:IsNPC() && !attacker:GetClass() == "trigger_hurt" then return false end
+	if !attacker:IsNPC() && !attacker:GetClass() == "trigger_hurt" then return false end
 	return true
 end
 
 function GM:ScalePlayerDamage(ply, hitgrp, dmg)
 	if dmg:IsExplosionDamage() || dmg:GetInflictor():GetClass() == "weapon_shotgun" then
 		dmg:ScaleDamage(0.4)
-	elseif table.HasValue(Zombies, dmg:GetAttacker():GetClass()) then
+	elseif dmg:GetAttacker():IsZombie() then
 		dmg:ScaleDamage(10)
 	elseif dmg:GetAttacker():GetClass() == "npc_manhack" then
 		dmg:ScaleDamage(2)
@@ -665,7 +669,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 	local class = npc:GetClass()
 	local name = npcs[class] or class
 	local bonus = 0
-
+	
 	if class == "npc_combine_s" then
 		for k,v in pairs(ents.FindByClass("item_ammo_ar2_altfire")) do
 			v:Remove()
@@ -675,6 +679,20 @@ function GM:OnNPCKilled( npc, killer, wep)
 		elseif npc:GetModel() == "models/combine_soldier_prisonguard.mdl" then
 		bonus = 20
 		end
+	end
+	if npc:IsZombie() && math.random(1,3) == 1 then -- ZOMBIES ARE SUPREME
+		local sequence = npc:LookupSequence("releasecrab") -- TODO FIND WAY TO MAKE THIS FUCKING ANIMATION RUN
+		npc:ResetSequence(sequence)
+		local pos = npc:GetPos()
+		local entz = ents.FindInBox(Vector(pos.x-150,pos.y-150,pos.z-150),Vector(pos.x+150,pos.y+150,pos.z+150))
+		local ed = EffectData()
+		ed:SetOrigin(pos)
+		for k,v in pairs(entz) do
+			if v:IsPlayer() && v:Alive() then
+				v:Poison(npc)
+			end
+		end
+		util.Effect("poisonexplode", ed)
 	end
 	local plyobj = killer
 	if killer:IsPlayer() then

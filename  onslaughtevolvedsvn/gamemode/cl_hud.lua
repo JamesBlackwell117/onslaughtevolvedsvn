@@ -254,7 +254,6 @@ function GM:DrawHUD()
 		end
 
 		-- main bottom pannels
-		UnifiedBar(0, W*x,H*y, W*w, H*h,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
 		UnifiedBar(0, W/1.3, H*0.90, W*0.2, H*0.08,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
 
 		-- top bar
@@ -271,43 +270,45 @@ function GM:DrawHUD()
 		else
 			draw.SimpleText("KILLS: "..kills.."/"..killneeded.." For "..RANKS[rank + 1].NAME.." Rank", "HUD",W*0.71,H*0.006)
 		end
-
-		-- health bar
-		local itr = W / 5.02 * health/maxhealth - 2
-		for i = 0, itr do
-			local r = math.Clamp(255 - i,0,255)
-			local g = math.Clamp((health / maxhealth)*255,0,255)
-			surface.SetDrawColor(r, g, 10, 255)
-			surface.DrawRect( W * 0.025 + i, H * 0.86, 1, H / 40 )
-		end
-
-		if armor > 0 then
-			UnifiedBar(0,W * 0.025, H * 0.86, W / 5.02*armor/100, H / 40,Color(0, 0, 255, 64),Color(0,0,0,0),armor/100)
-		end
-
-		UnifiedBar(0,W*0.025,H*0.86,W/5.02,H/40,Color(0, 0, 0, 0),Color(255, 255, 255, 255))
-		draw.SimpleTextOutlined("Class: "..Classes[classid].NAME,"HUD",W*0.03,H*0.82,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
-		draw.SimpleTextOutlined("Health: "..health.."/"..maxhealth,"HUD2",W*0.03,H*0.86,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
-
-		-- weapon bars
-		if wdraw == true then
-			if Maxammo > 0 then
-				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*math.abs(cur_mag)/Maxclip, H / 40 )
-
-				surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip+cur_mag)/(Maxammo), H / 160 )
-				
-				surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
-				surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip)/(Maxammo), H / 160 )
-
-				surface.SetDrawColor(255, 255, 255, 255)
-				surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
-				surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 32 )
-				draw.SimpleTextOutlined( "Ammo: "..math.abs(cur_mag).."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+		if ply:Alive() then
+			UnifiedBar(0, W*x,H*y, W*w, H*h,Color(50, 50, 50, 200),Color(255, 255, 255, 255))
+			-- health bar
+			local itr = W / 5.02 * health/maxhealth - 2
+			for i = 0, itr do
+				local r = math.Clamp(255 - i,0,255)
+				local g = math.Clamp((health / maxhealth)*255,0,255)
+				surface.SetDrawColor(r, g, 10, 255)
+				surface.DrawRect( W * 0.025 + i, H * 0.86, 1, H / 40 )
 			end
-			if alt_mags > 0 then
-				draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+
+			if armor > 0 then
+				UnifiedBar(0,W * 0.025, H * 0.86, W / 5.02*armor/100, H / 40,Color(0, 0, 255, 64),Color(0,0,0,0),armor/100)
+			end
+
+			UnifiedBar(0,W*0.025,H*0.86,W/5.02,H/40,Color(0, 0, 0, 0),Color(255, 255, 255, 255))
+			draw.SimpleTextOutlined("Class: "..Classes[classid].NAME,"HUD",W*0.03,H*0.82,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
+			draw.SimpleTextOutlined("Health: "..health.."/"..maxhealth,"HUD2",W*0.03,H*0.86,Color(255,255,255,255),0,0,1,Color(0,0,0,255))
+
+			-- weapon bars
+			if wdraw == true then
+				if Maxammo > 0 then
+					surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
+					surface.DrawRect( W * 0.025, H * 0.89, (W / 5.02)*math.abs(cur_mag)/Maxclip, H / 40 )
+
+					surface.SetDrawColor(0, math.Clamp(ammofraction * 255, 0, 255), 255, 255)
+					surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip+cur_mag)/(Maxammo), H / 160 )
+					
+					surface.SetDrawColor(0, 255, math.Clamp(clipfraction * 255, 0, 255), 255)
+					surface.DrawRect( W * 0.025, H * 0.915, (W / 5.02)*(mags-Maxclip)/(Maxammo), H / 160 )
+
+					surface.SetDrawColor(255, 255, 255, 255)
+					surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 40 )
+					surface.DrawOutlinedRect( W * 0.025, H * 0.89, W / 5.02, H / 32 )
+					draw.SimpleTextOutlined( "Ammo: "..math.abs(cur_mag).."/"..mags, "HUD2", W * 0.03, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+				end
+				if alt_mags > 0 then
+					draw.SimpleTextOutlined( "Alt: "..alt_mags, "HUD2", W * 0.18, H * 0.891, Color(255,255,255,255), 0, 0, 1, Color(0,0,0,255) )
+				end
 			end
 		end
 		-- right panel
