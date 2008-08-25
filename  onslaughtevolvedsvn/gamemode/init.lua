@@ -321,20 +321,21 @@ function GM:CheckRanks(ply,join)
 end
 
 function GM:PlayerDeath( ply, wep, killer )
-	ply:SetNWBool("pois", false) -- prevent being poisened on death
-	ply.Poisoned = false
 	ply:SetTeam(1)
 	ply:ConCommand("stopsounds")
 	ply:Spectate(OBS_MODE_DEATHCAM)
 	ply.specid = 1
 	ply.Specatemode = OBS_MODE_CHASE
 	local name = npcs[killer:GetClass()] or killer:GetClass()
-
+	if ply.Poisoned == true && killer:GetClass() == "worldspawn" then name = "Poison Zombie" end
 	if ply != killer then
 		for k,v in pairs(player.GetAll()) do
 			v:Message(ply:Nick().." was killed by a " .. name, Color(255,100,100,255), true)
 		end
 	end
+		
+	ply:SetNWBool("pois", false) -- prevent being poisened on death
+	ply.Poisoned = false
 
 	if self.AmmoBin then self.AmmoBin:Close() self.AmmoBin = nil end
 

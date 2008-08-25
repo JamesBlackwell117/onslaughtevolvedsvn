@@ -83,14 +83,27 @@ function GM:HUDPaint()
 	GAMEMODE:HUDDrawTargetID()
 end
 
+local ag = 0
+local br = 0
+local con = 1
+local bl = 0
+
 function GM:RenderScreenspaceEffects( )
+	print("AG: "..ag)
+	print("BR: "..br)
+	print("con: "..con)
 	if LocalPlayer():GetNWBool("pois", false) == true then
+		ag = math.Approach(ag, 8 * 0.05, 0.0003)
+		br = math.Approach(br, -0.21, -0.0003)
+		con = math.Approach(con,1.5, 0.0003)
+		bl = math.Approach(bl, 0.999, 0.002)
+
 		local tab = {}
 		tab[ "$pp_colour_addr" ] = 0
-		tab[ "$pp_colour_addg" ] = 8 * 0.03
+		tab[ "$pp_colour_addg" ] = ag
 		tab[ "$pp_colour_addb" ] = 0
-		tab[ "$pp_colour_brightness" ] = -0.21
-		tab[ "$pp_colour_contrast" ] = 1.01
+		tab[ "$pp_colour_brightness" ] = br
+		tab[ "$pp_colour_contrast" ] = con
 		tab[ "$pp_colour_colour" ] = 1
 		tab[ "$pp_colour_mulr" ] = 0
 		tab[ "$pp_colour_mulg" ] = 0
@@ -98,7 +111,26 @@ function GM:RenderScreenspaceEffects( )
 
 		DrawColorModify( tab ) 
 		
-		DrawMotionBlur( 0.1, 0.5, 0.05)
+		DrawMotionBlur( 0.1, bl, 0.05)
+	else
+		ag = math.Approach(ag, 0, -0.001)
+		br = math.Approach(br, 0, 0.001)
+		con = math.Approach(con,1, -0.001)
+		bl = math.Approach(bl,0, -0.01)
+		
+		tab = {}
+		tab[ "$pp_colour_addr" ] = 0
+		tab[ "$pp_colour_addg" ] = ag
+		tab[ "$pp_colour_addb" ] = 0
+		tab[ "$pp_colour_brightness" ] = br
+		tab[ "$pp_colour_contrast" ] = con
+		tab[ "$pp_colour_colour" ] = 1
+		tab[ "$pp_colour_mulr" ] = 0
+		tab[ "$pp_colour_mulg" ] = 0
+		tab[ "$pp_colour_mulb" ] = 0
+
+		DrawColorModify( tab ) 
+		DrawMotionBlur( 0.1, bl, 0.05)
 	end
 end
 
