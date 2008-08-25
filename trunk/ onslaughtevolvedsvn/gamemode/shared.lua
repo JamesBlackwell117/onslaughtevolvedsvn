@@ -188,7 +188,7 @@ end
 	MAXHUNTERS = 2
 	MAXHACKS = 7
 	SPAWN_DELAY = .5
-	S_MAX_NPCS, MAX_NPCS = 60,60 -- S is for singleplayer normal is multiplayer
+	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	TURRET_COST = 700
 	DISP_COST = 600
 	DISP_RATE = 50 -- lower is faster

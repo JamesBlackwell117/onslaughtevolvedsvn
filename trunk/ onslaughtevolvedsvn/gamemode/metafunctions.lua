@@ -83,7 +83,7 @@ function Pmeta:Poison(npc)
 		self:SetColor(100,150,100,255)
 		self.Poisoned = true
 		self.Poisoner = npc
-		self.Poisonend = CurTime() + math.random(5,30)
+		self.Poisonend = CurTime() + math.random(15,30)
 		self:PoisonThink()
 	end
 end
@@ -97,8 +97,8 @@ function Pmeta:PoisonThink()
 		return false
 	end
 	self:SetNWBool("pois", true)
-	self:TakeDamage(math.random(2,9), self.Poisoner, self.Poisoner)
-	timer.Simple(math.Rand(0.5,1.3),self.PoisonThink,self)
+	self:TakeDamage(math.random(2,4), self.Poisoner, self.Poisoner)
+	timer.Simple(math.Rand(0.4,1.2),self.PoisonThink,self)
 end
 
 function Pmeta:SaveProfile()
