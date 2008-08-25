@@ -89,9 +89,6 @@ local con = 1
 local bl = 0
 
 function GM:RenderScreenspaceEffects( )
-	print("AG: "..ag)
-	print("BR: "..br)
-	print("con: "..con)
 	if LocalPlayer():GetNWBool("pois", false) == true then
 		ag = math.Approach(ag, 8 * 0.05, 0.0003)
 		br = math.Approach(br, -0.21, -0.0003)

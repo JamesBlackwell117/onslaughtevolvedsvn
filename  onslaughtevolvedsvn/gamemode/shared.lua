@@ -2,7 +2,7 @@ include("swep_fix.lua")
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 GM.Name 	= "Onslaught: Evolved - 1.9"
-GM.Author	= "Ailia, Conman420, & Xera" -- DO NOT CHANGE THIS
+GM.Author	= "Conman420, Ailia & Xera" -- DO NOT CHANGE THIS
 GM.Email	= ""
 GM.Website	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
@@ -179,11 +179,11 @@ end
 	PROP_DELETE_TIME = 180 -- how long a player has to leave for until his money and props are deleted.
 	FLAMABLE_PROPS = false
 	PROP_CLEANUP = false
-	PROP_LIMIT = 25
+	PROP_LIMIT = 35
 	STARTING_MONEY = 20000
 	LADDER_COST = 800
 	LIVE_BONUS = 5000
-	DEATH_PENALTY = -1500
+	DEATH_PENALTY = -2000
 	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
 	MAXHUNTERS = 2
 	MAXHACKS = 7
