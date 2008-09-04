@@ -681,7 +681,7 @@ function GM:OnNPCKilled( npc, killer, wep)
 		bonus = 20
 		end
 	end
-	if npc:IsZombie() && math.random(1,3) == 1 then -- ZOMBIES ARE SUPREME
+	if npc:IsZombie() && npc.poison then -- ZOMBIES ARE SUPREME
 		local sequence = npc:LookupSequence("releasecrab") -- TODO FIND WAY TO MAKE THIS FUCKING ANIMATION RUN
 		npc:ResetSequence(sequence)
 		local pos = npc:GetPos()

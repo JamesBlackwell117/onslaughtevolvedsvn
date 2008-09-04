@@ -113,7 +113,11 @@ function ENT:Think( )
 				ent:Fire( "setrelationship", k .. " D_LI 99" ) -- make the npcs like eachother
 			end
 
-			if table.HasValue(Zombies, ent:GetClass()) then
+			if ent:IsZombie() then
+				if math.random(1,4) == 1 then
+					ent.poison = true
+					ent:SetColor(50,255,50,255)
+				end
 				for k,v in pairs(ents.FindByClass("npc_bullseye")) do
 					local trace = util.QuickTrace(v:GetPos(), Vector(0,0,-75), ents.FindByClass("sent_*"))
 					if trace.HitWorld then
