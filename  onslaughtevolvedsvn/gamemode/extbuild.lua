@@ -16,6 +16,7 @@ MODELS["models/Combine_turrets/Floor_turret.mdl"].EXTBUILD = function(this,owner
 	owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 end
 
+/*
 MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,owner,tr)
 	local angl = owner:GetAngles()
 	angl.p = 0
@@ -70,6 +71,7 @@ MODELS["models/Combine_turrets/Ceiling_turret.mdl"].EXTBUILD = function(this,own
 	owner:EmitSound( "npc/scanner/scanner_siren1.wav" )
 	owner:SendLua( [[surface.PlaySound( "npc/scanner/scanner_siren1.wav" )]] )
 end
+*/
 
 MODELS["models/props_combine/combine_mine01.mdl"].EXTBUILD = function(this,owner,tr)
 	local ang = tr.HitNormal:Angle()

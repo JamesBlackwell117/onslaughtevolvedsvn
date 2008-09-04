@@ -241,7 +241,7 @@ end
 
 	MODELS["models/props_combine/health_charger001.mdl"] = {GROUP = 6, CLASS = "sent_dispenser", NAME = "Dispenser", LIMIT = 1, COST = DISP_COST, EXTBUILD = nil, DONTSPAWN = true, RANGE = 200}
 
-	MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 2, COST = TURRET_COST, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
+	--MODELS["models/Combine_turrets/Ceiling_turret.mdl"] = {SPAWNFLAGS = "32", ANG = Angle(0,180,0),GROUP = 6, PLYCLASS = 3, CLASS = "npc_turret_ceiling", NAME = "Turret", LIMIT = 2, COST = TURRET_COST, EXTBUILD = nil, ALLOWBATTLE = true, RANGE = 200}
 
 	if SERVER then
 		include("extbuild.lua")

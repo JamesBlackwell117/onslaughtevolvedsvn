@@ -13,6 +13,7 @@ function ENT:Use(act, cal)
 	if act:Health() >= act:GetMaxHealth() then return end
 		self.Entity:EmitSound("items/medshot4.wav",50,100)
 		act:AddHealth(math.Round(act:GetMaxHealth()/DISP_RATE))
+		if (act:Health() / act:GetMaxHealth()) >= 0.5 then act.Poisoned = false end
 		if act:Health() > act:GetMaxHealth() then act:SetHealth(act:GetMaxHealth()) end
 		if PHASE == "BATTLE" then
 			self.Healing = self.Healing + 1
