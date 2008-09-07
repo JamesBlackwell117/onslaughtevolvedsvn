@@ -1,4 +1,5 @@
 MODELS["models/Combine_turrets/Floor_turret.mdl"].EXTBUILD = function(this,owner,tr)
+	if !owner:Alive() then return false end
 	this:SetPos(tr.HitPos)
 	this:SetKeyValue("spawnflags","512")
 	this:GetPhysicsObject():EnableMotion(false)
