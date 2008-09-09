@@ -13,7 +13,7 @@ ZOMBIEMODE_ENABLED = true
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Classes = {}
 Classes[1] = {NAME = "Scout", SPEED = 650, JUMP = 260, WEAPON_SET = 1, HEALTH = 100, AMMO = {2,11}, MODEL = "models/player/Group03/Female_02.mdl",					DSCR = "A fast and agile class the scout is perfect for those who like to be in the action."}
-Classes[2] = {NAME = "Soldier", SPEED = 280, JUMP = 160, ARMOR = 100, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl",	DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
+Classes[2] = {NAME = "Soldier", SPEED = 250, JUMP = 80, ARMOR = 50, WEAPON_SET = 2, HEALTH = 200,AMMO = {1,2,8,6}, MODEL = "models/player/Group03/male_08.mdl",	DSCR = "A perfect for those defensive players featuring a wide range of weapons the soldier is a perfect well balanced class." }
 Classes[3] = {NAME = "Engineer", SPEED = 300, JUMP = 160, WEAPON_SET = 3, HEALTH = 120, AMMO = {2,4}, MODEL = "models/player/Group03/male_03.mdl",					DSCR = "With the ability to make turrets and dispensers the engineer is truly an invaluable class."  }
 Classes[4] = {NAME = "Sniper", SPEED = 270, JUMP = 160, WEAPON_SET = 4, HEALTH = 80,AMMO = {7,5,14}, MODEL = "models/player/Group03/male_06.mdl",					DSCR = "The Sniper is the useful for taking out incoming enemies but its lack of health and speed requires you to keep cover!"}
 Classes[5] = {NAME = "Pyro", SPEED = 450, JUMP = 210, WEAPON_SET = 5, HEALTH = 150, AMMO = {2,10,12,8}, MODEL = "models/player/Group03/male_07.mdl",				DSCR = "The pyro has the ability to set enemies alight and place mines to send those enemies fliying!"	}
@@ -183,16 +183,17 @@ end
 	STARTING_MONEY = 20000
 	LADDER_COST = 800
 	LIVE_BONUS = 5000
-	DEATH_PENALTY = -2000
+	DEATH_PENALTY = -2500
 	PING_LIMIT = 300 -- This is NOT a ping kicker this is where if the gamemode feels that everyone is getting a bit laggy then start lowering the max npcs available :)
 	MAXHUNTERS = 2
-	MAXHACKS = 7
+	MAXHACKS = 10
 	SPAWN_DELAY = .5
 	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	TURRET_COST = 700
 	DISP_COST = 600
-	DISP_RATE = 50 -- lower is faster
+	DISP_RATE = 60 -- lower is faster
 	TURRET_HEALTH = 100
+	ADVANCED_DAMAGE = false -- ONLY TURN THIS ON IF YOU ARE NOT EXPERIENCING ANY LAG.
 
 	MODELS =   {}
 	MODELS["models/props_c17/display_cooler01a.mdl"] = {ANG = Angle(0,-90,0), GROUP = 4, NAME = "Rack"}

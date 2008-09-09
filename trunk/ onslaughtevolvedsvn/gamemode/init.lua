@@ -279,7 +279,7 @@ function GM:ScaleNPCDamage(npc,hit,dmg)
 	end
 
 	if ZOMBIEMODE_ENABLED then
-		dmg:ScaleDamage(.5)
+		dmg:ScaleDamage(.3)
 	end
 
 	dmg:ScaleDamage(1 / DamageMod())

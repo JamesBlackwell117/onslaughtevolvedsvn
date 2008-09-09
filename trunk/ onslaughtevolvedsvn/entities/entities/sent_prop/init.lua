@@ -173,19 +173,25 @@ function ENT:OnTakeDamage(dmg)
 	if ZOMBIEMODE_ENABLED then
 		damage = damage * 2
 	end
-
-	self.Shealth = self.Shealth - damage
+	--print("DAMAGE: "..(damage + ((self.Mhealth - self.Shealth) / 6)))
+	if !FLAMABLE_PROPS then
+		self.Shealth = self.Shealth - (damage + ((self.Mhealth - self.Shealth) / 6))
+	else
+		self.Shealth = self.Shealth - damage
+	end
 
 	if self.LastUpdate + 2 < CurTime() then
 		self:UpdateColour()
 		self.count = 0
-		for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
-			if v:IsPlayer() then self.count = self.count + 1 end
+		if ADVANCED_DAMAGE then
+			for k,v in pairs(ents.FindInBox(Vector(pos.x-300,pos.y-300,pos.z-300),Vector(pos.x+300,pos.y+300,pos.z+300))) do
+				if v:IsPlayer() then self.count = self.count + 1 end
+			end
 		end
 	end
 	if self.Shealth <= 0 then
 		self:Remove()
-	elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.4 then
+	elseif FLAMABLE_PROPS && self.Shealth / self.Mhealth <= 0.2 then
 		self.Entity:Ignite(8,150)
 	end
 	return dmg
