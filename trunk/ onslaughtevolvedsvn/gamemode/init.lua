@@ -1,4 +1,4 @@
-//Conman, Xera
+//Ailia, Conman, Scooby, Xera
 
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
@@ -151,8 +151,6 @@ function GM:PlayerLoadout(ply)
 		end
 	elseif PHASE == "BUILD" then
 		ply:Give("weapon_physgun")
-		--ply:Give( "swep_nocollide" )
-		--ply:Give("swep_dispensermaker")
 	end
 end
 
@@ -244,7 +242,7 @@ function GM:StartBuild()
 	for k,v in pairs( ents.GetAll( ) ) do
 		if v:IsWeapon( ) then
 			v:Remove( )
-		elseif v:IsNPC() || v:GetClass() == "ose_mines" then
+		elseif v:IsNPC() || v:IsProp() then
 			v:CheckValidOwnership(true)
 		elseif v.PropReset then
 			v:PropReset()
@@ -342,7 +340,7 @@ function GM:PlayerDeath( ply, wep, killer )
 	if PHASE == "BUILD" then
 		ply.NextSpawn = CurTime() + 5
 	else
-		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * ADD_SPAWN_TIME)
 		for k,v in pairs(ents.FindByClass("npc_turret_floor")) do
 			if v:GetRealOwner() == ply then v:PropRemove() end
 		end
@@ -372,7 +370,7 @@ end
 
 function GM:PlayerDeathThink( ply )
 	if ply.NextSpawn == nil then
-		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * 10)
+		ply.NextSpawn = CurTime() + SPAWN_TIME + (#player.GetAll() * ADD_SPAWN_TIME)
 	end
 	if ply.NextSpawn > CurTime( ) then
 		local players = player.GetAll()
@@ -541,15 +539,6 @@ function GM:DeleteProps(ply, ID, nick)
 	end
 end
 
-function GM:GravGunOnPickedUp( ply,ent )
-	if ent:GetClass() == "sent_turret_controller" then
-		ent:GetPhysicsObject():EnableMotion(true)
-		if ValidEntity(ent.Turret) then
-			ent.Turret:GetPhysicsObject():EnableMotion(true)
-		end
-	end
-end
-
 function GM:GravGunOnDropped( ply, ent )
 	return false
 end
@@ -560,6 +549,7 @@ function GM:GravGunPunt( ply, ent )
 end
 
 function GM:PhysgunPickup(ply, ent)
+if ent:GetClass( ) == "sent_dispenser" then return false end
 	if ent:PropOp(ply) then
 		return true
 	end
@@ -638,7 +628,7 @@ function GM:Think()
 		for k,v in pairs(player.GetAll())do
 			if v:GetNWInt("class") == 2 then
 				local armor = math.Clamp(v:Armor()+1,0,100)
-				if armor <= v:Health() / 2 then
+				if armor <= v:Health() * 0.5 then
 					v:SetArmor(armor)
 					v:SetNWInt("Armor", armor)
 				end
