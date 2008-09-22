@@ -2,7 +2,7 @@ include("swep_fix.lua")
 
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
 GM.Name 	= "Onslaught: Evolved - 1.9"
-GM.Author	= "Conman420, Ailia & Xera" -- DO NOT CHANGE THIS
+GM.Author	= "Conman420, Ailia, Scooby & Xera" -- DO NOT CHANGE THIS
 GM.Email	= ""
 GM.Website	= ""
 -- DO NOT REDISTRIBUTE THIS GAMEMODE
@@ -171,7 +171,8 @@ end
 	BUILDTIME = 600
 	BATTLETIME = 900
 	MINBATTLETIME = 600
-	SPAWN_TIME = 30 -- this is the base spawn time. The game adds 10 seconds to the spawn time for every player present on the server. So if there were 8 players the spawn time would be 30 + 80.
+	ADD_SPAWN_TIME = 10 -- Every player that is in the server multiplied by this number will be added to SPAWN_TIME
+	SPAWN_TIME = 30 -- this is the base spawn time. The game adds X seconds to the spawn time for every player present on the server. You can change how many seconds it adds for each player above
 	ANTILAG = false --turn on with caution!
 	BUILD_NOCLIP = true -- whether or not noclip should be allowed in build
 	VOTE_TIME = 30 -- how long players have to vote for a map.
@@ -191,7 +192,7 @@ end
 	S_MAX_NPCS, MAX_NPCS = 60,40 -- S is for singleplayer normal is multiplayer
 	TURRET_COST = 700
 	DISP_COST = 600
-	DISP_RATE = 60 -- lower is faster
+	DISP_RATE = 100 -- lower is faster
 	TURRET_HEALTH = 100
 	ADVANCED_DAMAGE = false -- ONLY TURN THIS ON IF YOU ARE NOT EXPERIENCING ANY LAG.
 

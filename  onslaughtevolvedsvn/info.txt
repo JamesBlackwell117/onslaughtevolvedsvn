@@ -3,7 +3,7 @@
 	"name"		"Onslaught Evolved"
 	"version"	"1.9"
 
-	"author_name"	"Conman420, Xera & Ailia"
+	"author_name"	"Conman420, Ailia, Scooby & Ailia"
 	"author_email"	""
 	"author_url"	"Facepunch thread"
 	

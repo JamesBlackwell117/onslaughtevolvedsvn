@@ -75,6 +75,8 @@ function AllChat(msg)
 end
 
 function Pmeta:Poison(npc)
+	if self.GetNWInt("class") == 6 then return end
+	
 	if self.Poisoned == true then
 		self.Poisonend = self.Poisonend + math.Rand(10,15)
 		self:TakeDamage(math.random(10,25), self.Poisoner, self.Poisoner)
