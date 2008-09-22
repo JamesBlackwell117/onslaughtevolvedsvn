@@ -174,7 +174,11 @@ function ENT:OnTakeDamage(dmg)
 		damage = damage * 2
 	end
 	--print("DAMAGE: "..(damage + ((self.Mhealth - self.Shealth) / 6)))
+	if !FLAMABLE_PROPS then
+		self.Shealth = self.Shealth - (damage + ((self.Mhealth - self.Shealth) / 12))
+	else
 		self.Shealth = self.Shealth - damage
+	end
 
 
 	if self.LastUpdate + 2 < CurTime() then
