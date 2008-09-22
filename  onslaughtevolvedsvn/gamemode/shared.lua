@@ -89,14 +89,14 @@ NPCS = {}
 NPCS["npc_combine_s"] = {}
 NPCS["npc_combine_s"][1] =		{FLAGS = 403204, MONEY = 100,	MODEL = "models/combine_soldier.mdl",				KEYS = "tacticalvariant 1 additionalequipment weapon_smg1 model models/combine_soldier.mdl NumGrenades 999999 wakeradius 999999"}
 NPCS["npc_combine_s"][2] =		{FLAGS = 403204, MONEY = 140,	MODEL = "models/combine_super_soldier.mdl", 		KEYS = "tacticalvariant 1 additionalequipment weapon_ar2 model models/combine_super_soldier.mdl wakeradius 999999"}
-NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 120,	MODEL = "models/combine_soldier_prisonguard.mdl",	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl NumGrenades 999999 wakeradius 999999"}
+NPCS["npc_combine_s"][3] =		{FLAGS = 403204, MONEY = 120,	MODEL = "models/combine_soldier_prisonguard.mdl",	KEYS = "tacticalvariant 1 additionalequipment weapon_shotgun model models/combine_soldier_prisonguard.mdl wakeradius 999999"}
 NPCS["npc_metropolice"]  =		{FLAGS = 403204, MONEY = 50,	MODEL = "models/police.mdl",						KEYS = "additionalequipment weapon_pistol"}
 NPCS["npc_hunter"]	=			{FLAGS = 9984,	 MONEY = 500,	MODEL = "models/hunter.mdl"}
 NPCS["npc_manhack"]  =			{FLAGS = 263940, MONEY = 50,	MODEL = "models/manhack.mdl"}
 NPCS["npc_zombie"]	=			{FLAGS = 1796,	 MONEY = 75,	MODEL = "models/zombie/classic.mdl"}
 NPCS["npc_fastzombie"]	=		{FLAGS = 1796,	 MONEY = 100,	MODEL = "models/zombie/fast.mdl"}
 NPCS["npc_zombine"]  =			{FLAGS = 1796,	 MONEY = 100,	MODEL = "models/zombie/zombie_soldier.mdl"}
-NPCS["npc_antlion"] =			{FLAGS = 9984,	 MONEY = 100,	MODEL = "models/antlion.mdl",						KEYS = "radius 512"}
+NPCS["npc_antlion"] =			{FLAGS = 9984,	 MONEY = 50,	MODEL = "models/antlion.mdl",						KEYS = "radius 512"}
 NPCS["npc_headcrab"] =			{FLAGS = 1796,	 MONEY = 33,	MODEL = "models/headcrabclassic.mdl"}
 NPCS["npc_headcrab_fast"] = 	{FLAGS = 1796,	 MONEY = 40,	MODEL = "models/headcrab.mdl"}
 NPCS["npc_antlionguard"] =		{FLAGS = 9988,	 MONEY = 700,	MODEL = "models/antlion_guard.mdl"}
@@ -105,6 +105,7 @@ NPCS["npc_poisonzombie"] =		{FLAGS = 9988,	 MONEY = 125,	MODEL = "models/zombie/
 NPCS["npc_headcrab_black"] =	{FLAGS = 9988,	 MONEY = 120,	MODEL = "models/headcrabblack.mdl"}
 NPCS["npc_zombie_torso"] =		{FLAGS = 1796,	 MONEY = 50,	MODEL = "models/zombie/classic.mdl"}
 NPCS["npc_fastzombie_torso"] =	{FLAGS = 1796,	 MONEY = 75,	MODEL = "models/zombie/fast.mdl"}
+NPCS["npc_clawscanner"] =		{FLAGS = 8196,   MONEY = 50, 	CREDIT = .5,	MODEL = "models/shield_scanner.mdl"}
 
 npcs = {
 	npc_combine_s = "Combine Soldier",
@@ -123,6 +124,7 @@ npcs = {
 	npc_rollermine = "Rollermine",
 	npc_poisonzombie = "Poison zombie",
 	npc_antlionguard = "Antlion Guard"
+	npc_clawscanner = "Claw Scanner"
 }
 
 Zombies = {"npc_zombine", "npc_zombie", "npc_fastzombie", "npc_antlion", "npc_antlionguard", "npc_poisonzombie"}
